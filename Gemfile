@@ -31,6 +31,10 @@ gem 'rack-cors'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'cucumber', '~> 3.1', '>= 3.1.2'
+  gem 'rspec-rails', '~> 3.8'
+  gem 'fabrication', '~> 2.20', '>= 2.20.1'
+  gem 'capybara', '~> 3.9'
 end
 
 group :development do
