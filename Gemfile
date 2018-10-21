@@ -39,6 +39,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.8'
   gem 'fabrication', '~> 2.20', '>= 2.20.1'
   gem 'capybara', '~> 3.9'
+  gem 'ffaker'
 end
 
 group :development do
