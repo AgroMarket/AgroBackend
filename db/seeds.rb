@@ -17,6 +17,10 @@ def random_inn_kpp
   inn
 end
 
+def add_role?(user)
+  return true if user.roles.count < 2
+end
+
 users = 5.times.map do
   {
     email: FFaker::Internet.safe_email,
@@ -31,3 +35,20 @@ users = 5.times.map do
 end
 
 User.create! users
+
+Role.create!(name: 'customer')
+Role.create!(name: 'seller')
+
+customers = User.first(3)
+sellers = User.last(2)
+
+customers.each do |c|
+  c.roles = Role.first(1)
+end
+
+sellers.each do |s|
+  s.roles = Role.last(1)
+end
+
+u = User.first
+u.roles = Role.all
