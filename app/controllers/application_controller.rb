@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::API
   include ActionController::MimeResponds
-  # before_action :authenticate_user!
+  include Knock::Authenticable
+  undef_method :current_user
   respond_to :json
 end
