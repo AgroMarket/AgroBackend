@@ -4,7 +4,8 @@ HOST: http://80.211.153.183:3000/
 # AgroMarket
 API платформы
 
-## Пользователи [/api/users]
+## Регистрация [/api/users]
+Простая регистрация с е-мейлом и паролем
 
 ### Регистрация пользователя [POST]
 
@@ -42,11 +43,11 @@ API платформы
             }
         ]
 
-### Create a New Question [PUT]
+## Вход на сайт [/api/login]
 
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+### Аутентификация пользователя [POST]
+
+Используется JWT-аутентификация
 
 + Request (application/json)
 
