@@ -10,6 +10,14 @@ User.destroy_all
 Category.destroy_all
 Product.destroy_all
 
+def random_inn
+  inn = ""
+  9.times do
+    inn += rand(0..9).to_s
+  end
+  inn
+end
+
 users = 5.times.map do
   {
     email: FFaker::Internet.safe_email,
@@ -23,19 +31,12 @@ end
 
 User.create! users
 
-customers = User.first(3)
-sellers = User.last(2)
+farmers = User.last(2)
 
-customers.each do |c|
-  c.add_role "customer"
+farmers.each do |s|
+  s.add_role :farmer
+  s.farmer = Farmer.create(inn: random_inn, description: FFaker::HipsterIpsum.paragraph, address: FFaker::AddressRU.city)
 end
-
-sellers.each do |s|
-  s.add_role "seller"
-end
-
-u = User.first
-u.add_role "seller"
 
 category_array = %w(мясо овощи фрукты специи ингредиенты)
 category_hash = 5.times.map do |t|
