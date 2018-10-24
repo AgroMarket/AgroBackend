@@ -7,48 +7,59 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 User.destroy_all
-Role.destroy_all
-
-def random_inn_kpp
-  inn = ""
-  9.times do
-    inn += rand(0..9).to_s
-  end
-  inn
-end
-
-def add_role?(user)
-  return true if user.roles.count < 2
-end
+Category.destroy_all
+Product.destroy_all
 
 users = 5.times.map do
   {
     email: FFaker::Internet.safe_email,
-    fio: FFaker::NameRU.name,
+    name: FFaker::NameRU.name,
     password: 'password',
-    inn: random_inn_kpp,
-    kpp: random_inn_kpp,
     telephone: FFaker::PhoneNumber.short_phone_number,
-    region: FFaker::AddressRU.city,
-    another_information: FFaker::HipsterIpsum.paragraph
+    address: FFaker::AddressRU.city,
+    description: FFaker::HipsterIpsum.paragraph
   }
 end
 
 User.create! users
 
-Role.create!(name: 'customer')
-Role.create!(name: 'seller')
-
 customers = User.first(3)
 sellers = User.last(2)
 
 customers.each do |c|
-  c.roles = Role.first(1)
+  c.add_role "customer"
 end
 
 sellers.each do |s|
-  s.roles = Role.last(1)
+  s.add_role "seller"
 end
 
 u = User.first
-u.roles = Role.all
+u.add_role "seller"
+
+category_array = %w(мясо овощи фрукты специи ингредиенты)
+category_hash = 5.times.map do |t|
+  {
+      name: category_array[t-1]
+  }
+end
+
+Category.create! category_hash
+category = Category.all
+
+10.times do
+  category.each do |c|
+    case c.name
+    when "мясо"
+      Product.create(name: FFaker::Food.unique.meat, messures: "kg", category: c)
+    when "овощи"
+      Product.create(name: FFaker::Food.unique.vegetable, messures: "kg", category: c)
+    when "фрукты"
+      Product.create(name: FFaker::Food.unique.fruit, messures: "kg", category: c)
+    when "специи"
+      Product.create(name: FFaker::Food.unique.herb_or_spice, messures: "kg", category: c)
+    when "ингредиенты"
+      Product.create(name: FFaker::Food.unique.ingredient, messures: "kg", category: c)
+    end
+  end
+end
