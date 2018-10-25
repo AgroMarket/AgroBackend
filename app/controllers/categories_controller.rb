@@ -4,7 +4,8 @@ class CategoriesController < ApplicationController
   # GET /categories
   # GET /categories.json
   def index
-    @categories = Category.all
+    p current_user
+    @categories = Category.includes(:children).where(parent_id: 0).order(:rank)
   end
 
   # GET /categories/1
