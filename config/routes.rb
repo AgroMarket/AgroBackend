@@ -3,6 +3,9 @@ Rails.application.routes.draw do
     post 'login' => 'user_token#create'
     devise_for :users, defaults: { format: :json }
 
+    # Home
+    get '/home', to: 'categories#home'
+
     # Categories
     resources :categories, only: [:index, :show]
   end

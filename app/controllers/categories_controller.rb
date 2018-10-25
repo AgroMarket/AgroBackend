@@ -1,11 +1,18 @@
 class CategoriesController < ApplicationController
   before_action :set_category, only: [:show, :update, :destroy]
 
+  # GET /home
+  # GET /home.json
+  def home
+    @categories = Category.includes(:children).where(parent_id: 0).order(:rank)
+    @products = Product.limit 8
+  end
+
   # GET /categories
   # GET /categories.json
   def index
-    p current_user
     @categories = Category.includes(:children).where(parent_id: 0).order(:rank)
+    @products = Product.limit 8
   end
 
   # GET /categories/1
