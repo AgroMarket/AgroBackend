@@ -11,6 +11,8 @@ Category.destroy_all
 Product.destroy_all
 
 def random_inn
+  # можно одной строкой rand(100000000..999999999).to_s
+
   inn = ""
   9.times do
     inn += rand(0..9).to_s
@@ -28,48 +30,49 @@ users = 5.times.map do
     description: FFaker::HipsterIpsum.paragraph
   }
 end
-
 User.create! users
 
-farmers = User.last(2)
+u = User.first
+u.roles = Role.all
 
+farmers = User.last(2)
 farmers.each do |s|
   s.add_role :farmer
   s.farmer = Farmer.create(inn: random_inn, description: FFaker::HipsterIpsum.paragraph, address: FFaker::AddressRU.city)
 end
 
-category_array = %w(мясо овощи фрукты специи ингредиенты)
-category_hash = 5.times.map do |t|
-  {
-      name: category_array[t-1]
-  }
-end
+# category_array = %w(мясо овощи фрукты специи ингредиенты)
+# category_hash = 5.times.map do |t|
+#   {
+#       name: category_array[t-1]
+#   }
+# end
+#
+#
+# Category.create! category_hash
+# category = Category.all
+#
+# 10.times do
+#   category.each do |c|
+#     case c.name
+#     when "мясо"
+#       Product.create(name: FFaker::Food.unique.meat, messures: "kg", category: c)
+#     when "овощи"
+#       Product.create(name: FFaker::Food.unique.vegetable, messures: "kg", category: c)
+#     when "фрукты"
+#       Product.create(name: FFaker::Food.unique.fruit, messures: "kg", category: c)
+#     when "специи"
+#       Product.create(name: FFaker::Food.unique.herb_or_spice, messures: "kg", category: c)
+#     when "ингредиенты"
+#       Product.create(name: FFaker::Food.unique.ingredient, messures: "kg", category: c)
+#     end
+#   end
+# end
 
 
-Category.create! category_hash
-category = Category.all
-
-10.times do
-  category.each do |c|
-    case c.name
-    when "мясо"
-      Product.create(name: FFaker::Food.unique.meat, messures: "kg", category: c)
-    when "овощи"
-      Product.create(name: FFaker::Food.unique.vegetable, messures: "kg", category: c)
-    when "фрукты"
-      Product.create(name: FFaker::Food.unique.fruit, messures: "kg", category: c)
-    when "специи"
-      Product.create(name: FFaker::Food.unique.herb_or_spice, messures: "kg", category: c)
-    when "ингредиенты"
-      Product.create(name: FFaker::Food.unique.ingredient, messures: "kg", category: c)
-    end
-
-u = User.first
-u.roles = Role.all
 
 
 # Categories
-Category.destroy_all
 category_names = [
     {name: 'Мёд', children: [
         {name: 'Мёд'},
@@ -157,6 +160,22 @@ category_names = [
 category_names.each_with_index do |category_name, idx|
   category = Category.create! name: category_name[:name], parent_id: 0, rank: idx + 1
   category_name[:children].each_with_index do |sub_name, sub_idx|
-    category.subcategories << Category.create!(name: sub_name[:name], parent_id: category.id, rank: sub_idx)
+    category.children << Category.create!(name: sub_name[:name], parent_id: category.id, rank: sub_idx + 1)
+  end
+end
+
+# Products
+Category.where(parent_id: 0).each do |parent|
+  parent.children.each do |category|
+    6.times.each do |idx|
+      product = {
+          name: "#{category.name} №#{idx + 1}",
+          category: category,
+          messures: "кг",
+          image: "",
+          rank: idx + 1
+      }
+      Product.create! product
+    end
   end
 end
