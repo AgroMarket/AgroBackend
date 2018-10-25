@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_25_101803) do
+ActiveRecord::Schema.define(version: 2018_10_25_191503) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "carts", force: :cascade do |t|
+    t.decimal "price"
+    t.bigint "product_id"
+    t.bigint "farmer_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["farmer_id"], name: "index_carts_on_farmer_id"
+    t.index ["product_id"], name: "index_carts_on_product_id"
+  end
 
   create_table "categories", force: :cascade do |t|
     t.string "name"
@@ -34,6 +44,17 @@ ActiveRecord::Schema.define(version: 2018_10_25_101803) do
     t.index ["user_id"], name: "index_farmers_on_user_id"
   end
 
+  create_table "orders", force: :cascade do |t|
+    t.integer "quantity"
+    t.decimal "total_price"
+    t.bigint "user_id"
+    t.bigint "farmer_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["farmer_id"], name: "index_orders_on_farmer_id"
+    t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.string "messures"
@@ -42,7 +63,9 @@ ActiveRecord::Schema.define(version: 2018_10_25_101803) do
     t.datetime "updated_at", null: false
     t.string "image"
     t.integer "rank"
+    t.bigint "farmer_id"
     t.index ["category_id"], name: "index_products_on_category_id"
+    t.index ["farmer_id"], name: "index_products_on_farmer_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -88,4 +111,8 @@ ActiveRecord::Schema.define(version: 2018_10_25_101803) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  add_foreign_key "carts", "farmers"
+  add_foreign_key "carts", "products"
+  add_foreign_key "orders", "farmers"
+  add_foreign_key "orders", "users"
 end

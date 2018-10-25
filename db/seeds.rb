@@ -164,6 +164,8 @@ category_names.each_with_index do |category_name, idx|
   end
 end
 
+farmers = Farmer.all
+
 # Products
 Category.where(parent_id: 0).each do |parent|
   parent.children.each do |category|
@@ -173,7 +175,8 @@ Category.where(parent_id: 0).each do |parent|
           category: category,
           messures: "кг",
           image: "",
-          rank: idx + 1
+          rank: idx + 1,
+          farmer: farmers.sample
       }
       Product.create! product
     end
