@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_23_043742) do
+ActiveRecord::Schema.define(version: 2018_10_24_195759) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,25 @@ ActiveRecord::Schema.define(version: 2018_10_23_043742) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "farmers", force: :cascade do |t|
+    t.string "inn"
+    t.text "description"
+    t.string "address"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_farmers_on_user_id"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string "name"
+    t.string "messures"
+    t.bigint "category_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_products_on_category_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -48,12 +67,10 @@ ActiveRecord::Schema.define(version: 2018_10_23_043742) do
     t.string "unconfirmed_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "fio"
-    t.string "inn"
-    t.string "kpp"
+    t.string "name"
+    t.string "address"
     t.string "telephone"
-    t.string "region"
-    t.text "another_information"
+    t.text "description"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
