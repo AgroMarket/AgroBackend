@@ -8,7 +8,7 @@ class CategoriesController < ApplicationController
       @categories = Category.includes(:children).where(parent_id: 0).order(:rank)
       @products = Product.limit 8
 
-      @status = nil
+      @status = response.status
       @message = 'Запрос данных для главной страницы'
       @result = true
       @error = nil
@@ -18,7 +18,7 @@ class CategoriesController < ApplicationController
       @error = ex.message
     end
 
-    render 'layouts/response'
+    render_response
   end
 
   # GET /categories
@@ -70,5 +70,9 @@ class CategoriesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def category_params
       params.require(:category).permit(:name)
+    end
+
+    def render_response
+      render 'layouts/response'
     end
 end
