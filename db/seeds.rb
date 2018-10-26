@@ -139,6 +139,7 @@ Category.where(parent_id: 0).each do |parent|
           messures: "кг",
           image: "",
           rank: idx + 1,
+          price: rand(1..10),
           farmer: farmers.sample
       }
       Product.create! product
@@ -152,10 +153,25 @@ cart_hash = 10.times.map do
     user: User.all.sample,
     products: 10.times.map do
       Product.all.sample
-    end,
-    price: rand(1..10)
+    end
   }
 end
 
 Cart.create! cart_hash
+
+# orders
+
+10.times.map do
+  user = User.all.sample
+  farmer = Farmer.all.sample
+  order_hash = {
+      user: user,
+      farmer: farmer,
+      quantity: user.cart.products.count,
+      total_price: user.cart.products.sum(:price)
+  }
+  Order.create order_hash
+end
+
+
 
