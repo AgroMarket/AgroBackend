@@ -1,7 +1,8 @@
 class Product < ApplicationRecord
   belongs_to :category
   belongs_to :farmer
-  has_and_belongs_to_many :carts
+  has_many :cart_products
+  has_many :carts, through: :cart_products
 
   validates :name, presence: :true
 end
