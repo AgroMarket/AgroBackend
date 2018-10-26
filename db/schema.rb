@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 2018_10_26_084304) do
   end
 
   create_table "carts", force: :cascade do |t|
+    t.integer "quantity", default: 1
     t.bigint "user_id"
     t.bigint "product_id"
     t.datetime "created_at", null: false
