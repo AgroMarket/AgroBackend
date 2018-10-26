@@ -1,6 +1,5 @@
 # json.array! @categories, partial: 'categories/category', as: :category
 
-# json.user current_user
 json.header do
   json.logo do
     json.api ""
