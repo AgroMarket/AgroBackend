@@ -11,13 +11,7 @@ Category.destroy_all
 Product.destroy_all
 
 def random_inn
-  # можно одной строкой rand(100000000..999999999).to_s
-
-  inn = ""
-  9.times do
-    inn += rand(0..9).to_s
-  end
-  inn
+  rand(100000000..999999999).to_s
 end
 
 users = 5.times.map do
@@ -40,37 +34,6 @@ farmers.each do |s|
   s.add_role :farmer
   s.farmer = Farmer.create(inn: random_inn, description: FFaker::HipsterIpsum.paragraph, address: FFaker::AddressRU.city)
 end
-
-# category_array = %w(мясо овощи фрукты специи ингредиенты)
-# category_hash = 5.times.map do |t|
-#   {
-#       name: category_array[t-1]
-#   }
-# end
-#
-#
-# Category.create! category_hash
-# category = Category.all
-#
-# 10.times do
-#   category.each do |c|
-#     case c.name
-#     when "мясо"
-#       Product.create(name: FFaker::Food.unique.meat, messures: "kg", category: c)
-#     when "овощи"
-#       Product.create(name: FFaker::Food.unique.vegetable, messures: "kg", category: c)
-#     when "фрукты"
-#       Product.create(name: FFaker::Food.unique.fruit, messures: "kg", category: c)
-#     when "специи"
-#       Product.create(name: FFaker::Food.unique.herb_or_spice, messures: "kg", category: c)
-#     when "ингредиенты"
-#       Product.create(name: FFaker::Food.unique.ingredient, messures: "kg", category: c)
-#     end
-#   end
-# end
-
-
-
 
 # Categories
 category_names = [
@@ -164,6 +127,8 @@ category_names.each_with_index do |category_name, idx|
   end
 end
 
+farmers = Farmer.all
+
 # Products
 Category.where(parent_id: 0).each do |parent|
   parent.children.each do |category|
@@ -173,9 +138,40 @@ Category.where(parent_id: 0).each do |parent|
           category: category,
           messures: "кг",
           image: "",
-          rank: idx + 1
+          rank: idx + 1,
+          price: rand(1..10),
+          farmer: farmers.sample
       }
       Product.create! product
     end
   end
 end
+
+# cart
+cart_hash = 10.times.map do
+  {
+    user: User.all.sample,
+    products: 10.times.map do
+      Product.all.sample
+    end
+  }
+end
+
+Cart.create! cart_hash
+
+# orders
+
+10.times.map do
+  user = User.all.sample
+  farmer = Farmer.all.sample
+  order_hash = {
+      user: user,
+      farmer: farmer,
+      quantity: user.cart.products.count,
+      total_price: user.cart.products.sum(:price)
+  }
+  Order.create order_hash
+end
+
+
+
