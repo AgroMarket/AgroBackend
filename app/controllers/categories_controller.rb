@@ -12,7 +12,7 @@ class CategoriesController < ApplicationController
       @message = 'Запрос данных для главной страницы'
       @result = true
       @error = nil
-      
+
     rescue => ex
       @result = nil
       @error = ex.message
