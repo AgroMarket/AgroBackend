@@ -4,8 +4,21 @@ class CategoriesController < ApplicationController
   # GET /home
   # GET /home.json
   def home
-    @categories = Category.includes(:children).where(parent_id: 0).order(:rank)
-    @products = Product.limit 8
+    begin
+      @categories = Category.includes(:children).where(parent_id: 0).order(:rank)
+      @products = Product.limit 8
+
+      @status = nil
+      @message = 'Запрос данных для главной страницы'
+      @result = true
+      @error = nil
+      
+    rescue => ex
+      @result = nil
+      @error = ex.message
+    end
+
+    render 'layouts/response'
   end
 
   # GET /categories
