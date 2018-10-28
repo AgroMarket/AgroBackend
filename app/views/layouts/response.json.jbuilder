@@ -3,5 +3,5 @@
 # json.user current_user
 json.status @status
 json.message @message
-json.result @result, partial: 'categories/home', as: :category
+json.result @result, partial: @view, as: :category
 json.error @error ||= nil

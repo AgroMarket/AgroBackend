@@ -18,6 +18,7 @@ class CategoriesController < ApplicationController
       @error = ex.message
     end
 
+    @view = 'categories/home'
     render_response
   end
 

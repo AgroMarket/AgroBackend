@@ -1,5 +1,5 @@
 json.logo do
-  json.api ""
+  json.api home_path
   json.name "Ferma Store"
   json.image ""
 end
