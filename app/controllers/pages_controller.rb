@@ -2,7 +2,21 @@ class PagesController < ApplicationController
   before_action :set_page, only: [:show, :update, :destroy]
 
   def about
+    begin
+      @page = Page.where(name: 'about').first
 
+      @status = response.status
+      @message = 'Страница "О нас"'
+      @result = true
+      @error = nil
+
+    rescue => ex
+      @result = nil
+      @error = ex.message
+    end
+
+    @view = 'pages/about'
+    render 'layouts/response'
   end
 
   # GET /pages
