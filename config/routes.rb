@@ -14,5 +14,5 @@ Rails.application.routes.draw do
 
     # Pages
     resources :pages
-  end
+    end
 end

@@ -9,6 +9,7 @@
 User.destroy_all
 Category.destroy_all
 Product.destroy_all
+Page.destroy_all
 
 def random_inn
   rand(100000000..999999999).to_s
@@ -173,5 +174,13 @@ Cart.create! cart_hash
   Order.create order_hash
 end
 
+
+# Pages
+Page.create! name: 'main',      title: 'Ferma Store',       content: 'Текст'
+Page.create! name: 'about',     title: 'О нас',             content: 'Текст'
+Page.create! name: 'sellers',   title: 'Продавцам',         content: 'Текст'
+Page.create! name: 'buyers',    title: 'Покупателям',       content: 'Текст'
+Page.create! name: 'delivery',  title: 'Доставка и оплата', content: 'Текст'
+Page.create! name: 'basket',    title: 'Корзина',           content: 'Текст'
 
 
