@@ -19,14 +19,28 @@ class CategoriesController < ApplicationController
     end
 
     @view = 'categories/home'
-    render_response
+    render 'layouts/response'
   end
 
   # GET /categories
   # GET /categories.json
   def index
-    @categories = Category.includes(:children).where(parent_id: 0).order(:rank)
-    @products = Product.limit 8
+    begin
+      @categories = Category.includes(:children).where(parent_id: 0).order(:rank)
+      # @products = Product.limit 8
+
+      @status = response.status
+      @message = 'Запрос категорий каталога'
+      @result = true
+      @error = nil
+
+    rescue => ex
+      @result = nil
+      @error = ex.message
+    end
+
+    @view = 'layouts/menu'
+    render 'layouts/response'
   end
 
   # GET /categories/1
@@ -71,9 +85,5 @@ class CategoriesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def category_params
       params.require(:category).permit(:name)
-    end
-
-    def render_response
-      render 'layouts/response'
     end
 end
