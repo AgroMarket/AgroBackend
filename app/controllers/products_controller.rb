@@ -4,7 +4,24 @@ class ProductsController < ApplicationController
   # GET /products
   # GET /products.json
   def index
-    @products = Product.all
+    begin
+      @products = case params[:scope]
+                  when 'samples' then Product.find(Product.pluck(:id).sample(8))
+                  else Product.all
+                  end
+
+      @status = response.status
+      @message = 'Список продуктов'
+      @result = true
+      @error = nil
+
+    rescue => ex
+      @result = nil
+      @error = ex.message
+    end
+
+    @view = 'products/index'
+    render 'layouts/response'
   end
 
   # GET /products/1
