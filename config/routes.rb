@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :pages
   scope :api do
     post 'login' => 'user_token#create'
     devise_for :users, defaults: { format: :json }
@@ -9,5 +8,11 @@ Rails.application.routes.draw do
 
     # Categories
     resources :categories, only: [:index, :show]
+
+    # Products
+    resources :products
+
+    # Pages
+    resources :pages
   end
 end
