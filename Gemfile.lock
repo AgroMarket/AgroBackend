@@ -44,6 +44,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
+    api-pagination (4.8.1)
     arel (9.0.0)
     backports (3.11.4)
     bcrypt (3.1.12)
@@ -221,6 +222,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  api-pagination (~> 4.8, >= 4.8.1)
   bootsnap (>= 1.1.0)
   byebug
   cancancan (~> 2.3)
