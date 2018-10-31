@@ -42,6 +42,10 @@ group :development, :test do
   gem 'fabrication', '~> 2.20', '>= 2.20.1'
   gem 'capybara', '~> 3.9'
   gem 'ffaker'
+  gem 'factory_bot_rails'
+  gem 'shoulda-matchers', '4.0.0.rc1'
+  gem 'rails-controller-testing'
+  gem 'database_cleaner'
 end
 
 group :development do
