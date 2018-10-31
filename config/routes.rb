@@ -7,7 +7,9 @@ Rails.application.routes.draw do
     get '/home', to: 'categories#home'
 
     # Categories
-    resources :categories, only: [:index, :show]
+    resources :categories, only: [:index, :show] do
+      resources :products
+    end
 
     # Products
     resources :products
