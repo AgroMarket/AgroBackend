@@ -5,13 +5,21 @@ class ProductsController < ApplicationController
   # GET /products.json
   def index
     begin
-      @products = case params[:scope]
-                  when 'samples' then Product.find(Product.pluck(:id).sample(8))
-                  else Product.all
-                  end
+      if params[:category_id]
+        @products = Product.where(category_id: params[:category_id]).page(params[:page]).per(4)
+        @message = 'Список товаров по категории'
+      elsif params[:scope]
+        @products = case params[:scope]
+                    when 'samples' then Product.find(Product.pluck(:id).sample(8))
+                    else Product.all
+                    end
+        @message = 'Список случаных товаров'
+      elsif params[:search]
+        @products = Product.where
+        @message = 'Поиск товаров'
+      end
 
       @status = response.status
-      @message = 'Список продуктов'
       @result = true
       @error = nil
 
