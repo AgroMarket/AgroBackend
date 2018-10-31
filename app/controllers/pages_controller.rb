@@ -1,12 +1,14 @@
 class PagesController < ApplicationController
   before_action :set_page, only: [:show, :update, :destroy]
 
-  def about
+  # GET /pages
+  # GET /pages.json
+  def index
     begin
-      @page = Page.where(name: 'about').first
+      @pages = Page.all
 
       @status = response.status
-      @message = 'Страница "О нас"'
+      @message = 'Список страниц'
       @result = true
       @error = nil
 
@@ -15,19 +17,28 @@ class PagesController < ApplicationController
       @error = ex.message
     end
 
-    @view = 'pages/about'
+    @view = 'pages/index'
     render 'layouts/response'
-  end
-
-  # GET /pages
-  # GET /pages.json
-  def index
-    @pages = Page.all
   end
 
   # GET /pages/1
   # GET /pages/1.json
   def show
+    begin
+      @page = Page.where(name: 'about').first
+
+      @status = response.status
+      @message = 'Страница'
+      @result = true
+      @error = nil
+
+    rescue => ex
+      @result = nil
+      @error = ex.message
+    end
+
+    @view = 'pages/show'
+    render 'layouts/response'
   end
 
   # POST /pages

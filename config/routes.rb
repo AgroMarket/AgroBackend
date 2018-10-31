@@ -13,7 +13,6 @@ Rails.application.routes.draw do
     resources :products
 
     # Pages
-    get '/pages/about' => 'pages#about', as: 'page_about'
     resources :pages
-    end
+  end
 end
