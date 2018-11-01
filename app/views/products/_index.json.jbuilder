@@ -9,4 +9,4 @@ json.products do
   end
 end
 
-json.pagination ""#paginate(json: @products)
+json.pagination @pagination
