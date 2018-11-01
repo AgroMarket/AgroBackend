@@ -1,66 +1,43 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :update, :destroy]
   include Paginable
+  include Exceptable
 
   # GET /products
   # GET /products.json
   def index
-    begin
-      @pagination = nil
+    @pagination = nil
 
+    build do
       if params[:category_id]
-        @message = 'Список товаров по категории'
-        paginate(
-          items: Product.where(category_id: params[:category_id]),
-          path: category_products_path,
-          params: nil
-        )
+        message 'Список товаров по категориям'
+        products Product.category(params[:category_id])
+        path category_products_path
+        @products = paginate @products
 
       elsif params[:search]
-        @message = 'Поиск товаров'
-        paginate(
-          items: Product.where("LOWER(name) LIKE ?", "%#{params[:search]}%"),
-          path: products_path,
-          params: {
-            "search": params[:search],
-            "some": 23
-          }
-        )
+        message 'Поиск товаров'
+        products Product.search(params[:search])
+        path products_path
+        url_params "search": params[:search]
+        @products = paginate @products
 
       elsif params[:scope] && params[:scope] == 'samples'
-        @message = 'Список случаных товаров'
-        @products = Product.find(Product.pluck(:id).sample(8))
+        message 'Список случайных товаров'
+        products Product.samples
       end
 
-      @status = response.status
-      @result = true
-      @error = nil
-
-    rescue => ex
-      @result = nil
-      @error = ex.message
+      view 'products/index'
     end
-
-    @view = 'products/index'
-    render 'layouts/response'
   end
 
   # GET /products/1
   # GET /products/1.json
   def show
-    begin
-      @message = 'Страница товара'
-      @status = response.status
-      @result = true
-      @error = nil
-
-    rescue => ex
-      @result = nil
-      @error = ex.message
+    build do
+      message 'Страница товара'
+      view 'products/show'
     end
-
-    @view = 'products/show'
-    render 'layouts/response'
   end
 
   # POST /products

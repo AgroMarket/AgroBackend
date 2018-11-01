@@ -2,20 +2,38 @@ module Exceptable
   def build
     if block_given?
       begin
-        @page = Page.where(name: 'about').first
-
+        yield
         @status = response.status
-        @message = 'Страница "О нас"'
         @result = true
         @error = nil
 
       rescue => ex
+        @status = response.status
         @result = nil
         @error = ex.message
       end
 
-      @view = 'pages/about'
       render 'layouts/response'
     end
+  end
+
+  def products(products)
+    @products = products
+  end
+
+  def path(path)
+    @path = path
+  end
+
+  def url_params(url_params = nil)
+    @url_params = url_params
+  end
+
+  def message(message)
+    @message = message
+  end
+
+  def view(view)
+    @view = view
   end
 end
