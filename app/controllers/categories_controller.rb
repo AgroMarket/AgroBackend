@@ -30,7 +30,7 @@ class CategoriesController < ApplicationController
       # @products = Product.limit 8
 
       @status = response.status
-      @message = 'Запрос категорий каталога'
+      @message = 'Список категорий'
       @result = true
       @error = nil
 

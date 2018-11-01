@@ -1,17 +1,38 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :update, :destroy]
+  include Paginable
 
   # GET /products
   # GET /products.json
   def index
     begin
-      @products = case params[:scope]
-                  when 'samples' then Product.find(Product.pluck(:id).sample(8))
-                  else Product.all
-                  end
+      @pagination = nil
+
+      if params[:category_id]
+        @message = 'Список товаров по категории'
+        paginate(
+          items: Product.where(category_id: params[:category_id]),
+          path: category_products_path,
+          params: nil
+        )
+
+      elsif params[:search]
+        @message = 'Поиск товаров'
+        paginate(
+          items: Product.where("LOWER(name) LIKE ?", "%#{params[:search]}%"),
+          path: products_path,
+          params: {
+            "search": params[:search],
+            "some": 23
+          }
+        )
+
+      elsif params[:scope] && params[:scope] == 'samples'
+        @message = 'Список случаных товаров'
+        @products = Product.find(Product.pluck(:id).sample(8))
+      end
 
       @status = response.status
-      @message = 'Список продуктов'
       @result = true
       @error = nil
 
@@ -27,6 +48,19 @@ class ProductsController < ApplicationController
   # GET /products/1
   # GET /products/1.json
   def show
+    begin
+      @message = 'Страница товара'
+      @status = response.status
+      @result = true
+      @error = nil
+
+    rescue => ex
+      @result = nil
+      @error = ex.message
+    end
+
+    @view = 'products/show'
+    render 'layouts/response'
   end
 
   # POST /products

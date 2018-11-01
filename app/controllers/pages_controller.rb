@@ -1,25 +1,6 @@
 class PagesController < ApplicationController
   before_action :set_page, only: [:show, :update, :destroy]
-
   include Exceptable
-
-  def about
-    begin
-      @page = Page.where(name: 'about').first
-
-      @status = response.status
-      @message = 'Страница "О нас"'
-      @result = true
-      @error = nil
-
-    rescue => ex
-      @result = nil
-      @error = ex.message
-    end
-
-    @view = 'pages/about'
-    render 'layouts/response'
-  end
 
   # GET /pages
   # GET /pages.json
@@ -44,6 +25,21 @@ class PagesController < ApplicationController
   # GET /pages/1
   # GET /pages/1.json
   def show
+    begin
+      @page = Page.where(name: 'about').first
+
+      @status = response.status
+      @message = 'Страница'
+      @result = true
+      @error = nil
+
+    rescue => ex
+      @result = nil
+      @error = ex.message
+    end
+
+    @view = 'pages/show'
+    render 'layouts/response'
   end
 
   # POST /pages
