@@ -138,7 +138,7 @@ Category.where(parent_id: 0).each do |parent|
           name: "#{category.name} №#{idx + 1}",
           category: category,
           messures: "кг",
-          image: "",
+          image: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"),
           rank: idx + 1,
           price: rand(1..10),
           farmer: farmers.sample
@@ -149,13 +149,15 @@ Category.where(parent_id: 0).each do |parent|
 end
 
 # cart
-cart_hash = 10.times.map do
-  {
-    user: User.all.sample,
-    products: 10.times.map do
-      Product.all.sample
-    end
-  }
+users = User.all
+cart_hash = []
+users.each do |user|
+  cart_hash << {
+      user: user,
+      products: 10.times.map do
+        Product.all.sample
+       end
+      }
 end
 
 Cart.create! cart_hash

@@ -34,6 +34,7 @@ gem 'knock', '~> 2.1', '>= 2.1.1'
 gem 'cancancan', '~> 2.3'
 gem 'rolify', '~> 5.2'
 gem 'kaminari', '~> 1.1', '>= 1.1.1'
+gem "paperclip", "~> 6.0.0"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

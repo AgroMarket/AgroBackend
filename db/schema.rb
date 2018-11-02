@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_30_101520) do
+ActiveRecord::Schema.define(version: 2018_11_02_095425) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,6 +83,10 @@ ActiveRecord::Schema.define(version: 2018_10_30_101520) do
     t.integer "rank"
     t.bigint "farmer_id"
     t.bigint "cart_id"
+    t.string "image_file_name"
+    t.string "image_content_type"
+    t.integer "image_file_size"
+    t.datetime "image_updated_at"
     t.index ["cart_id"], name: "index_products_on_cart_id"
     t.index ["category_id"], name: "index_products_on_category_id"
     t.index ["farmer_id"], name: "index_products_on_farmer_id"
