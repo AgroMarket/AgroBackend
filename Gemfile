@@ -35,6 +35,7 @@ gem 'cancancan', '~> 2.3'
 gem 'rolify', '~> 5.2'
 gem 'kaminari', '~> 1.1', '>= 1.1.1'
 gem "paperclip", "~> 6.0.0"
+gem 'ffaker'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -43,7 +44,6 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.8'
   gem 'fabrication', '~> 2.20', '>= 2.20.1'
   gem 'capybara', '~> 3.9'
-  gem 'ffaker'
   gem 'factory_bot_rails'
   gem 'shoulda-matchers', '4.0.0.rc1'
   gem 'rails-controller-testing'
