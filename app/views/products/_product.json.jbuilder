@@ -2,7 +2,7 @@
 # json.url product_url(product, format: :json)
 
 json.link product_path product.id
-json.image ""
+json.image product.image
 json.title product.name
 json.measures product.messures
 json.price product.price

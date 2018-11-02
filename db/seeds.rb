@@ -138,7 +138,7 @@ Category.where(parent_id: 0).each do |parent|
           name: "#{category.name} №#{idx + 1}",
           category: category,
           messures: "кг",
-          image: "",
+          image: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"),
           rank: idx + 1,
           price: rand(1..10),
           farmer: farmers.sample
