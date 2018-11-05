@@ -17,7 +17,7 @@ class ProductsController < ApplicationController
 
       elsif params[:search]
         message 'Поиск товаров'
-        products Product.search(params[:search])
+        products Product.search(params[:search].downcase!)
         path products_path
         url_params "search": params[:search]
         @products = paginate @products
