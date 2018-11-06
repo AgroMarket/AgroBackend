@@ -15,7 +15,7 @@ class Product < ApplicationRecord
   validates :name, presence: :true
 
   scope :samples, -> { find(pluck(:id).sample(8)) }
-  scope :search, ->(string) { where('LOWER(name) LIKE ?', "%#{string.downcase!}%") }
+  scope :search, ->(string) { where('LOWER(name) LIKE ?', "%#{string.downcase}%") }
   scope :category, ->(category_id) { where(category_id: category_id) }
   scope :parent_categories, ->(category_id) do
     if Category.find(category_id).parent_id.zero?

@@ -134,6 +134,7 @@ Category.where(parent_id: 0).each do |parent|
     6.times.each do |idx|
       product = {
           name: "#{category.name} №#{idx + 1}",
+          description: FFaker::HipsterIpsum.paragraph,
           category: category,
           messures: "кг",
          # image: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"),
