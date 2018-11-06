@@ -12,3 +12,4 @@ json.category_api category_products_path product.category_id
 json.farmer_id product.farmer_id
 json.farmer_api ""#farmer_path product.farmer_id
 json.id product.id
+json.descripion product.description
