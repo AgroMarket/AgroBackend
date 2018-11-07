@@ -3,18 +3,36 @@ Rails.application.routes.draw do
     post 'login' => 'user_token#create'
     devise_for :users, defaults: { format: :json }
 
-    # Home
-    get '/home', to: 'categories#home'
+    # PUBLIC
+
+    # Pages
+    resources :pages
 
     # Categories
     resources :categories, only: [:index, :show] do
-      resources :products
+      resources :products, only: :index
     end
 
     # Products
     resources :products
 
-    # Pages
-    resources :pages
+    # Farmers
+    resources :farmers, only: :show do
+      resources :products, only: :index
+    end
+
+    # Carts
+    resources :carts
+
+
+    # CLIENT
+
+
+    # FARMER
+
+
+
+
+
   end
 end
