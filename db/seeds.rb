@@ -137,7 +137,7 @@ Category.where(parent_id: 0).each do |parent|
           description: FFaker::HipsterIpsum.paragraph,
           category: category,
           messures: "кг",
-          image: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"),
+         # image: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"),
           rank: idx + 1,
           price: rand(1..10),
           farmer: farmers.sample
@@ -145,6 +145,11 @@ Category.where(parent_id: 0).each do |parent|
       Product.create! product
     end
   end
+end
+
+products = Product.all
+products.each do |pr|
+  pr.image.attach(io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"), filename: 'missing.png')
 end
 
 # cart
