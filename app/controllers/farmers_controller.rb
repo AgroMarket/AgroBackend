@@ -1,5 +1,7 @@
 class FarmersController < ApplicationController
   before_action :set_farmer, only: [:show, :update, :destroy]
+  include Paginable
+  include Exceptable
 
   # GET /farmers
   # GET /farmers.json
@@ -10,6 +12,10 @@ class FarmersController < ApplicationController
   # GET /farmers/1
   # GET /farmers/1.json
   def show
+    build do
+      message 'Страница фермера глазами гостя'
+      view 'farmers/show'
+    end
   end
 
   # POST /farmers
