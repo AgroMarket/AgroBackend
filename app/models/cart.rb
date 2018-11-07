@@ -1,6 +1,6 @@
 class Cart < ApplicationRecord
-  belongs_to :user, dependent: :destroy
-  has_many :cart_products
+  belongs_to :user
+  has_many :cart_products, dependent: :destroy
   has_many :products, through: :cart_products
 
   # добавляет один продукт

@@ -5,7 +5,7 @@ class User < ApplicationRecord
 
   has_one :farmer
   has_many :orders, dependent: :destroy
-  has_one :cart
+  has_one :cart, dependent: :destroy
 
   after_create :assign_default_role
 
