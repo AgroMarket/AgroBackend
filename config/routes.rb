@@ -22,7 +22,7 @@ Rails.application.routes.draw do
     end
 
     # Carts
-    resources :carts
+    resources :carts, only: %i[show create update]
 
 
     # CLIENT
