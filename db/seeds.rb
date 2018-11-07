@@ -10,6 +10,8 @@ User.destroy_all
 Category.destroy_all
 Product.destroy_all
 Page.destroy_all
+Cart.destroy_all
+
 
 def random_inn
   rand(100000000..999999999).to_s
