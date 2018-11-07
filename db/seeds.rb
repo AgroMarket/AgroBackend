@@ -38,29 +38,29 @@ end
 
 # Categories
 category_names = [
-    {name: 'Мёд', children: [
+    {name: 'Мёд', icontype: 'мед', children: [
         {name: 'Мёд'},
         {name: 'Мёд в сотах'},
         {name: 'Продукты пчеловодства'}
     ]},
-    {name: 'Овощи фрукты', children: [
+    {name: 'Овощи фрукты', icontype: 'овощи', children: [
         {name: 'Зелень'},
         {name: 'Овощи'},
         {name: 'Фрукты'}
     ]},
-    {name: 'Орехи', children: [
+    {name: 'Орехи', icontype: 'орех', children: [
         {name: 'Орехи'},
         {name: 'Семечки'},
         {name: 'Орехи, семечки очищенные'}
     ]},
-    {name: 'Молочные продукты', children: [
+    {name: 'Молочные продукты', icontype: 'молоко',  children: [
         {name: 'Молоко, сливки'},
         {name: 'Кефир, ряженка'},
         {name: 'Сметана'},
         {name: 'Сыр'},
         {name: 'Творог'}
     ]},
-    {name: 'Крупы, Бобовые', children: [
+    {name: 'Крупы, Бобовые', icontype: 'крупа', children: [
         {name: 'Гречка'},
         {name: 'Пшеница'},
         {name: 'Пшено'},
@@ -69,7 +69,7 @@ category_names = [
         {name: 'Соя'},
         {name: 'Чечевица'}
     ]},
-    {name: 'Готовые продукты, заготовки', children: [
+    {name: 'Готовые продукты, заготовки', icontype: 'заготовка', children: [
         {name: 'Хлебобулочные изделия'},
         {name: 'Консервированные продукты'},
         {name: 'Мясные деликатесы'},
@@ -77,20 +77,20 @@ category_names = [
         {name: 'Соусы, специи'},
         {name: 'Кондитерские изделия'}
     ]},
-    {name: 'Птица, Яйцо', children: [
+    {name: 'Птица, Яйцо', icontype: 'птица', children: [
         {name: 'Курица'},
         {name: 'Индейка'},
         {name: 'Гусь'},
         {name: 'Утка'},
         {name: 'Яйцо'}
     ]},
-    {name: 'Рыба, Морепродукты', children: [
+    {name: 'Рыба, Морепродукты', icontype: 'рыба', children: [
         {name: 'Замороженная рыба'},
         {name: 'Копченная, соленая, вяленная рыба'},
         {name: 'Свежая рыба'},
         {name: 'Икра'}
     ]},
-    {name: 'Грибы, Ягоды', children: [
+    {name: 'Грибы, Ягоды', icontype: 'гриб', children: [
         {name: 'Свежие ягоды'},
         {name: 'Замороженные ягоды'},
         {name: 'Сущеные ягоды'},
@@ -99,19 +99,19 @@ category_names = [
         {name: 'Соленые грибы'},
         {name: 'Сушенные грибы'}
     ]},
-    {name: 'Напитки', children: [
+    {name: 'Напитки', icontype: 'напиток', children: [
         {name: 'Соки'},
         {name: 'Морс'},
         {name: 'Квас'},
         {name: 'Сиропы'},
         {name: 'Чай'}
     ]},
-    {name: 'Масла, Жиры', children: [
+    {name: 'Масла, Жиры', icontype: 'масло', children: [
         {name: 'Масло сливочное'},
         {name: 'Масло растительное'},
         {name: 'Жир животный'}
     ]},
-    {name: 'Мясо', children: [
+    {name: 'Мясо', icontype: 'мясо', children: [
         {name: 'Говядина'},
         {name: 'Свинина'},
         {name: 'Баранина'},
@@ -120,11 +120,16 @@ category_names = [
     ]},
 ]
 category_names.each_with_index do |category_name, idx|
-  category = Category.create! name: category_name[:name], parent_id: 0, rank: idx + 1
+  category = Category.create! name: category_name[:name], icontype: category_name[:icontype], parent_id: 0, rank: idx + 1
   category_name[:children].each_with_index do |sub_name, sub_idx|
     category.children << Category.create!(name: sub_name[:name], parent_id: category.id, rank: sub_idx + 1)
   end
 end
+
+Category.where(parent_id: 0).each do |category|
+  category.icon.attach(io: File.open("#{Rails.root}/app/assets/images/icons/#{category.icontype}.png"), filename: "#{category.icontype}.png")
+end
+
 
 farmers = Farmer.all
 

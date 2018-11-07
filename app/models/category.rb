@@ -3,6 +3,8 @@ class Category < ApplicationRecord
   has_many :children, class_name: 'Category', foreign_key: 'parent_id'
   has_many :products
 
+  has_one_attached :icon
+
   validates :name, presence: :true
 
 end
