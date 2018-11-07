@@ -4,7 +4,7 @@ class User < ApplicationRecord
   rolify
 
   has_one :farmer
-  has_many :orders
+  has_many :orders, dependent: :destroy
   has_one :cart
 
   after_create :assign_default_role
