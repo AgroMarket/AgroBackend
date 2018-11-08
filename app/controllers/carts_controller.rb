@@ -1,5 +1,6 @@
 class CartsController < ApplicationController
   before_action :set_cart, only: [:show, :update, :destroy]
+  include Exceptable
 
   # GET /carts
   # GET /carts.json
@@ -10,6 +11,10 @@ class CartsController < ApplicationController
   # GET /carts/1
   # GET /carts/1.json
   def show
+    build do
+      message 'Корзина товаров'
+      view 'carts/show'
+    end
   end
 
   # POST /carts
@@ -18,7 +23,11 @@ class CartsController < ApplicationController
     @cart = Cart.new(cart_params)
 
     if @cart.save
-      render :show, status: :created, location: @cart
+      build do
+        message 'Новая корзина'
+        view 'carts/show'
+      end
+      # render :show, status: :created, location: @cart
     else
       render json: @cart.errors, status: :unprocessable_entity
     end
