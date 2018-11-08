@@ -25,6 +25,7 @@ json.result do
       json.api ""
       json.id category.id
       json.name category.name
+      json.icon url_for(category.icon)
       json.parent_id category.parent_id
       json.rank category.rank
       json.children do
