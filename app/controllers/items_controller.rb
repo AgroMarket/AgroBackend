@@ -16,7 +16,12 @@ class ItemsController < ApplicationController
   # POST /items
   # POST /items.json
   def create
-    @item = Item.new(item_params)
+    if item_exist?
+      @item.quantity += params[:item][:quantity]
+    else
+      params[:item][:cart_id] = params[:cart_id]
+      @item = Item.new(item_params)
+    end
 
     if @item.save
       @cart = @item.cart
@@ -33,7 +38,9 @@ class ItemsController < ApplicationController
   # PATCH/PUT /items/1
   # PATCH/PUT /items/1.json
   def update
-    if @item.update(item_params)
+    if params[:item][:quantity].to_i.zero?
+      destroy
+    elsif @item.update(item_params)
       @cart = @item.cart
       build do
         message 'Новый товар в корзине'
@@ -48,7 +55,21 @@ class ItemsController < ApplicationController
   # DELETE /items/1
   # DELETE /items/1.json
   def destroy
-    @item.destroy
+    if @item.destroy
+      if @item.cart.items.present?
+        build do
+          message 'Удаление товара из корзины'
+          view 'items/delete'
+        end
+      else
+        @cart = @item.cart
+        @cart.destroy
+        build do
+          message 'Удаление корзины'
+          view 'carts/delete'
+        end
+      end
+    end
   end
 
   private
@@ -60,5 +81,9 @@ class ItemsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def item_params
       params.require(:item).permit(:cart_id, :user_id, :product_id, :quantity)
+    end
+
+    def item_exist?
+      @item = Item.find_by(cart_id: params[:cart_id], product_id: params[:item][:product_id])
     end
 end
