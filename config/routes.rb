@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   scope :api do
     post 'login' => 'user_token#create'
-    devise_for :users, defaults: { format: :json }
+    devise_for :users,
+               controllers: { registrations: 'users/registrations' },
+               defaults: { format: :json }
 
     # PUBLIC
 
@@ -25,6 +27,7 @@ Rails.application.routes.draw do
     resources :carts, only: %i[index show create update] do
       resources :items
     end
+
 
 
     # CLIENT
