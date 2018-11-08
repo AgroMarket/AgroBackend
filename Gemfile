@@ -43,9 +43,9 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'cucumber', '~> 3.1', '>= 3.1.2'
   gem 'rspec-rails', '~> 3.8'
-  gem 'fabrication', '~> 2.20', '>= 2.20.1'
+  #gem 'fabrication', '~> 2.20', '>= 2.20.1'
   gem 'capybara', '~> 3.9'
-  gem 'factory_bot_rails'
+  #gem 'factory_bot_rails'
   gem 'shoulda-matchers', '4.0.0.rc1'
   gem 'rails-controller-testing'
   gem 'database_cleaner'
