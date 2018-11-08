@@ -75,6 +75,18 @@ ActiveRecord::Schema.define(version: 2018_11_07_172605) do
     t.index ["user_id"], name: "index_farmers_on_user_id"
   end
 
+  create_table "items", force: :cascade do |t|
+    t.bigint "cart_id"
+    t.bigint "user_id"
+    t.bigint "product_id"
+    t.integer "quantity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cart_id"], name: "index_items_on_cart_id"
+    t.index ["product_id"], name: "index_items_on_product_id"
+    t.index ["user_id"], name: "index_items_on_user_id"
+  end
+
   create_table "orders", force: :cascade do |t|
     t.integer "quantity"
     t.integer "total_price"
@@ -154,9 +166,4 @@ ActiveRecord::Schema.define(version: 2018_11_07_172605) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
-  add_foreign_key "cart_products", "carts"
-  add_foreign_key "cart_products", "products"
-  add_foreign_key "carts", "users"
-  add_foreign_key "orders", "farmers"
-  add_foreign_key "orders", "users"
 end

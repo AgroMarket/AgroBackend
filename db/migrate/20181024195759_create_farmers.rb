@@ -4,7 +4,7 @@ class CreateFarmers < ActiveRecord::Migration[5.2]
       t.string :inn
       t.text :description
       t.string :address
-      t.references :user, default: nil
+      t.references :user, index: true, default: nil
 
       t.timestamps
     end
