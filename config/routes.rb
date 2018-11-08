@@ -22,7 +22,9 @@ Rails.application.routes.draw do
     end
 
     # Carts
-    resources :carts, only: %i[show create update]
+    resources :carts, only: %i[index show create update] do
+      resources :items
+    end
 
 
     # CLIENT
