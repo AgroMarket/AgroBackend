@@ -1,2 +1,2 @@
-json.deleted true
-json.cart_id @item.id
+json.cart "deleted"
+json.cart_id @cart.id
