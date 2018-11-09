@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   scope :api do
+    resources :consumers
+
     post 'login' => 'user_token#create'
     devise_for :users,
                controllers: { registrations: 'users/registrations' },

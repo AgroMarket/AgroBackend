@@ -1,0 +1,2 @@
+class Consumer < User
+end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_09_004854) do
+ActiveRecord::Schema.define(version: 2018_11_09_164049) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,10 @@ ActiveRecord::Schema.define(version: 2018_11_09_004854) do
     t.integer "rank", default: 0, null: false
     t.string "icontype", default: ""
     t.index ["parent_id"], name: "index_categories_on_parent_id"
+  end
+
+  create_table "consumers", force: :cascade do |t|
+    t.string "phome"
   end
 
   create_table "farmers", force: :cascade do |t|
@@ -155,6 +159,7 @@ ActiveRecord::Schema.define(version: 2018_11_09_004854) do
     t.string "telephone"
     t.text "description"
     t.string "image"
+    t.string "type"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
