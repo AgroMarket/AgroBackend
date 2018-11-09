@@ -6,6 +6,13 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
+def missing_png
+  {
+    io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"),
+    filename: 'missing.png'
+  }
+end
+
 User.destroy_all
 Category.destroy_all
 Product.destroy_all
@@ -28,6 +35,8 @@ users = 5.times.map do
   }
 end
 User.create! users
+
+User.all.each { |user| user.image.attach missing_png }
 
 u = User.first
 u.roles = Role.all
@@ -144,7 +153,6 @@ Category.where(parent_id: 0).each do |parent|
           description: FFaker::HipsterIpsum.paragraph,
           category: category,
           messures: "кг",
-         # image: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"),
           rank: idx + 1,
           price: rand(1..10),
           farmer: farmers.sample
@@ -156,7 +164,7 @@ end
 
 products = Product.all
 products.each do |pr|
-  pr.image.attach(io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"), filename: 'missing.png')
+  pr.image.attach missing_png
 end
 
 # cart

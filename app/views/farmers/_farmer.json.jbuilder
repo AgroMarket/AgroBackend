@@ -5,7 +5,7 @@ json.link farmer_path farmer.id
 json.id farmer.id
 json.name farmer.user.name
 json.email farmer.user.email
-json.image farmer.user.image
+json.image url_for(farmer.user.image)
 json.descripion farmer.description
 json.phone farmer.user.telephone
 json.address farmer.address
