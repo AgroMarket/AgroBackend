@@ -36,7 +36,7 @@ users = 5.times.map do
 end
 User.create! users
 
-User.all.each { |user| user.image.attach missing_png }
+# User.all.each { |user| user.image.attach missing_png }
 
 u = User.first
 u.roles = Role.all
