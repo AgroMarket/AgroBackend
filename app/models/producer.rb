@@ -1,0 +1,2 @@
+class Producer < Consumer
+end

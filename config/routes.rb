@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   scope :api do
     resources :consumers
+    resources :producers
 
     post 'login' => 'user_token#create'
     devise_for :users,
