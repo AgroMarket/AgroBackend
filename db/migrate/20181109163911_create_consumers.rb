@@ -1,7 +1,8 @@
 class CreateConsumers < ActiveRecord::Migration[5.2]
   def change
-    create_table :consumers do |t|
-      t.string :phome
+    change_table :users do |t|
+      t.remove :telephone
+      t.string :phone
     end
   end
 end

@@ -65,10 +65,6 @@ ActiveRecord::Schema.define(version: 2018_11_10_202731) do
     t.index ["parent_id"], name: "index_categories_on_parent_id"
   end
 
-  create_table "consumers", force: :cascade do |t|
-    t.string "phome"
-  end
-
   create_table "farmers", force: :cascade do |t|
     t.string "inn"
     t.text "description"
@@ -158,9 +154,9 @@ ActiveRecord::Schema.define(version: 2018_11_10_202731) do
     t.datetime "updated_at", null: false
     t.string "name"
     t.string "address"
-    t.string "telephone"
     t.text "description"
     t.string "image"
+    t.string "phone"
     t.string "type"
     t.string "logo"
     t.string "brand"
