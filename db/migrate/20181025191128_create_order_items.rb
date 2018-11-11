@@ -1,5 +1,13 @@
-class AddOrderToItems < ActiveRecord::Migration[5.2]
+class CreateOrderItems < ActiveRecord::Migration[5.2]
   def change
-    add_reference :items, :order, index: true
+    create_table :order_items do |t|
+      t.references :order, index: true
+      t.references :product, index: true
+      t.integer :price
+      t.integer :quantity
+      t.integer :sum
+
+      t.timestamps
+    end
   end
 end
