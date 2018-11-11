@@ -19,6 +19,30 @@ end
 Consumer.create! consumer
 User.all.each { |user| user.image.attach missing_png }
 
+# Producers
+
+
+# Categories
+
+
+# Products
+
+
+# Carts
+
+
+# CartItems
+
+
+# Orders
+
+
+# OrderItems
+
+
+
+
+
 
 # def missing_png
 #   {
