@@ -1,10 +1,11 @@
 # json.extract! cart, :id, :created_at, :updated_at
 # json.url cart_url(cart, format: :json)
 
-json.id cart.id
-json.user_id cart.user.present? ? cart.user.id : nil
+json.cart_id cart.id
+json.user_id cart.consumer.present? ? cart.consumer.id : nil
 json.products do
-  json.array! cart.items do |item|
+  json.array! cart.cart_items do |item|
+    json.tooltip "Поле cart_item_id это айдишник записи о товаре в корзине"
     json.cart_item_id item.id
     json.product_name item.product.name
     json.product_price item.product.price

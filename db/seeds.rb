@@ -5,6 +5,9 @@ require 'category_names'
 Consumer.destroy_all
 Producer.destroy_all
 Category.destroy_all
+Product.destroy_all
+Cart.destroy_all
+# Order.destroy_all
 
 def missing_png
   { io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"), filename: 'missing.png' }
@@ -64,17 +67,28 @@ Category.where(parent_id: 0).each_with_index do |parent, idx|
         producer: Producer.find_by(email: "farmer#{idx+1}@mail.ru"),
         category: category
       }
-      # p product
       Product.create! product
     end
   end
 end
 
 # Carts
-
+cart = Cart.create! consumer: Consumer.first
+p cart.id
 
 # CartItems
-
+Producer.first(4).each do |producer|
+  producer.products.first(3).each do |product|
+    quantity = 2
+    cart_item = {
+      cart: cart,
+      product: product,
+      quantity: quantity,
+      sum: product.price * quantity
+    }
+    cart.cart_items << CartItem.create!(cart_item)
+  end
+end
 
 # Orders
 

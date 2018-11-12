@@ -28,7 +28,7 @@ Rails.application.routes.draw do
 
     # Carts
     resources :carts, only: %i[index show create update] do
-      resources :items
+      resources :cart_items
     end
 
 
