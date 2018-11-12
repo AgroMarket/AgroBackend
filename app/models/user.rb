@@ -1,14 +1,12 @@
 class User < ApplicationRecord
-  # validates :name, presence: true
-
   rolify
 
-  has_one :farmer
-  has_many :orders, dependent: :destroy
-  has_one :cart, dependent: :destroy
+  # has_one :farmer
+  # has_many :orders, dependent: :destroy
+  # has_one :cart, dependent: :destroy
   # has_one_attached :image
 
-  after_create :assign_default_role
+  # after_create :assign_default_role
 
   # before_create :skip_confirmation_notification!
   # before_update :skip_confirmation_notification!
@@ -27,8 +25,8 @@ class User < ApplicationRecord
 
   private
 
-  def assign_default_role
-    self.add_role(:customer) if self.roles.blank?
-  end
+  # def assign_default_role
+  #   self.add_role(:customer) if self.roles.blank?
+  # end
 
 end

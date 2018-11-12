@@ -1,10 +1,12 @@
+require 'category_names'
+
 # frozen_string_literal: true
 
 Consumer.destroy_all
+Category.destroy_all
 
 def missing_png
-  { io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"),
-    filename: 'missing.png' }
+  { io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"), filename: 'missing.png' }
 end
 
 # Consumers
@@ -19,11 +21,30 @@ end
 Consumer.create! consumer
 User.all.each { |user| user.image.attach missing_png }
 
-# Producers
-
+# Producer
+9.times.each do |i|
+  producer = { email: "farmer#{i}@mail.ru",
+    password: '12341234',
+    name: "farmer#{i}",
+    phone: FFaker::PhoneNumber.short_phone_number,
+    address: FFaker::AddressRU.city,
+    description: FFaker::HipsterIpsum.paragraph,
+    producer_logo: "",
+    producer_brand: "Farmer#{i}",
+    }
+end
 
 # Categories
-
+category_names = CategoryNames::ALL
+category_names.each_with_index do |category_name, idx|
+  category = Category.create! name: category_name[:name], icontype: category_name[:icontype], parent_id: 0, rank: idx + 1
+  category_name[:children].each_with_index do |sub_name, sub_idx|
+    category.children << Category.create!(name: sub_name[:name], parent_id: category.id, rank: sub_idx + 1)
+  end
+end
+Category.where(parent_id: 0).each do |category|
+  category.icon.attach(io: File.open("#{Rails.root}/app/assets/images/icons/#{category.icontype}.png"), filename: "#{category.icontype}.png")
+end
 
 # Products
 
