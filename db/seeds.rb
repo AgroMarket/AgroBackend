@@ -3,6 +3,7 @@ require 'category_names'
 # frozen_string_literal: true
 
 Consumer.destroy_all
+Producer.destroy_all
 Category.destroy_all
 
 def missing_png
@@ -22,7 +23,7 @@ Consumer.create! consumer
 User.all.each { |user| user.image.attach missing_png }
 
 # Producer
-9.times.each do |i|
+(1..12).each do |i|
   producer = { email: "farmer#{i}@mail.ru",
     password: '12341234',
     name: "farmer#{i}",
@@ -31,7 +32,11 @@ User.all.each { |user| user.image.attach missing_png }
     description: FFaker::HipsterIpsum.paragraph,
     producer_logo: "",
     producer_brand: "Farmer#{i}",
-    }
+    producer_address: FFaker::AddressRU.city,
+    producer_phone: FFaker::PhoneNumber.short_phone_number,
+    producer_description: FFaker::HipsterIpsum.paragraph,
+    producer_inn: rand(100000000..999999999).to_s }
+  Producer.create! producer
 end
 
 # Categories
@@ -47,7 +52,23 @@ Category.where(parent_id: 0).each do |category|
 end
 
 # Products
-
+Category.where(parent_id: 0).each_with_index do |parent, idx|
+  parent.children.each do |category|
+    12.times.each do |i|
+      product = {
+        name: "#{category.name} №#{i + 1}",
+        description: FFaker::HipsterIpsum.paragraph,
+        measures: "кг",
+        price: rand(100..1000),
+        rank: i + 1,
+        producer: Producer.find_by(email: "farmer#{idx+1}@mail.ru"),
+        category: category
+      }
+      # p product
+      Product.create! product
+    end
+  end
+end
 
 # Carts
 
