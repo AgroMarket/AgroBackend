@@ -56,19 +56,19 @@ class ItemsController < ApplicationController
   # DELETE /items/1.json
   def destroy
     if @item.destroy
-      if @item.cart.items.present?
+      # if @item.cart.items.present?
         build do
           message 'Удаление товара из корзины'
           view 'items/delete'
         end
-      else
-        @cart = @item.cart
-        @cart.destroy
-        build do
-          message 'Удаление корзины'
-          view 'carts/delete'
-        end
-      end
+      # else
+        # @cart = @item.cart
+        # @cart.destroy
+        # build do
+          # message 'Удаление корзины'
+          # view 'carts/delete'
+        # end
+      # end
     end
   end
 
