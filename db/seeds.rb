@@ -41,6 +41,7 @@ User.all.each { |user| user.image.attach missing_png }
     producer_inn: rand(100000000..999999999).to_s }
   Producer.create! producer
 end
+Producer.all.each { |producer| producer.logo.attach missing_png }
 
 # Categories
 category_names = CategoryNames::ALL
@@ -71,6 +72,7 @@ Category.where(parent_id: 0).each_with_index do |parent, idx|
     end
   end
 end
+Product.all.each { |product| product.image.attach missing_png }
 
 # Carts
 cart = Cart.create! consumer: Consumer.first
@@ -102,12 +104,12 @@ end
 # puts 'cart end'
 # puts ''
 
-cart.calculate_order_total
+# cart.calculate_cart_total
 
 # Orders
 cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
   # для каждого производителя находим в корзине его товары и формируем из них заказ
-  # puts "farmer_id #{producer.id}, farmer_name #{producer.name}"
+  puts "farmer_id #{producer.id}, farmer_name #{producer.name}"
 
   # создаем заказ
   order_hash = {
@@ -132,12 +134,12 @@ cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
       }
 
       order_item = OrderItem.create!(order_item_hash)
-      # order_id = order_item.order.id
-      # farmer_id = order_item.producer.id
-      # farmer_name = order_item.producer.name
-      # product_id = order_item.product.id
-      # product_name = order_item.product.name
-      # puts "  order_id #{order_id} farmer_id #{farmer_id} farmer_name #{farmer_name} product_id #{product_id} product_name #{product_name}"
+      order_id = order_item.order.id
+      farmer_id = order_item.producer.id
+      farmer_name = order_item.producer.name
+      product_id = order_item.product.id
+      product_name = order_item.product.name
+      puts "  order_id #{order_id} farmer_id #{farmer_id} farmer_name #{farmer_name} product_id #{product_id} product_name #{product_name}"
       order.order_items << order_item
       # p order.save
     end
@@ -146,7 +148,13 @@ cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
 end
 cart.destroy
 
-
+# Pages
+Page.create! name: 'main',      title: 'Ferma Store',       content: 'Текст'
+Page.create! name: 'about',     title: 'О нас',             content: 'Текст'
+Page.create! name: 'sellers',   title: 'Продавцам',         content: 'Текст'
+Page.create! name: 'buyers',    title: 'Покупателям',       content: 'Текст'
+Page.create! name: 'delivery',  title: 'Доставка и оплата', content: 'Текст'
+Page.create! name: 'basket',    title: 'Корзина',           content: 'Текст'
 
 # def missing_png
 #   {
