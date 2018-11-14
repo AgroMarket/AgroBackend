@@ -5,4 +5,4 @@ json.api page_path page.id
 json.id page.id
 json.name page.name
 json.title page.title
-json.content page.content
+# json.content page.content
