@@ -7,7 +7,7 @@ Producer.destroy_all
 Category.destroy_all
 Product.destroy_all
 Cart.destroy_all
-# Order.destroy_all
+Order.destroy_all
 
 def missing_png
   { io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"), filename: 'missing.png' }
@@ -33,7 +33,7 @@ User.all.each { |user| user.image.attach missing_png }
     phone: FFaker::PhoneNumber.short_phone_number,
     address: FFaker::AddressRU.city,
     description: FFaker::HipsterIpsum.paragraph,
-    producer_logo: "",
+    producer_logo: '',
     producer_brand: "Farmer#{i}",
     producer_address: FFaker::AddressRU.city,
     producer_phone: FFaker::PhoneNumber.short_phone_number,
@@ -61,7 +61,7 @@ Category.where(parent_id: 0).each_with_index do |parent, idx|
       product = {
         name: "#{category.name} №#{i + 1}",
         description: FFaker::HipsterIpsum.paragraph,
-        measures: "кг",
+        measures: 'кг',
         price: rand(100..1000),
         rank: i + 1,
         producer: Producer.find_by(email: "farmer#{idx+1}@mail.ru"),
@@ -74,7 +74,6 @@ end
 
 # Carts
 cart = Cart.create! consumer: Consumer.first
-p cart.id
 
 # CartItems
 Producer.first(4).each do |producer|
@@ -83,6 +82,7 @@ Producer.first(4).each do |producer|
     cart_item = {
       cart: cart,
       product: product,
+      producer: producer,
       quantity: quantity,
       sum: product.price * quantity
     }
@@ -90,13 +90,61 @@ Producer.first(4).each do |producer|
   end
 end
 
+# puts 'cart start'
+# cart.cart_items.each do |item|
+#   cart_id = item.cart.id
+#   farmer_id = item.product.producer.id
+#   farmer = item.product.producer.name
+#   product_id = item.product.id
+#   product = item.product.name
+#   puts "  cart_id #{cart_id} farmer_id #{farmer_id} farmer_name #{farmer} product_id #{product_id} product_name #{product}"
+# end
+# puts 'cart end'
+# puts ''
+
+cart.calculate_order_total
+
 # Orders
+cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
+  # для каждого производителя находим в корзине его товары и формируем из них заказ
+  # puts "farmer_id #{producer.id}, farmer_name #{producer.name}"
 
+  # создаем заказ
+  order_hash = {
+    consumer: cart.consumer,
+    producer: producer,
+    total: cart.total,
+    status: 1
+  }
+  order = Order.create!(order_hash)
 
-# OrderItems
+  # если заказ создан, то наполняем его товарами
+  if order.present?
+    # выбираем из корзины записи относящиеся только к данному производителю
+    CartItem.where(cart: cart, producer: producer).each do |cart_item|
+      order_item_hash = {
+        order: order,
+        product: cart_item.product,
+        producer: producer,
+        price: cart_item.product.price,
+        quantity: cart_item.quantity,
+        sum: cart_item.sum
+      }
 
+      order_item = OrderItem.create!(order_item_hash)
+      # order_id = order_item.order.id
+      # farmer_id = order_item.producer.id
+      # farmer_name = order_item.producer.name
+      # product_id = order_item.product.id
+      # product_name = order_item.product.name
+      # puts "  order_id #{order_id} farmer_id #{farmer_id} farmer_name #{farmer_name} product_id #{product_id} product_name #{product_name}"
+      order.order_items << order_item
+      # p order.save
+    end
 
-
+  end
+end
+cart.destroy
 
 
 
