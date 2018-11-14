@@ -1,13 +1,34 @@
 class Consumer::OrdersController < ApplicationController
   before_action :set_order, only: [:show, :update, :destroy]
+  include Paginable
   include Exceptable
 
   # GET /orders
   # GET /orders.json
   def index
+    @paginanation = nil
+
     build do
-      message 'Покупки пользователя'
-      orders Order.where(consumer_id: current_user.id)
+
+      if params[:scope] == "pending"
+        message 'Покупки ожидающие ответа продавца'
+        orders Order.where(consumer_id: current_user.id, status: 0)
+
+      elsif params[:scope] == "close"
+        message 'Завершенные покупки пользователя'
+        orders Order.where(consumer_id: current_user.id, status: 1)
+
+      elsif params[:scope] == "reject"
+        message 'Отклоненные покупки'
+        orders Order.where(consumer_id: current_user.id, status: 2)
+
+      else
+        message 'Покупки пользователя'
+        orders Order.where(consumer_id: current_user.id)
+      end
+
+        path consumer_orders_path
+        @orders = paginate @orders
       view 'consumer/orders/index'
     end
   end
@@ -15,17 +36,26 @@ class Consumer::OrdersController < ApplicationController
   # GET /orders/1
   # GET /orders/1.json
   def show
+    build do
+      message 'Данные о покупке'
+      view 'consumer/orders/show'
+    end
   end
 
   # POST /orders
   # POST /orders.json
   def create
-    if Order.create_orders_from_cart(params[:cart_id])
+    if params[:order][:id]
+      build do
+        message 'Повторый заказ'
+        order Order.create_order_from_order(params[:order][:id])
+        view 'consumer/orders/show'
+      end
+    elsif Order.create_orders_from_cart(params[:cart_id])
       build do
         message 'Создание заказов'
-        view 'orders/create'
+        view 'consumer/orders/create'
       end
-      # render :show, status: :created, location: @order
     else
       render json: @order.errors, status: :unprocessable_entity
     end
@@ -44,7 +74,12 @@ class Consumer::OrdersController < ApplicationController
   # DELETE /orders/1
   # DELETE /orders/1.json
   def destroy
-    @order.destroy
+    if @order.destroy
+      build do
+        message 'Удаление заказа'
+        view 'consumer/orders/delete'
+      end
+    end
   end
 
   private
