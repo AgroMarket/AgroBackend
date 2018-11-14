@@ -1,17 +1,22 @@
 Rails.application.routes.draw do
   scope :api do
-    resources :consumers
-    resources :producers
-
     post 'login' => 'user_token#create'
     devise_for :users,
                controllers: { registrations: 'users/registrations' },
                defaults: { format: :json }
-
     # PUBLIC
 
     # Pages
     resources :pages
+
+    # Consumers
+    # get 'consumer/orders' => 'orders#index'
+    resources :consumers
+
+    # Producers
+    resources :producers, only: :show do
+      resources :products, only: :index
+    end
 
     # Categories
     resources :categories, only: [:index, :show] do
@@ -21,14 +26,10 @@ Rails.application.routes.draw do
     # Products
     resources :products
 
-    # Farmers
-    resources :farmers, only: :show do
-      resources :products, only: :index
-    end
-
     # Carts
-    resources :carts, only: %i[index show create update] do
+    resources :carts, only: %i[index show create update destroy] do
       resources :cart_items
+      resources :orders, only: :create
     end
 
     # Orders
@@ -37,7 +38,9 @@ Rails.application.routes.draw do
     end
 
     # CLIENT
-
+    namespace :consumer do
+      resources :orders, only: %i[index show]
+    end
 
     # FARMER
 
