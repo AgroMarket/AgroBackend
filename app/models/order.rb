@@ -3,7 +3,7 @@ class Order < ApplicationRecord
   belongs_to :producer
   has_many :order_items, dependent: :destroy
 
-  enum status: %i[pending complеted rejected]
+  enum status: %i[Ожидает Выполнен Отклонен]
 
   def self.create_orders_from_cart(cart_id)
   	cart = Cart.find(cart_id)
@@ -11,7 +11,6 @@ class Order < ApplicationRecord
       order_hash = {
         consumer: cart.consumer,
         producer: producer,
-        total: cart.total,
         status: 1
       }
       order = Order.create!(order_hash)
@@ -29,11 +28,27 @@ class Order < ApplicationRecord
 
           order_item = OrderItem.create!(order_item_hash)
           order.order_items << order_item
+          order.total += order_item.product.price
         end
       end
     end
     
     # cart.destroy if order.present?
     true
+  end
+
+  def self.create_order_from_order(order_id)
+    old_order = Order.find(order_id)
+    new_order = old_order.dup
+    new_order.status = 0
+    new_order.save
+
+    old_order.order_items.each do |item|
+      old_item = item
+      new_item = old_item.dup
+      new_item.order = new_order
+      new_item.save
+    end
+    new_order
   end
 end
