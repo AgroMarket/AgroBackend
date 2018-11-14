@@ -21,7 +21,7 @@ class CartsController < ApplicationController
   # POST /carts.json
   def create
     @cart = Cart.new(cart_params)
-    @cart.user = current_user if current_user.present?
+    @cart.consumer = current_user if current_user.present?
 
     if @cart.save
       build do
@@ -46,7 +46,12 @@ class CartsController < ApplicationController
   # DELETE /carts/1
   # DELETE /carts/1.json
   def destroy
-    @cart.destroy
+    if @cart.destroy
+      build do
+        message 'Удаление корзины'
+        view 'carts/delete'
+      end
+    end
   end
 
   private
