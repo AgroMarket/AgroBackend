@@ -39,11 +39,13 @@ ActiveRecord::Schema.define(version: 2018_11_05_174233) do
   create_table "cart_items", force: :cascade do |t|
     t.bigint "cart_id"
     t.bigint "product_id"
+    t.bigint "producer_id"
     t.integer "quantity"
     t.integer "sum"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cart_id"], name: "index_cart_items_on_cart_id"
+    t.index ["producer_id"], name: "index_cart_items_on_producer_id"
     t.index ["product_id"], name: "index_cart_items_on_product_id"
   end
 
@@ -69,20 +71,22 @@ ActiveRecord::Schema.define(version: 2018_11_05_174233) do
   create_table "order_items", force: :cascade do |t|
     t.bigint "order_id"
     t.bigint "product_id"
+    t.bigint "producer_id"
     t.integer "price"
     t.integer "quantity"
     t.integer "sum"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_order_items_on_order_id"
+    t.index ["producer_id"], name: "index_order_items_on_producer_id"
     t.index ["product_id"], name: "index_order_items_on_product_id"
   end
 
   create_table "orders", force: :cascade do |t|
     t.bigint "consumer_id"
     t.bigint "producer_id"
-    t.integer "total"
-    t.integer "status"
+    t.integer "total", default: 0, null: false
+    t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["consumer_id"], name: "index_orders_on_consumer_id"
