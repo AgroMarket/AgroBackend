@@ -31,7 +31,10 @@ Rails.application.routes.draw do
       resources :cart_items
     end
 
-
+    # Orders
+    resources :orders, only: %i[index show create update] do
+      resources :order_items
+    end
 
     # CLIENT
 
