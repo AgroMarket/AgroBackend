@@ -17,7 +17,7 @@ class Product < ApplicationRecord
       Product.by_category category_id
     end
   end
-  scope :by_farmer, ->(farmer_id) { where farmer_id: farmer_id }
+  scope :by_producer, ->(producer_id) { where producer_id: producer_id }
   scope :search, ->(string) { where('LOWER(name) LIKE ?', "%#{string.downcase}%") }
   scope :samples, -> { find(pluck(:id).sample(8)) }
 end
