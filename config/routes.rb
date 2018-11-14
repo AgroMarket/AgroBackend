@@ -39,7 +39,7 @@ Rails.application.routes.draw do
 
     # CLIENT
     namespace :consumer do
-      resources :orders, only: %i[index show]
+      resources :orders, only: %i[index show create destroy]
     end
 
     # FARMER
