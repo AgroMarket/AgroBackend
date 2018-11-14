@@ -21,6 +21,10 @@ module Exceptable
     @products = products
   end
 
+  def orders(orders)
+    @orders = orders
+  end
+
   def path(path)
     @path = path
   end
