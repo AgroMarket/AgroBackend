@@ -64,7 +64,10 @@ class Producer::OrdersController < ApplicationController
   # PATCH/PUT /orders/1.json
   def update
     if @order.update(order_params)
-      render :show, status: :ok, location: @order
+      build do
+        message 'Редактирование заказа'
+        view 'producer/orders/show'
+      end
     else
       render json: @order.errors, status: :unprocessable_entity
     end
@@ -89,6 +92,6 @@ class Producer::OrdersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def order_params
-      params.fetch(:order, {})
+      params.require(:order).permit(:status)
     end
 end
