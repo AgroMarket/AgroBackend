@@ -12,23 +12,23 @@ class Consumer::OrdersController < ApplicationController
 
       if params[:scope] == "pending"
         message 'Покупки ожидающие ответа продавца'
-        orders Order.where(consumer_id: current_user.id, status: 0)
+        orders Order.where(consumer_id: current_user.id, status: 0).order(:created_at)
 
       elsif params[:scope] == "close"
         message 'Завершенные покупки пользователя'
-        orders Order.where(consumer_id: current_user.id, status: 1)
+        orders Order.where(consumer_id: current_user.id, status: 1).order(:created_at)
 
       elsif params[:scope] == "reject"
         message 'Отклоненные покупки'
-        orders Order.where(consumer_id: current_user.id, status: 2)
+        orders Order.where(consumer_id: current_user.id, status: 2).order(:created_at)
 
       else
         message 'Покупки пользователя'
-        orders Order.where(consumer_id: current_user.id)
+        orders Order.where(consumer_id: current_user.id).order(:created_at)
       end
 
-        path consumer_orders_path
-        @orders = paginate @orders
+      path consumer_orders_path
+      @orders = paginate @orders
       view 'consumer/orders/index'
     end
   end
