@@ -29,6 +29,10 @@ module Exceptable
     @order = order
   end
 
+  def producers(producers)
+    @producers = producers
+  end
+
   def path(path)
     @path = path
   end
