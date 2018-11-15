@@ -1,61 +1,49 @@
 Rails.application.routes.draw do
   scope :api do
+     
+    # DEVISE
+    devise_for :users, controllers: { registrations: 'users/registrations' }, defaults: { format: :json }
+    
+    # AUTH
+    post 'login' => 'user_token#create'
+    
     # PRODUCER
     namespace :producer do
       resources :products
-      resources :orders, only: %i[index show update]
+      resources :orders, only: %i[index show update] do
+        resources :order_items, only: %i[index]
+      end
       resources :consumers, only: %i[index]
       get 'profile' => 'producers#show'
       put 'profile' => 'producers#update'
     end
 
-    # CLIENT
+    # CONSUMER
     namespace :consumer do
-      resources :orders, only: %i[index show create destroy]
+      resources :orders, only: %i[index show create destroy] do
+        resources :order_items, only: %i[index create destroy]
+      end
       resources :producers, only: :index
       get 'profile' => 'consumers#show'
       put 'profile' => 'consumers#update'
     end
-     
-    post 'login' => 'user_token#create'
-    devise_for :users,
-               controllers: { registrations: 'users/registrations' },
-               defaults: { format: :json }
-    # PUBLIC
 
-    # Pages
-    resources :pages
-
-    # Consumers
-    # get 'consumer/orders' => 'orders#index'
-    resources :consumers
-
-    # Producers
-    resources :producers, only: :show do
-      resources :products, only: :index
+    # GUEST
+    resources :pages, only: %i[index show]
+    resources :consumers, only: %i[index show]
+    resources :producers, only: %i[show] do
+      resources :products, only: %i[index]
     end
-
-    # Categories
-    resources :categories, only: [:index, :show] do
-      resources :products, only: :index
+    resources :categories, only: %i[index show] do
+      resources :products, only: %i[index]
     end
-
-    # Products
-    resources :products
-
-    # Carts
+    resources :products, only: %i[index show]
     resources :carts, only: %i[index show create update destroy] do
-      resources :cart_items
-      resources :orders, only: :create
+      resources :cart_items, %i[index show create update destroy]
+      resources :orders, only: %i[create]
     end
-
-    # Orders
-    resources :orders, only: %i[index show create update] do
-      resources :order_items
-    end
-
-
-
-
+    # resources :orders, only: %i[index show create update] do
+    #   resources :order_items
+    # end
   end
 end
