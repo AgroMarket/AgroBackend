@@ -10,9 +10,8 @@ class Producer::ConsumersController < ApplicationController
 
     build do
       message 'Список покупателей'
-      consumers = current_user.consumers.distinct
+      @consumers = paginate current_user.consumers.distinct
       view 'producer/consumers/index'
-      @consumers = paginate @consumers
     end
   end
 
