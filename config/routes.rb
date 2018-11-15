@@ -5,6 +5,16 @@ Rails.application.routes.draw do
       resources :products
       resources :orders, only: %i[index show update]
       resources :consumers, only: %i[index]
+      get 'profile' => 'producers#show'
+      put 'profile' => 'producers#update'
+    end
+
+    # CLIENT
+    namespace :consumer do
+      resources :orders, only: %i[index show create destroy]
+      resources :producers, only: :index
+      get 'profile' => 'consumers#show'
+      put 'profile' => 'consumers#update'
     end
      
     post 'login' => 'user_token#create'
@@ -42,14 +52,6 @@ Rails.application.routes.draw do
     # Orders
     resources :orders, only: %i[index show create update] do
       resources :order_items
-    end
-
-    # CLIENT
-    namespace :consumer do
-      resources :orders, only: %i[index show create destroy]
-      resources :producers, only: :index
-      get 'profile' => 'consumers#show'
-      put 'profile' => 'consumers#update'
     end
 
 
