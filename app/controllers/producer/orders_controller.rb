@@ -1,4 +1,4 @@
-class Consumer::OrdersController < ApplicationController
+class Producer::OrdersController < ApplicationController
   before_action :set_order, only: [:show, :update, :destroy]
   include Paginable
   include Exceptable
@@ -9,27 +9,26 @@ class Consumer::OrdersController < ApplicationController
     @paginanation = nil
 
     build do
-
       if params[:scope] == "pending"
-        message 'Покупки ожидающие ответа продавца'
-        orders Order.where(consumer_id: current_user.id, status: 0).order(:created_at)
+        message 'Новые заказы'
+        orders Order.where(producer_id: current_user.id, status: 0).order(:created_at)
 
       elsif params[:scope] == "close"
-        message 'Завершенные покупки пользователя'
-        orders Order.where(consumer_id: current_user.id, status: 1).order(:created_at)
+        message 'Выполненные заказы'
+        orders Order.where(producer_id: current_user.id, status: 1).order(:created_at)
 
       elsif params[:scope] == "reject"
-        message 'Отклоненные покупки'
-        orders Order.where(consumer_id: current_user.id, status: 2).order(:created_at)
+        message 'Отклоненные заказы'
+        orders Order.where(producer_id: current_user.id, status: 2).order(:created_at)
 
       else
-        message 'Покупки пользователя'
-        orders Order.where(consumer_id: current_user.id).order(:created_at)
+        message 'Продажи производителя'
+        orders Order.where(producer_id: current_user.id).order(:created_at)
       end
 
       path consumer_orders_path
       @orders = paginate @orders
-      view 'consumer/orders/index'
+      view 'producer/orders/index'
     end
   end
 
@@ -38,7 +37,7 @@ class Consumer::OrdersController < ApplicationController
   def show
     build do
       message 'Данные о покупке'
-      view 'consumer/orders/show'
+      view 'producer/orders/show'
     end
   end
 
@@ -49,12 +48,12 @@ class Consumer::OrdersController < ApplicationController
       build do
         message 'Повторый заказ'
         order Order.create_order_from_order(params[:order][:id])
-        view 'consumer/orders/show'
+        view 'producer/orders/show'
       end
     elsif Order.create_orders_from_cart(params[:cart_id])
       build do
         message 'Создание заказов'
-        view 'consumer/orders/create'
+        view 'producer/orders/create'
       end
     else
       render json: @order.errors, status: :unprocessable_entity
@@ -77,7 +76,7 @@ class Consumer::OrdersController < ApplicationController
     if @order.destroy
       build do
         message 'Удаление заказа'
-        view 'consumer/orders/delete'
+        view 'producer/orders/delete'
       end
     end
   end
