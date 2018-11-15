@@ -115,7 +115,6 @@ cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
   order_hash = {
     consumer: cart.consumer,
     producer: producer,
-    total: cart.total,
     status: 1
   }
   order = Order.create!(order_hash)
@@ -139,9 +138,14 @@ cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
       farmer_name = order_item.producer.name
       product_id = order_item.product.id
       product_name = order_item.product.name
-      puts "  order_id #{order_id} farmer_id #{farmer_id} farmer_name #{farmer_name} product_id #{product_id} product_name #{product_name}"
+      price = order_item.price
+      quantity = order_item.quantity
+      sum = order_item.sum
+      puts "  order_id #{order_id} farmer_id #{farmer_id} farmer_name #{farmer_name} product_id #{product_id} product_name #{product_name} price #{price} quantity #{quantity} sum #{sum}"
       order.order_items << order_item
-      # p order.save
+      order.total += order_item.sum
+      order.save
+      puts "    total #{order.total}"
     end
 
   end
