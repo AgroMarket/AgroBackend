@@ -20,4 +20,8 @@ class Product < ApplicationRecord
   scope :by_producer, ->(producer_id) { where producer_id: producer_id }
   scope :search, ->(string) { where('LOWER(name) LIKE ?', "%#{string.downcase}%") }
   scope :samples, -> { find(pluck(:id).sample(8)) }
+
+  def self.missing_png
+    { io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"), filename: 'missing.png' }
+  end
 end

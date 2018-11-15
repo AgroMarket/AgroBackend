@@ -1,0 +1,15 @@
+json.products do
+  json.array! @products do |product|
+    json.link product_path product.id
+    json.image url_for(product.image)
+    json.title product.name
+    json.measures product.measures
+    json.price product.price
+    json.category_id product.category.id
+    json.producer_id product.producer.id
+    json.id product.id
+    json.rank product.rank
+  end
+end
+
+json.pagination @pagination
