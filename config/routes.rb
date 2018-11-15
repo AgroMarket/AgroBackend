@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     namespace :producer do
       resources :products
       resources :orders, only: %i[index show update]
+      resources :consumers, only: %i[index]
     end
      
     post 'login' => 'user_token#create'

@@ -33,6 +33,10 @@ module Exceptable
     @producers = producers
   end
 
+  def consumers(consumers)
+    @consumers = consumers
+  end
+
   def path(path)
     @path = path
   end
