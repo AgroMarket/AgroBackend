@@ -1,5 +1,11 @@
 Rails.application.routes.draw do
   scope :api do
+    # PRODUCER
+    namespace :producer do
+      resources :products
+      resources :orders, only: %i[index show update]
+    end
+     
     post 'login' => 'user_token#create'
     devise_for :users,
                controllers: { registrations: 'users/registrations' },
@@ -40,10 +46,10 @@ Rails.application.routes.draw do
     # CLIENT
     namespace :consumer do
       resources :orders, only: %i[index show create destroy]
+      resources :producers, only: :index
+      get 'profile' => 'consumers#show'
+      put 'profile' => 'consumers#update'
     end
-
-    # FARMER
-
 
 
 
