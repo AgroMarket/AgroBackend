@@ -1,10 +1,12 @@
 json.orders do
 	json.array! @orders do |order|
-		json.id order.id
-		json.date order.created_at
-		json.status order.status
-		json.link producer_order_path (order.id)
-		json.total order.total
+		json.order do
+			json.id order.id
+			json.date order.created_at
+			json.status order.status
+			json.link producer_order_path (order.id)
+			json.total order.total
+		end
 	end
 end
 
