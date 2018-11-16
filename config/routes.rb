@@ -39,7 +39,7 @@ Rails.application.routes.draw do
     end
     resources :products, only: %i[index show]
     resources :carts, only: %i[index show create update destroy] do
-      resources :cart_items, %i[index show create update destroy]
+      resources :cart_items, only: %i[index show create update destroy]
       resources :orders, only: %i[create]
     end
     # resources :orders, only: %i[index show create update] do
