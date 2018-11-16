@@ -30,7 +30,7 @@ Rails.application.routes.draw do
 
     # GUEST
     resources :pages, only: %i[index show]
-    resources :consumers, only: %i[index show]
+    resources :consumers, only: %i[index show create]
     resources :producers, only: %i[show] do
       resources :products, only: %i[index]
     end
