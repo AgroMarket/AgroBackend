@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_09_004854) do
+ActiveRecord::Schema.define(version: 2018_11_05_174233) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,66 +36,61 @@ ActiveRecord::Schema.define(version: 2018_11_09_004854) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "cart_products", force: :cascade do |t|
+  create_table "cart_items", force: :cascade do |t|
     t.bigint "cart_id"
     t.bigint "product_id"
+    t.bigint "producer_id"
+    t.integer "quantity"
+    t.integer "sum"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["cart_id"], name: "index_cart_products_on_cart_id"
-    t.index ["product_id"], name: "index_cart_products_on_product_id"
+    t.index ["cart_id"], name: "index_cart_items_on_cart_id"
+    t.index ["producer_id"], name: "index_cart_items_on_producer_id"
+    t.index ["product_id"], name: "index_cart_items_on_product_id"
   end
 
   create_table "carts", force: :cascade do |t|
-    t.integer "quantity", default: 1
-    t.bigint "user_id"
-    t.bigint "product_id"
+    t.bigint "consumer_id"
+    t.integer "total"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["product_id"], name: "index_carts_on_product_id"
-    t.index ["user_id"], name: "index_carts_on_user_id"
+    t.index ["consumer_id"], name: "index_carts_on_consumer_id"
   end
 
   create_table "categories", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
+    t.string "icontype", default: ""
+    t.integer "rank", default: 0, null: false
+    t.bigint "parent_id", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "parent_id", default: 0, null: false
-    t.integer "rank", default: 0, null: false
-    t.string "icontype", default: ""
+    t.index ["name"], name: "index_categories_on_name"
     t.index ["parent_id"], name: "index_categories_on_parent_id"
   end
 
-  create_table "farmers", force: :cascade do |t|
-    t.string "inn"
-    t.text "description"
-    t.string "address"
-    t.bigint "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_farmers_on_user_id"
-  end
-
-  create_table "items", force: :cascade do |t|
-    t.bigint "cart_id"
-    t.bigint "user_id"
+  create_table "order_items", force: :cascade do |t|
+    t.bigint "order_id"
     t.bigint "product_id"
+    t.bigint "producer_id"
+    t.integer "price"
     t.integer "quantity"
+    t.integer "sum"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["cart_id"], name: "index_items_on_cart_id"
-    t.index ["product_id"], name: "index_items_on_product_id"
-    t.index ["user_id"], name: "index_items_on_user_id"
+    t.index ["order_id"], name: "index_order_items_on_order_id"
+    t.index ["producer_id"], name: "index_order_items_on_producer_id"
+    t.index ["product_id"], name: "index_order_items_on_product_id"
   end
 
   create_table "orders", force: :cascade do |t|
-    t.integer "quantity"
-    t.integer "total_price"
-    t.bigint "user_id"
-    t.bigint "farmer_id"
+    t.bigint "consumer_id"
+    t.bigint "producer_id"
+    t.integer "total", default: 0, null: false
+    t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["farmer_id"], name: "index_orders_on_farmer_id"
-    t.index ["user_id"], name: "index_orders_on_user_id"
+    t.index ["consumer_id"], name: "index_orders_on_consumer_id"
+    t.index ["producer_id"], name: "index_orders_on_producer_id"
   end
 
   create_table "pages", force: :cascade do |t|
@@ -108,19 +103,17 @@ ActiveRecord::Schema.define(version: 2018_11_09_004854) do
 
   create_table "products", force: :cascade do |t|
     t.string "name"
-    t.string "messures"
+    t.text "description"
+    t.string "measures"
     t.integer "price"
+    t.string "image"
+    t.integer "rank"
+    t.bigint "producer_id"
     t.bigint "category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "image"
-    t.integer "rank"
-    t.bigint "farmer_id"
-    t.bigint "cart_id"
-    t.text "description"
-    t.index ["cart_id"], name: "index_products_on_cart_id"
     t.index ["category_id"], name: "index_products_on_category_id"
-    t.index ["farmer_id"], name: "index_products_on_farmer_id"
+    t.index ["producer_id"], name: "index_products_on_producer_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -150,11 +143,18 @@ ActiveRecord::Schema.define(version: 2018_11_09_004854) do
     t.string "unconfirmed_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "type"
+    t.string "avatar"
     t.string "name"
     t.string "address"
-    t.string "telephone"
+    t.string "phone"
     t.text "description"
-    t.string "image"
+    t.string "producer_logo"
+    t.string "producer_brand"
+    t.string "producer_address"
+    t.string "producer_phone"
+    t.text "producer_description"
+    t.string "producer_inn"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

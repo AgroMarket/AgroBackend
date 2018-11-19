@@ -1,200 +1,156 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+require 'category_names'
 
-def missing_png
-  {
-    io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"),
-    filename: 'missing.png'
-  }
-end
+# frozen_string_literal: true
 
-User.destroy_all
+Consumer.destroy_all
+Producer.destroy_all
 Category.destroy_all
 Product.destroy_all
-Page.destroy_all
 Cart.destroy_all
+Order.destroy_all
 
-
-def random_inn
-  rand(100000000..999999999).to_s
+def missing_png
+  { io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"), filename: 'missing.png' }
 end
 
-users = 5.times.map do
-  {
-    email: FFaker::Internet.safe_email,
+# Consumers
+consumer = Array.new(5) do
+  { email: FFaker::Internet.safe_email,
+    password: '12341234',
     name: FFaker::NameRU.name,
-    password: 'password',
-    telephone: FFaker::PhoneNumber.short_phone_number,
+    phone: FFaker::PhoneNumber.short_phone_number,
     address: FFaker::AddressRU.city,
-    description: FFaker::HipsterIpsum.paragraph
-  }
+    description: FFaker::HipsterIpsum.paragraph }
 end
-User.create! users
-
+Consumer.create! consumer
 User.all.each { |user| user.image.attach missing_png }
 
-u = User.first
-u.roles = Role.all
-
-farmers = User.last(2)
-farmers.each do |s|
-  s.add_role :farmer
-  s.farmer = Farmer.create(inn: random_inn, description: FFaker::HipsterIpsum.paragraph, address: FFaker::AddressRU.city)
+# Producer
+(1..12).each do |i|
+  producer = { email: "farmer#{i}@mail.ru",
+    password: '12341234',
+    name: "farmer#{i}",
+    phone: FFaker::PhoneNumber.short_phone_number,
+    address: FFaker::AddressRU.city,
+    description: FFaker::HipsterIpsum.paragraph,
+    producer_logo: '',
+    producer_brand: "Farmer#{i}",
+    producer_address: FFaker::AddressRU.city,
+    producer_phone: FFaker::PhoneNumber.short_phone_number,
+    producer_description: FFaker::HipsterIpsum.paragraph,
+    producer_inn: rand(100000000..999999999).to_s }
+  Producer.create! producer
 end
+Producer.all.each { |producer| producer.logo.attach missing_png }
 
 # Categories
-category_names = [
-    {name: 'Мёд', icontype: 'мед', children: [
-        {name: 'Мёд'},
-        {name: 'Мёд в сотах'},
-        {name: 'Продукты пчеловодства'}
-    ]},
-    {name: 'Овощи фрукты', icontype: 'овощи', children: [
-        {name: 'Зелень'},
-        {name: 'Овощи'},
-        {name: 'Фрукты'}
-    ]},
-    {name: 'Орехи', icontype: 'орех', children: [
-        {name: 'Орехи'},
-        {name: 'Семечки'},
-        {name: 'Орехи, семечки очищенные'}
-    ]},
-    {name: 'Молочные продукты', icontype: 'молоко',  children: [
-        {name: 'Молоко, сливки'},
-        {name: 'Кефир, ряженка'},
-        {name: 'Сметана'},
-        {name: 'Сыр'},
-        {name: 'Творог'}
-    ]},
-    {name: 'Крупы, Бобовые', icontype: 'крупа', children: [
-        {name: 'Гречка'},
-        {name: 'Пшеница'},
-        {name: 'Пшено'},
-        {name: 'Горох'},
-        {name: 'Фасоль'},
-        {name: 'Соя'},
-        {name: 'Чечевица'}
-    ]},
-    {name: 'Готовые продукты, заготовки', icontype: 'заготовка', children: [
-        {name: 'Хлебобулочные изделия'},
-        {name: 'Консервированные продукты'},
-        {name: 'Мясные деликатесы'},
-        {name: 'Пельмени, вареники'},
-        {name: 'Соусы, специи'},
-        {name: 'Кондитерские изделия'}
-    ]},
-    {name: 'Птица, Яйцо', icontype: 'птица', children: [
-        {name: 'Курица'},
-        {name: 'Индейка'},
-        {name: 'Гусь'},
-        {name: 'Утка'},
-        {name: 'Яйцо'}
-    ]},
-    {name: 'Рыба, Морепродукты', icontype: 'рыба', children: [
-        {name: 'Замороженная рыба'},
-        {name: 'Копченная, соленая, вяленная рыба'},
-        {name: 'Свежая рыба'},
-        {name: 'Икра'}
-    ]},
-    {name: 'Грибы, Ягоды', icontype: 'гриб', children: [
-        {name: 'Свежие ягоды'},
-        {name: 'Замороженные ягоды'},
-        {name: 'Сущеные ягоды'},
-        {name: 'Свежие грибы'},
-        {name: 'Замороженные грибы'},
-        {name: 'Соленые грибы'},
-        {name: 'Сушенные грибы'}
-    ]},
-    {name: 'Напитки', icontype: 'напиток', children: [
-        {name: 'Соки'},
-        {name: 'Морс'},
-        {name: 'Квас'},
-        {name: 'Сиропы'},
-        {name: 'Чай'}
-    ]},
-    {name: 'Масла, Жиры', icontype: 'масло', children: [
-        {name: 'Масло сливочное'},
-        {name: 'Масло растительное'},
-        {name: 'Жир животный'}
-    ]},
-    {name: 'Мясо', icontype: 'мясо', children: [
-        {name: 'Говядина'},
-        {name: 'Свинина'},
-        {name: 'Баранина'},
-        {name: 'Крольчатина'},
-        {name: 'Субпродукты'}
-    ]},
-]
+category_names = CategoryNames::ALL
 category_names.each_with_index do |category_name, idx|
   category = Category.create! name: category_name[:name], icontype: category_name[:icontype], parent_id: 0, rank: idx + 1
   category_name[:children].each_with_index do |sub_name, sub_idx|
     category.children << Category.create!(name: sub_name[:name], parent_id: category.id, rank: sub_idx + 1)
   end
 end
-
 Category.where(parent_id: 0).each do |category|
   category.icon.attach(io: File.open("#{Rails.root}/app/assets/images/icons/#{category.icontype}.png"), filename: "#{category.icontype}.png")
 end
 
-
-farmers = Farmer.all
-
 # Products
-Category.where(parent_id: 0).each do |parent|
+Category.where(parent_id: 0).each_with_index do |parent, idx|
   parent.children.each do |category|
-    6.times.each do |idx|
+    12.times.each do |i|
       product = {
-          name: "#{category.name} №#{idx + 1}",
-          description: FFaker::HipsterIpsum.paragraph,
-          category: category,
-          messures: "кг",
-          rank: idx + 1,
-          price: rand(1..10),
-          farmer: farmers.sample
+        name: "#{category.name} №#{i + 1}",
+        description: FFaker::HipsterIpsum.paragraph,
+        measures: 'кг',
+        price: rand(100..1000),
+        rank: i + 1,
+        producer: Producer.find_by(email: "farmer#{idx+1}@mail.ru"),
+        category: category
       }
       Product.create! product
     end
   end
 end
+Product.all.each { |product| product.image.attach missing_png }
 
-products = Product.all
-products.each do |pr|
-  pr.image.attach missing_png
+# Carts
+cart = Cart.create! consumer: Consumer.first
+
+# CartItems
+Producer.first(4).each do |producer|
+  producer.products.first(3).each do |product|
+    quantity = 2
+    cart_item = {
+      cart: cart,
+      product: product,
+      producer: producer,
+      quantity: quantity,
+      sum: product.price * quantity
+    }
+    cart.cart_items << CartItem.create!(cart_item)
+  end
 end
 
-# cart
-users = User.all
-cart_hash = []
-users.each do |user|
-  cart_hash << {
-      user: user,
-      products: 10.times.map do
-        Product.all.sample
-       end
-      }
-end
+# puts 'cart start'
+# cart.cart_items.each do |item|
+#   cart_id = item.cart.id
+#   farmer_id = item.product.producer.id
+#   farmer = item.product.producer.name
+#   product_id = item.product.id
+#   product = item.product.name
+#   puts "  cart_id #{cart_id} farmer_id #{farmer_id} farmer_name #{farmer} product_id #{product_id} product_name #{product}"
+# end
+# puts 'cart end'
+# puts ''
 
-Cart.create! cart_hash
+# cart.calculate_cart_total
 
-# orders
+# Orders
+cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
+  # для каждого производителя находим в корзине его товары и формируем из них заказ
+  puts "farmer_id #{producer.id}, farmer_name #{producer.name}"
 
-10.times.map do
-  user = User.all.sample
-  farmer = Farmer.all.sample
+  # создаем заказ
   order_hash = {
-      user: user,
-      farmer: farmer,
-      quantity: user.cart.products.count,
-      total_price: user.cart.products.sum(:price)
+    consumer: cart.consumer,
+    producer: producer,
+    status: 1
   }
-  Order.create order_hash
-end
+  order = Order.create!(order_hash)
 
+  # если заказ создан, то наполняем его товарами
+  if order.present?
+    # выбираем из корзины записи относящиеся только к данному производителю
+    CartItem.where(cart: cart, producer: producer).each do |cart_item|
+      order_item_hash = {
+        order: order,
+        product: cart_item.product,
+        producer: producer,
+        price: cart_item.product.price,
+        quantity: cart_item.quantity,
+        sum: cart_item.sum
+      }
+
+      order_item = OrderItem.create!(order_item_hash)
+      order_id = order_item.order.id
+      farmer_id = order_item.producer.id
+      farmer_name = order_item.producer.name
+      product_id = order_item.product.id
+      product_name = order_item.product.name
+      price = order_item.price
+      quantity = order_item.quantity
+      sum = order_item.sum
+      puts "  order_id #{order_id} farmer_id #{farmer_id} farmer_name #{farmer_name} product_id #{product_id} product_name #{product_name} price #{price} quantity #{quantity} sum #{sum}"
+      order.order_items << order_item
+      order.total += order_item.sum
+      order.save
+      puts "    total #{order.total}"
+    end
+
+  end
+end
+cart.destroy
 
 # Pages
 Page.create! name: 'main',      title: 'Ferma Store',       content: 'Текст'
@@ -203,5 +159,203 @@ Page.create! name: 'sellers',   title: 'Продавцам',         content: '�
 Page.create! name: 'buyers',    title: 'Покупателям',       content: 'Текст'
 Page.create! name: 'delivery',  title: 'Доставка и оплата', content: 'Текст'
 Page.create! name: 'basket',    title: 'Корзина',           content: 'Текст'
+
+# def missing_png
+#   {
+#     io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"),
+#     filename: 'missing.png'
+#   }
+# end
+#
+# User.destroy_all
+# Category.destroy_all
+# Product.destroy_all
+# Page.destroy_all
+# Cart.destroy_all
+#
+#
+# def random_inn
+#   rand(100000000..999999999).to_s
+# end
+#
+# users = 5.times.map do
+#   {
+#     email: FFaker::Internet.safe_email,
+#     name: FFaker::NameRU.name,
+#     password: 'password',
+#     telephone: FFaker::PhoneNumber.short_phone_number,
+#     address: FFaker::AddressRU.city,
+#     description: FFaker::HipsterIpsum.paragraph
+#   }
+# end
+# User.create! users
+#
+# # User.all.each { |user| user.image.attach missing_png }
+#
+# u = User.first
+# u.roles = Role.all
+#
+# farmers = User.last(2)
+# farmers.each do |s|
+#   s.add_role :farmer
+#   s.farmer = Farmer.create(inn: random_inn, description: FFaker::HipsterIpsum.paragraph, address: FFaker::AddressRU.city)
+# end
+#
+# # Categories
+# category_names = [
+#     {name: 'Мёд', icontype: 'мед', children: [
+#         {name: 'Мёд'},
+#         {name: 'Мёд в сотах'},
+#         {name: 'Продукты пчеловодства'}
+#     ]},
+#     {name: 'Овощи фрукты', icontype: 'овощи', children: [
+#         {name: 'Зелень'},
+#         {name: 'Овощи'},
+#         {name: 'Фрукты'}
+#     ]},
+#     {name: 'Орехи', icontype: 'орех', children: [
+#         {name: 'Орехи'},
+#         {name: 'Семечки'},
+#         {name: 'Орехи, семечки очищенные'}
+#     ]},
+#     {name: 'Молочные продукты', icontype: 'молоко',  children: [
+#         {name: 'Молоко, сливки'},
+#         {name: 'Кефир, ряженка'},
+#         {name: 'Сметана'},
+#         {name: 'Сыр'},
+#         {name: 'Творог'}
+#     ]},
+#     {name: 'Крупы, Бобовые', icontype: 'крупа', children: [
+#         {name: 'Гречка'},
+#         {name: 'Пшеница'},
+#         {name: 'Пшено'},
+#         {name: 'Горох'},
+#         {name: 'Фасоль'},
+#         {name: 'Соя'},
+#         {name: 'Чечевица'}
+#     ]},
+#     {name: 'Готовые продукты, заготовки', icontype: 'заготовка', children: [
+#         {name: 'Хлебобулочные изделия'},
+#         {name: 'Консервированные продукты'},
+#         {name: 'Мясные деликатесы'},
+#         {name: 'Пельмени, вареники'},
+#         {name: 'Соусы, специи'},
+#         {name: 'Кондитерские изделия'}
+#     ]},
+#     {name: 'Птица, Яйцо', icontype: 'птица', children: [
+#         {name: 'Курица'},
+#         {name: 'Индейка'},
+#         {name: 'Гусь'},
+#         {name: 'Утка'},
+#         {name: 'Яйцо'}
+#     ]},
+#     {name: 'Рыба, Морепродукты', icontype: 'рыба', children: [
+#         {name: 'Замороженная рыба'},
+#         {name: 'Копченная, соленая, вяленная рыба'},
+#         {name: 'Свежая рыба'},
+#         {name: 'Икра'}
+#     ]},
+#     {name: 'Грибы, Ягоды', icontype: 'гриб', children: [
+#         {name: 'Свежие ягоды'},
+#         {name: 'Замороженные ягоды'},
+#         {name: 'Сущеные ягоды'},
+#         {name: 'Свежие грибы'},
+#         {name: 'Замороженные грибы'},
+#         {name: 'Соленые грибы'},
+#         {name: 'Сушенные грибы'}
+#     ]},
+#     {name: 'Напитки', icontype: 'напиток', children: [
+#         {name: 'Соки'},
+#         {name: 'Морс'},
+#         {name: 'Квас'},
+#         {name: 'Сиропы'},
+#         {name: 'Чай'}
+#     ]},
+#     {name: 'Масла, Жиры', icontype: 'масло', children: [
+#         {name: 'Масло сливочное'},
+#         {name: 'Масло растительное'},
+#         {name: 'Жир животный'}
+#     ]},
+#     {name: 'Мясо', icontype: 'мясо', children: [
+#         {name: 'Говядина'},
+#         {name: 'Свинина'},
+#         {name: 'Баранина'},
+#         {name: 'Крольчатина'},
+#         {name: 'Субпродукты'}
+#     ]},
+# ]
+# category_names.each_with_index do |category_name, idx|
+#   category = Category.create! name: category_name[:name], icontype: category_name[:icontype], parent_id: 0, rank: idx + 1
+#   category_name[:children].each_with_index do |sub_name, sub_idx|
+#     category.children << Category.create!(name: sub_name[:name], parent_id: category.id, rank: sub_idx + 1)
+#   end
+# end
+#
+# Category.where(parent_id: 0).each do |category|
+#   category.icon.attach(io: File.open("#{Rails.root}/app/assets/images/icons/#{category.icontype}.png"), filename: "#{category.icontype}.png")
+# end
+#
+#
+# farmers = Farmer.all
+#
+# # Products
+# Category.where(parent_id: 0).each do |parent|
+#   parent.children.each do |category|
+#     6.times.each do |idx|
+#       product = {
+#           name: "#{category.name} №#{idx + 1}",
+#           description: FFaker::HipsterIpsum.paragraph,
+#           category: category,
+#           messures: "кг",
+#           rank: idx + 1,
+#           price: rand(1..10),
+#           farmer: farmers.sample
+#       }
+#       Product.create! product
+#     end
+#   end
+# end
+#
+# products = Product.all
+# products.each do |pr|
+#   pr.image.attach missing_png
+# end
+#
+# # cart
+# users = User.all
+# cart_hash = []
+# users.each do |user|
+#   cart_hash << {
+#       user: user,
+#       products: 10.times.map do
+#         Product.all.sample
+#        end
+#       }
+# end
+#
+# Cart.create! cart_hash
+#
+# # orders
+#
+# 10.times.map do
+#   user = User.all.sample
+#   farmer = Farmer.all.sample
+#   order_hash = {
+#       user: user,
+#       farmer: farmer,
+#       quantity: user.cart.products.count,
+#       total_price: user.cart.products.sum(:price)
+#   }
+#   Order.create order_hash
+# end
+#
+#
+# # Pages
+# Page.create! name: 'main',      title: 'Ferma Store',       content: 'Текст'
+# Page.create! name: 'about',     title: 'О нас',             content: 'Текст'
+# Page.create! name: 'sellers',   title: 'Продавцам',         content: 'Текст'
+# Page.create! name: 'buyers',    title: 'Покупателям',       content: 'Текст'
+# Page.create! name: 'delivery',  title: 'Доставка и оплата', content: 'Текст'
+# Page.create! name: 'basket',    title: 'Корзина',           content: 'Текст'
 
 

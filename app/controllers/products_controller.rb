@@ -15,10 +15,10 @@ class ProductsController < ApplicationController
         path category_products_path
         @products = paginate @products
 
-      elsif params[:farmer_id]
-        message 'Список товаро фермара'
-        products Product.by_farmer(params[:farmer_id])
-        path farmer_products_path
+      elsif params[:producer_id]
+        message 'Список товаро производителя'
+        products Product.by_producer(params[:producer_id])
+        path producer_products_path
         @products = paginate @products
 
       elsif params[:search]
@@ -41,7 +41,7 @@ class ProductsController < ApplicationController
   # GET /products/1.json
   def show
     build do
-      message 'Страница товара'
+      message 'Данные товара'
       view 'products/show'
     end
   end

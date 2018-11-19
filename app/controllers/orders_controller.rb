@@ -1,5 +1,6 @@
 class OrdersController < ApplicationController
   before_action :set_order, only: [:show, :update, :destroy]
+  include Exceptable
 
   # GET /orders
   # GET /orders.json
@@ -15,10 +16,12 @@ class OrdersController < ApplicationController
   # POST /orders
   # POST /orders.json
   def create
-    @order = Order.new(order_params)
-
-    if @order.save
-      render :show, status: :created, location: @order
+    if Order.create_orders_from_cart(params[:cart_id])
+      build do
+        message 'Создание заказов'
+        view 'orders/create'
+      end
+      # render :show, status: :created, location: @order
     else
       render json: @order.errors, status: :unprocessable_entity
     end

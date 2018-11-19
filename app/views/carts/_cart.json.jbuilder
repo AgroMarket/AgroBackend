@@ -1,16 +1,20 @@
 # json.extract! cart, :id, :created_at, :updated_at
 # json.url cart_url(cart, format: :json)
 
-json.id cart.id
-json.user_id cart.user.present? ? cart.user.id : nil
+json.cart_id cart.id
+json.user_id cart.consumer.present? ? cart.consumer.id : nil
 json.products do
-    json.array! cart.items do |item|
-      json.cart_item_id item.id
-      json.product_name item.product.name
-      json.product_price item.product.price
-      json.product_image url_for(item.product.image)
-      json.product_quantity item.quantity
-      json.product_id item.product.id
-      json.product_link product_path item.product.id
+  json.array! cart.cart_items do |item|
+    json.product do
+        json.cart_item_id item.id
+        json.id item.product.id
+        json.name item.product.name
+        json.price item.product.price
+        json.quantity item.quantity
+        json.sum item.sum
+        json.image url_for(item.product.image)
+        json.link product_path item.product.id
     end
+  end
 end
+json.total cart.total

@@ -1,43 +1,49 @@
 Rails.application.routes.draw do
   scope :api do
+     
+    # DEVISE
+    devise_for :users, controllers: { registrations: 'users/registrations' }, defaults: { format: :json }
+    
+    # AUTH
     post 'login' => 'user_token#create'
-    devise_for :users,
-               controllers: { registrations: 'users/registrations' },
-               defaults: { format: :json }
-
-    # PUBLIC
-
-    # Pages
-    resources :pages
-
-    # Categories
-    resources :categories, only: [:index, :show] do
-      resources :products, only: :index
+    
+    # PRODUCER
+    namespace :producer do
+      resources :products
+      resources :orders, only: %i[index show update] do
+        resources :order_items, only: %i[index]
+      end
+      resources :consumers, only: %i[index]
+      get 'profile' => 'producers#show'
+      put 'profile' => 'producers#update'
     end
 
-    # Products
-    resources :products
-
-    # Farmers
-    resources :farmers, only: :show do
-      resources :products, only: :index
+    # CONSUMER
+    namespace :consumer do
+      resources :orders, only: %i[index show create destroy] do
+        resources :order_items, only: %i[index create destroy]
+      end
+      resources :producers, only: :index
+      get 'profile' => 'consumers#show'
+      put 'profile' => 'consumers#update'
     end
 
-    # Carts
-    resources :carts, only: %i[index show create update] do
-      resources :items
+    # GUEST
+    resources :pages, only: %i[index show]
+    resources :consumers, only: %i[index show create]
+    resources :producers, only: %i[show] do
+      resources :products, only: %i[index]
     end
-
-
-
-    # CLIENT
-
-
-    # FARMER
-
-
-
-
-
+    resources :categories, only: %i[index show] do
+      resources :products, only: %i[index]
+    end
+    resources :products, only: %i[index show]
+    resources :carts, only: %i[index show create update destroy] do
+      resources :cart_items, only: %i[index show create update destroy]
+      resources :orders, only: %i[create]
+    end
+    # resources :orders, only: %i[index show create update] do
+    #   resources :order_items
+    # end
   end
 end

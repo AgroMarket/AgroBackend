@@ -21,13 +21,13 @@ class CartsController < ApplicationController
   # POST /carts.json
   def create
     @cart = Cart.new(cart_params)
+    @cart.consumer = current_user if current_user.present?
 
     if @cart.save
       build do
         message 'Новая корзина'
         view 'carts/show'
       end
-      # render :show, status: :created, location: @cart
     else
       render json: @cart.errors, status: :unprocessable_entity
     end
@@ -46,7 +46,12 @@ class CartsController < ApplicationController
   # DELETE /carts/1
   # DELETE /carts/1.json
   def destroy
-    @cart.destroy
+    if @cart.destroy
+      build do
+        message 'Удаление корзины'
+        view 'carts/delete'
+      end
+    end
   end
 
   private
@@ -56,6 +61,7 @@ class CartsController < ApplicationController
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
+    # TODO: сделать нормальный permit
     def cart_params
       params.fetch(:cart, {})
     end
