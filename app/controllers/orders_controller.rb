@@ -16,7 +16,7 @@ class OrdersController < ApplicationController
   # POST /orders
   # POST /orders.json
   def create
-    if Order.create_orders_from_cart(params[:cart_id])
+    if Order.create_orders_from_cart(params[:cart_id], current_user)
       build do
         message 'Создание заказов'
         view 'orders/create'
@@ -51,6 +51,6 @@ class OrdersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def order_params
-      params.fetch(:order, {})
+      params.require(:order).permit(:id)
     end
 end
