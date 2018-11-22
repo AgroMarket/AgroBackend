@@ -1,4 +1,5 @@
 json.consumer do
+  json.role consumer.type
 	json.id consumer.id
 	json.name consumer.name
 	json.email consumer.email

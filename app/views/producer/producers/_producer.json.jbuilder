@@ -1,4 +1,5 @@
 json.profile do
+  json.role producer.type
   json.id producer.id
   json.brand producer.producer_brand
   json.address producer.producer_address
