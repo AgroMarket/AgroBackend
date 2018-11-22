@@ -27,7 +27,6 @@ class ConsumersController < ApplicationController
         message 'Создание нового пользователя'
         view 'consumers/show'
       end
-      # render :show, status: :created, location: @consumer
     else
       render json: @consumer.errors, status: :unprocessable_entity
     end
