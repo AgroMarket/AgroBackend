@@ -6,7 +6,7 @@ class Order < ApplicationRecord
   enum status: %i[Ожидает Выполнен Отклонен]
 
   def self.create_orders_from_cart(cart_id, user)
-  	cart = Cart.find(cart_id)
+    cart = Cart.find(cart_id)
     cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
       order_hash = {
         consumer: cart.consumer ? cart.consumer : user,
@@ -28,7 +28,8 @@ class Order < ApplicationRecord
 
           order_item = OrderItem.create!(order_item_hash)
           order.order_items << order_item
-          order.total += order_item.product.price
+          order.total += order_item.sum
+          order.save
         end
       end
     end
