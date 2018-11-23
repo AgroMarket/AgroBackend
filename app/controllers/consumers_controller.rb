@@ -35,7 +35,6 @@ class ConsumersController < ApplicationController
         build do
           message 'Создание нового пользователя'
           view 'consumers/show'
-          status 201
         end
       else
         render json: @consumer.errors, status: :unprocessable_entity
