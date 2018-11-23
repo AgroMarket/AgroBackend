@@ -1,4 +1,5 @@
 require 'category_names'
+require 'page_contents'
 
 # frozen_string_literal: true
 
@@ -8,6 +9,7 @@ Category.destroy_all
 Product.destroy_all
 Cart.destroy_all
 Order.destroy_all
+Page.destroy_all
 
 def missing_png
   { io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"), filename: 'missing.png' }
@@ -153,12 +155,12 @@ end
 cart.destroy
 
 # Pages
-Page.create! name: 'main',      title: 'Ferma Store',       content: 'Текст'
-Page.create! name: 'about',     title: 'О нас',             content: 'Текст'
-Page.create! name: 'sellers',   title: 'Продавцам',         content: 'Текст'
-Page.create! name: 'buyers',    title: 'Покупателям',       content: 'Текст'
-Page.create! name: 'delivery',  title: 'Доставка и оплата', content: 'Текст'
-Page.create! name: 'basket',    title: 'Корзина',           content: 'Текст'
+# Page.create! name: 'main',      title: 'Ferma Store',       content: ''
+Page.create! name: 'about',     title: 'О нас',             content: PageContents::ABOUT
+Page.create! name: 'sellers',   title: 'Продавцам',         content: PageContents::SELLERS
+Page.create! name: 'buyers',    title: 'Покупателям',       content: PageContents::BUYERS
+Page.create! name: 'delivery',  title: 'Доставка и оплата', content: PageContents::DELIVERY
+# Page.create! name: 'basket',    title: 'Корзина',           content: ''
 
 # def missing_png
 #   {
