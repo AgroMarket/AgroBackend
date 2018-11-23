@@ -16,19 +16,31 @@ class ConsumersController < ApplicationController
   # POST /consumers
   # POST /consumers.json
   def create
-    @consumer = Consumer.new(consumer_params)
+    @consumer = Consumer.find_by(email: consumer_params[:email])
 
-    if @consumer.save
-      @consumer.image.attach(
-        io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"),
-        filename: 'missing.png'
-      )
+    if @consumer
       build do
-        message 'Создание нового пользователя'
+        message 'Пользователь уже существует'
         view 'consumers/show'
       end
+
     else
-      render json: @consumer.errors, status: :unprocessable_entity
+      @consumer = Consumer.new(consumer_params)
+
+      if @consumer.save
+        @consumer.image.attach(
+          io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"),
+          filename: 'missing.png'
+        )
+        build do
+          message 'Создание нового пользователя'
+          view 'consumers/show'
+          status 201
+        end
+      else
+        render json: @consumer.errors, status: :unprocessable_entity
+      end
+
     end
   end
 
