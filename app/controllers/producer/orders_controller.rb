@@ -11,19 +11,19 @@ class Producer::OrdersController < ApplicationController
     build do
       if params[:scope] == "pending"
         message 'Новые заказы'
-        orders Order.where(producer_id: current_user.id, status: 0).order(:created_at)
+        orders Order.where(producer_id: current_user.id, status: 0).order('created_at DESC')
 
       elsif params[:scope] == "close"
         message 'Выполненные заказы'
-        orders Order.where(producer_id: current_user.id, status: 1).order(:created_at)
+        orders Order.where(producer_id: current_user.id, status: 1).order('created_at DESC')
 
       elsif params[:scope] == "reject"
         message 'Отклоненные заказы'
-        orders Order.where(producer_id: current_user.id, status: 2).order(:created_at)
+        orders Order.where(producer_id: current_user.id, status: 2).order('created_at DESC')
 
       else
         message 'Продажи производителя'
-        orders Order.where(producer_id: current_user.id).order(:created_at)
+        orders Order.where(producer_id: current_user.id).order('created_at DESC')
       end
 
       path consumer_orders_path
