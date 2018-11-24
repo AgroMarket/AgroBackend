@@ -46,9 +46,9 @@ class CartsController < ApplicationController
   # DELETE /carts/1
   # DELETE /carts/1.json
   def destroy
-    if @cart.destroy
+    if @cart.cart_items.destroy_all
       build do
-        message 'Удаление корзины'
+        message 'Очищение корзины'
         view 'carts/delete'
       end
     end
