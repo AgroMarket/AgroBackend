@@ -152,7 +152,7 @@ cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
 
   end
 end
-cart.destroy
+cart.cart_items.destroy_all
 
 # Pages
 # Page.create! name: 'main',      title: 'Ferma Store',       content: ''

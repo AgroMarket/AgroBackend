@@ -33,8 +33,8 @@ class Order < ApplicationRecord
         end
       end
     end
-    
-    # cart.destroy if order.present?
+
+    cart.cart_items.destroy_all if order.present?
     true
   end
 
