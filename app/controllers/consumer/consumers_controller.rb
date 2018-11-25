@@ -1,6 +1,23 @@
 class Consumer::ConsumersController < ApplicationController
   before_action :set_consumer, only: [:show, :update, :destroy]
   include Exceptable
+  include Paginable
+
+  # GET /consumers
+  # GET /consumers.json
+  # добавил данный метод, т.к. происходит баг, когда
+  # при просмотре страницы с покупателями у продавца
+  # обращение идёт к данному контроллеру, а не к контроллеру
+  # в producers
+  def index
+    @pagination = nil
+
+    build do
+      message 'Список покупателей'
+      @consumers = paginate current_user.consumers.distinct
+      view 'producer/consumers/index'
+    end
+  end
 
   # GET /consumers
   # GET /consumers.json
