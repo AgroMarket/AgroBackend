@@ -7,6 +7,7 @@ class Order < ApplicationRecord
 
   def self.create_orders_from_cart(cart_id, user)
     cart = Cart.find(cart_id)
+    order = nil
     cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
       order_hash = {
         consumer: cart.consumer ? cart.consumer : user,
