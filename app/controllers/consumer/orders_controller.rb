@@ -12,19 +12,19 @@ class Consumer::OrdersController < ApplicationController
 
       if params[:scope] == "pending"
         message 'Покупки ожидающие ответа продавца'
-        orders Order.where(consumer_id: current_user.id, status: 0).order(:created_at)
+        orders Order.where(consumer_id: current_user.id, status: 0).order('created_at DESC')
 
       elsif params[:scope] == "close"
         message 'Завершенные покупки пользователя'
-        orders Order.where(consumer_id: current_user.id, status: 1).order(:created_at)
+        orders Order.where(consumer_id: current_user.id, status: 1).order('created_at DESC')
 
       elsif params[:scope] == "reject"
         message 'Отклоненные покупки'
-        orders Order.where(consumer_id: current_user.id, status: 2).order(:created_at)
+        orders Order.where(consumer_id: current_user.id, status: 2).order('created_at DESC')
 
       else
         message 'Покупки пользователя'
-        orders Order.where(consumer_id: current_user.id).order(:created_at)
+        orders Order.where(consumer_id: current_user.id).order('created_at DESC')
       end
 
       path consumer_orders_path
