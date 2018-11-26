@@ -6,8 +6,6 @@ class Order < ApplicationRecord
   enum status: %i[Ожидает Выполнен Отклонен]
 
   def self.create_orders_from_cart(cart_id, user)
-    # добавил объявление пустой переменной order
-    order = nil
     cart = Cart.find(cart_id)
     cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
       order_hash = {
