@@ -76,7 +76,11 @@ class Consumer::ConsumersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_consumer
-      @consumer = Consumer.find(params[:id])
+      if current_user.id != nill
+        @consumer = Consumer.find(current_user.id)
+      else
+        @consumer = Consumer.find(params[:id])
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
