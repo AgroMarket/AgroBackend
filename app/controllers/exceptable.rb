@@ -13,7 +13,7 @@ module Exceptable
         @error = ex.message
       end
 
-      render template 'layouts/response'
+      render "layouts/response"
     end
   end
 
