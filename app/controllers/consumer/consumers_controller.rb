@@ -13,7 +13,7 @@ class Consumer::ConsumersController < ApplicationController
     @pagination = nil
 
     build do
-      message 'Список покупателей'
+      message 'Список покупателей (consumers)'
       @consumers = paginate current_user.consumers.distinct
       view 'producer/consumers/index'
     end
