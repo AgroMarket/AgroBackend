@@ -9,15 +9,17 @@ class Consumer::ConsumersController < ApplicationController
   # при просмотре страницы с покупателями у продавца
   # обращение идёт к данному контроллеру, а не к контроллеру
   # в producers
-  def index
-    @pagination = nil
+  
+  #def index
+  #  @pagination = nil
 
-    build do
-      message 'Список покупателей'
-      @consumers = paginate current_user.consumers.distinct
-      view 'producer/consumers/index'
-    end
-  end
+  #  build do
+  #    message 'Список покупателей'
+  #    @consumers = paginate current_user.consumers.distinct
+  #    view 'producer/consumers/index'
+  #  end
+  #end
+  
 
   # GET /consumers
   # GET /consumers.json
