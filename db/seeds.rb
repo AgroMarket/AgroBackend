@@ -25,7 +25,7 @@ consumer = Array.new(5) do
     description: FFaker::HipsterIpsum.paragraph }
 end
 Consumer.create! consumer
-User.all.each { |user| user.image.attach missing_png }
+Consumer.all.each { |user| user.image.attach missing_png }
 
 # Producer
 (1..12).each do |i|
