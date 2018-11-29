@@ -1,4 +1,5 @@
 class Order < ApplicationRecord
+  belongs_to :ask
   belongs_to :consumer
   belongs_to :producer
   has_many :order_items, dependent: :destroy
@@ -6,11 +7,13 @@ class Order < ApplicationRecord
   enum status: %i[Ожидает Выполнен Отклонен]
 
   def self.create_orders_from_cart(cart_id, user)
-    # добавил объявление пустой переменной order
-    order = nil
     cart = Cart.find(cart_id)
+
+    ask = Ask.create! consumer: Consumer.first, amount: cart.total, status: 0
+
     cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
       order_hash = {
+        ask: ask,
         consumer: cart.consumer ? cart.consumer : user,
         producer: producer,
         status: 1
@@ -40,18 +43,18 @@ class Order < ApplicationRecord
     true
   end
 
-  def self.create_order_from_order(order_id)
-    old_order = Order.find(order_id)
-    new_order = old_order.dup
-    new_order.status = 0
-    new_order.save
-
-    old_order.order_items.each do |item|
-      old_item = item
-      new_item = old_item.dup
-      new_item.order = new_order
-      new_item.save
-    end
-    new_order
-  end
+  # def self.create_order_from_order(order_id)
+  #   old_order = Order.find(order_id)
+  #   new_order = old_order.dup
+  #   new_order.status = 0
+  #   new_order.save
+  #
+  #   old_order.order_items.each do |item|
+  #     old_item = item
+  #     new_item = old_item.dup
+  #     new_item.order = new_order
+  #     new_item.save
+  #   end
+  #   new_order
+  # end
 end

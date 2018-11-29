@@ -16,31 +16,32 @@ def missing_png
 end
 
 # Consumers
-consumer = Array.new(5) do
-  { email: FFaker::Internet.safe_email,
-    password: '12341234',
-    name: FFaker::NameRU.name,
-    phone: FFaker::PhoneNumber.short_phone_number,
-    address: FFaker::AddressRU.city,
-    description: FFaker::HipsterIpsum.paragraph }
+(1..5).each do |i|
+  consumer = { email: "consumer#{i}@mail.ru",
+               password: '12341234',
+               name: FFaker::NameRU.name,
+               avatar: '',
+               phone: FFaker::PhoneNumber.short_phone_number,
+               address: FFaker::AddressRU.city,
+               description: FFaker::HipsterIpsum.paragraph }
+  Consumer.create! consumer
 end
-Consumer.create! consumer
-Consumer.all.each { |user| user.image.attach missing_png }
+# Consumer.all.each { |consumer| consumer.image.attach missing_png }
 
 # Producer
 (1..12).each do |i|
   producer = { email: "farmer#{i}@mail.ru",
-    password: '12341234',
-    name: "farmer#{i}",
-    phone: FFaker::PhoneNumber.short_phone_number,
-    address: FFaker::AddressRU.city,
-    description: FFaker::HipsterIpsum.paragraph,
-    producer_logo: '',
-    producer_brand: "Farmer#{i}",
-    producer_address: FFaker::AddressRU.city,
-    producer_phone: FFaker::PhoneNumber.short_phone_number,
-    producer_description: FFaker::HipsterIpsum.paragraph,
-    producer_inn: rand(100000000..999999999).to_s }
+               password: '12341234',
+               name: "farmer#{i}",
+               phone: FFaker::PhoneNumber.short_phone_number,
+               address: FFaker::AddressRU.city,
+               description: FFaker::HipsterIpsum.paragraph,
+               producer_logo: '',
+               producer_brand: "Farmer#{i}",
+               producer_address: FFaker::AddressRU.city,
+               producer_phone: FFaker::PhoneNumber.short_phone_number,
+               producer_description: FFaker::HipsterIpsum.paragraph,
+               producer_inn: rand(100000000..999999999).to_s }
   Producer.create! producer
 end
 Producer.all.each { |producer| producer.logo.attach missing_png }
@@ -94,19 +95,22 @@ Producer.first(4).each do |producer|
   end
 end
 
-# puts 'cart start'
-# cart.cart_items.each do |item|
-#   cart_id = item.cart.id
-#   farmer_id = item.product.producer.id
-#   farmer = item.product.producer.name
-#   product_id = item.product.id
-#   product = item.product.name
-#   puts "  cart_id #{cart_id} farmer_id #{farmer_id} farmer_name #{farmer} product_id #{product_id} product_name #{product}"
-# end
-# puts 'cart end'
-# puts ''
+puts 'cart start'
+cart.cart_items.each do |item|
+  cart_id = item.cart.id
+  farmer_id = item.product.producer.id
+  farmer = item.product.producer.name
+  product_id = item.product.id
+  product = item.product.name
+  puts "  cart_id #{cart_id} farmer_id #{farmer_id} farmer_name #{farmer} product_id #{product_id} product_name #{product}"
+end
+puts 'cart end'
+puts ''
+p cart.total
+puts ''
 
-# cart.calculate_cart_total
+# Asks
+ask = Ask.create! consumer: Consumer.first, amount: cart.total, status: 0
 
 # Orders
 cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
@@ -115,6 +119,7 @@ cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
 
   # создаем заказ
   order_hash = {
+    ask: ask,
     consumer: cart.consumer,
     producer: producer,
     status: 1
@@ -144,6 +149,7 @@ cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
       quantity = order_item.quantity
       sum = order_item.sum
       puts "  order_id #{order_id} farmer_id #{farmer_id} farmer_name #{farmer_name} product_id #{product_id} product_name #{product_name} price #{price} quantity #{quantity} sum #{sum}"
+
       order.order_items << order_item
       order.total += order_item.sum
       order.save
@@ -152,6 +158,8 @@ cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
 
   end
 end
+puts '', "Ask total: #{ask.amount}"
+
 cart.cart_items.destroy_all
 
 # Pages
