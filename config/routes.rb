@@ -13,7 +13,9 @@ Rails.application.routes.draw do
       resources :orders, only: %i[index show update] do
         resources :order_items, only: %i[index]
       end
-      resources :consumers, only: %i[index]
+      # resources :consumers, only: %i[index]
+      get 'consumers' => 'consumers#index'
+      
       get 'profile' => 'producers#show'
       put 'profile' => 'producers#update'
     end

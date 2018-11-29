@@ -51,7 +51,7 @@ class Consumer::OrdersController < ApplicationController
         order Order.create_order_from_order(params[:order][:id])
         view 'consumer/orders/show'
       end
-    elsif Order.create_orders_from_cart(params[:cart_id])
+    elsif Order.create_orders_from_cart(params[:cart_id], current_user)
       build do
         message 'Создание заказов'
         view 'consumer/orders/create'
