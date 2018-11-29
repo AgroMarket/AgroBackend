@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :asks
   scope :api do
      
     # DEVISE
@@ -22,8 +23,10 @@ Rails.application.routes.draw do
 
     # CONSUMER
     namespace :consumer do
-      resources :orders, only: %i[index show create destroy] do
-        resources :order_items, only: %i[index create destroy]
+      resources :asks do
+        resources :orders, only: %i[index show create destroy] do
+          resources :order_items, only: %i[index create destroy]
+        end
       end
       resources :producers, only: :index
       get 'profile' => 'consumers#show'
