@@ -1,10 +1,11 @@
 class TranzactionsController < ApplicationController
   before_action :set_tranzaction, only: [:show, :update, :destroy]
+  before_action :authenticate_user
 
   # GET /tranzactions
   # GET /tranzactions.json
   def index
-    @tranzactions = Tranzaction.all
+    @tranzactions = Tranzaction.all    
   end
 
   # GET /tranzactions/1
