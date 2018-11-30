@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  resources :asks
+  
+#  resources :asks
   scope :api do
      
     # DEVISE
@@ -47,6 +48,9 @@ Rails.application.routes.draw do
       resources :cart_items, only: %i[index show create update destroy]
       resources :orders, only: %i[create]
     end
+
+    # TRANZACTIONS
+    resources :tranzactions, only: :index
     # resources :orders, only: %i[index show create update] do
     #   resources :order_items
     # end

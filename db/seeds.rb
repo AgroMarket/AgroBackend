@@ -15,6 +15,9 @@ def missing_png
   { io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"), filename: 'missing.png' }
 end
 
+# Создаём первого пользователя ФермаСторе
+first_user = User.create! ({email: 'FermaStore@mail.ru', password: '12341234', avatar: ''})
+
 # Consumers
 (1..5).each do |i|
   consumer = { email: "consumer#{i}@mail.ru",
@@ -161,6 +164,30 @@ end
 puts '', "Ask total: #{ask.amount}"
 
 cart.cart_items.destroy_all
+
+
+# создаём транзакции
+boss_user = User.find_by(email: 'fermastore@mail.ru')
+Consumer.all.each do |user|
+  if user.orders
+    user.orders.each do |order|
+      tranzactions_first = {
+        user: user,
+        sum: order.total,
+        to: boss_user.id,
+        order: order,
+        status: 'Резервация'
+      }
+      boss_user.amount = boss_user.amount + order.total
+      puts boss_user.amount
+      Tranzaction.create! tranzactions_first
+    end
+  end
+end
+
+boss_user.save
+
+# Переводим транзакции в статус
 
 # Pages
 # Page.create! name: 'main',      title: 'Ferma Store',       content: ''

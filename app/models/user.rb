@@ -5,6 +5,7 @@ class User < ApplicationRecord
   # has_many :orders, dependent: :destroy
   # has_one :cart, dependent: :destroy
   # has_one_attached :image
+  has_many :tranzactions
 
   # after_create :assign_default_role
 

@@ -3,6 +3,8 @@ class Order < ApplicationRecord
   belongs_to :consumer
   belongs_to :producer
   has_many :order_items, dependent: :destroy
+  has_one :tranzaction
+
 
   enum status: %i[Ожидает Выполнен Отклонен]
 
