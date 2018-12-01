@@ -169,18 +169,22 @@ cart.cart_items.destroy_all
 # создаём транзакции
 boss_user = User.find_by(email: 'fermastore@mail.ru')
 Consumer.all.each do |user|
-  if user.orders
-    user.orders.each do |order|
-      tranzactions_first = {
-        user: user,
-        sum: order.total,
-        to: boss_user.id,
-        order: order,
-        status: 'Резервация'
-      }
-      boss_user.amount = boss_user.amount + order.total
-      puts boss_user.amount
-      Tranzaction.create! tranzactions_first
+  asks = user.asks
+  if asks.orders 
+    asks.each do |ask|
+      ask.orders.each do |order|
+        tranzactions_first = {
+          from: order.consumer,
+          amount: order.total,
+          to: order.producer,
+          status: 'Оплачено',
+          order: order,
+          ask: ask
+        }
+        order.producer.amount += order.total
+        puts order.producer.amount
+        Transaction.create! tranzactions_first
+      end
     end
   end
 end

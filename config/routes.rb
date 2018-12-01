@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+#  resources :transactions
 #  resources :asks
   scope :api do
      
@@ -31,7 +32,7 @@ Rails.application.routes.draw do
       resources :producers, only: :index
       get 'profile' => 'consumers#show'
       put 'profile' => 'consumers#update'
-      get 'tranzactions' => 'tranzactions#index'
+      get 'transactions' => 'transactions#index'
     end
 
     # GUEST
@@ -50,7 +51,7 @@ Rails.application.routes.draw do
     end
 
     # TRANZACTIONS
-    resources :tranzactions, only: :index
+    # resources :tranzactions, only: :index
     # resources :orders, only: %i[index show create update] do
     #   resources :order_items
     # end
