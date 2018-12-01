@@ -64,6 +64,7 @@ class Producer::OrdersController < ApplicationController
   # PATCH/PUT /orders/1.json
   def update
     if @order.update(order_params)
+      create_task(@order) if check_ask_status_in_order(@order)      
       build do
         message 'Редактирование заказа'
         view 'producer/orders/show'

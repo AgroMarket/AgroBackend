@@ -31,7 +31,7 @@ transport_company = User.create! ({email: 'transport@mail.ru', password: '123412
                description: FFaker::HipsterIpsum.paragraph }
   Consumer.create! consumer
 end
-# Consumer.all.each { |consumer| consumer.image.attach missing_png }
+Consumer.all.each { |consumer| consumer.image.attach missing_png }
 
 # Producer
 (1..12).each do |i|

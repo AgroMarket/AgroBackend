@@ -25,4 +25,13 @@ class ApplicationController < ActionController::API
   def fermastore 
     User.find_by(email: 'fermastore@mail.ru')
   end
+
+  def check_ask_status_in_order(order)
+    ready_status = order.ask.orders.where(status: 1)
+    order.ask.orders.count == ready_status ? true : false
+  end
+
+  def create_task(order)
+    Task.create(order.ask, order.consumer)
+  end
 end
