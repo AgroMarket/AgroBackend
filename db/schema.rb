@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_01_104735) do
+ActiveRecord::Schema.define(version: 2018_12_01_134348) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 2018_12_01_104735) do
     t.integer "total"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "delivery_cost", default: 500
     t.index ["consumer_id"], name: "index_carts_on_consumer_id"
   end
 
@@ -137,6 +138,15 @@ ActiveRecord::Schema.define(version: 2018_12_01_104735) do
     t.index ["resource_type", "resource_id"], name: "index_roles_on_resource_type_and_resource_id"
   end
 
+  create_table "tasks", force: :cascade do |t|
+    t.bigint "ask_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ask_id"], name: "index_tasks_on_ask_id"
+    t.index ["user_id"], name: "index_tasks_on_user_id"
+  end
+
   create_table "transactions", force: :cascade do |t|
     t.bigint "from_id"
     t.bigint "to_id"
@@ -194,4 +204,6 @@ ActiveRecord::Schema.define(version: 2018_12_01_104735) do
     t.index ["user_id"], name: "index_users_roles_on_user_id"
   end
 
+  add_foreign_key "tasks", "asks"
+  add_foreign_key "tasks", "users"
 end

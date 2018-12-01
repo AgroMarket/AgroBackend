@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  resources :tasks
 #  resources :transactions
 #  resources :asks
   scope :api do
@@ -9,7 +10,7 @@ Rails.application.routes.draw do
     
     # AUTH
     post 'login' => 'user_token#create'
-    
+    post 'transactions' => 'transactions#create'
     # PRODUCER
     namespace :producer do
       resources :products

@@ -17,6 +17,8 @@ end
 
 # Создаём первого пользователя ФермаСторе
 first_user = User.create! ({email: 'FermaStore@mail.ru', password: '12341234', avatar: ''})
+money_user = User.create! ({email: 'money@mail.ru', password: '12341234', avatar: ''})
+transport_company = User.create! ({email: 'transport@mail.ru', password: '12341234', avatar: ''})
 
 # Consumers
 (1..5).each do |i|
@@ -113,7 +115,7 @@ p cart.total
 puts ''
 
 # Asks
-ask = Ask.create! consumer: Consumer.first, amount: cart.total, status: 0
+ask = Ask.create! consumer: Consumer.first, amount: cart.total + cart.delivery_cost, status: 0
 
 # Orders
 cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|

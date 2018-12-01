@@ -18,3 +18,4 @@ json.products do
   end
 end
 json.total cart.total
+json.delivery_cost cart.delivery_cost

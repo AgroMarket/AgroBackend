@@ -7,6 +7,7 @@ class User < ApplicationRecord
   # has_one_attached :image
   has_many :from, class_name: 'Transaction', foreign_key: 'from_id'
   has_many :to, class_name: 'Transaction', foreign_key: 'to_id'
+  has_many :tasks
 
   # after_create :assign_default_role
 
