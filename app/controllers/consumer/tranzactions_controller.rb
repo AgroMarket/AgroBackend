@@ -8,7 +8,7 @@ class Consumer::TranzactionsController < ApplicationController
     def index
         build do
             message "Транзакции пользователя"
-            tranzactions current_user.tranzactions    
+            @tranzactions = current_user.tranzactions    
             view 'consumer/tranzactions/tranzaction'
         end
     end  
