@@ -6,7 +6,7 @@ class Order < ApplicationRecord
   has_many :transactions
 
 
-  enum status: %i[Ожидает Выполнен Отклонен]
+  enum status: %i["Не подтверждён" "Готов к отгрузке" Доставлен Выполнен Отклонен]
 
   def self.create_orders_from_cart(cart_id, user)
     cart = Cart.find(cart_id)
@@ -18,7 +18,7 @@ class Order < ApplicationRecord
         ask: ask,
         consumer: cart.consumer ? cart.consumer : user,
         producer: producer,
-        status: 1
+        status: 3
       }
       order = Order.create!(order_hash)
 

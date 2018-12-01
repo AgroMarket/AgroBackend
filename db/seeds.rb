@@ -179,7 +179,7 @@ Consumer.all.each do |user|
           from: order.consumer,
           amount: order.total,
           to: order.producer,
-          status: 'Оплачено',
+          status: 2,
           order: order,
           ask: ask
         }

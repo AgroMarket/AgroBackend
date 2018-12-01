@@ -151,8 +151,8 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
     t.bigint "from_id"
     t.bigint "to_id"
     t.integer "amount"
-    t.bigint "ask_id"
-    t.bigint "order_id"
+    t.bigint "ask_id", default: 0
+    t.bigint "order_id", default: 0
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

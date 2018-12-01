@@ -4,8 +4,8 @@ class CreateTransactions < ActiveRecord::Migration[5.2]
       t.references :from, index: true
       t.references :to
       t.integer :amount
-      t.references :ask, default: nil
-      t.references :order, default: nil
+      t.references :ask, null: true, default: 0
+      t.references :order, null: true, default: 0
       t.string :status
 
       t.timestamps

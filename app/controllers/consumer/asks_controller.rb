@@ -25,12 +25,15 @@ class Consumer::AsksController < ApplicationController
   # POST /asks.json
   def create
     @ask = Ask.new(ask_params)
-
+    @ask.consumer = current_user
     if @ask.save
+      self.create_transaction(current_user, current_user, @ask.amount, @ask, order=nil, 0)
+      self.create_transaction(current_user, fermastore, @ask.amount, @ask, order=nil, 1)
       render :show, status: :created, location: @ask
     else
       render json: @ask.errors, status: :unprocessable_entity
     end
+    
   end
 
   # PATCH/PUT /asks/1
@@ -57,6 +60,6 @@ class Consumer::AsksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def ask_params
-      params.require(:ask).permit(:date, :amount, :status)
+      params.require(:ask).permit(:amount, :status)
     end
 end
