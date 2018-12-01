@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       resources :producers, only: :index
       get 'profile' => 'consumers#show'
       put 'profile' => 'consumers#update'
+      get 'tranzactions' => 'tranzactions#index'
     end
 
     # GUEST
