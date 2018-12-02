@@ -26,7 +26,7 @@ class Producer::OrdersController < ApplicationController
         orders Order.where(producer_id: current_user.id).order('created_at DESC')
       end
 
-      path consumer_orders_path
+      path producer_orders_path
       @orders = paginate @orders
       view 'producer/orders/index'
     end
@@ -63,7 +63,7 @@ class Producer::OrdersController < ApplicationController
   # PATCH/PUT /orders/1
   # PATCH/PUT /orders/1.json
   def update
-    if params[:status] == 1
+    if params[:order][:status] == 1
       if @order.update(order_params)
         create_task(@order) if check_ask_status_in_order(@order)      
         build do

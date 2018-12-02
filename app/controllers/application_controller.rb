@@ -38,10 +38,10 @@ class ApplicationController < ActionController::API
   end
 
   def check_ask_status_in_order(order)
-    order.ask.orders.count == order.ask.orders.where(status: 1) ? true : false
+    order.ask.orders.count == order.ask.orders.where(status: 1).count
   end
 
   def create_task(order)
-    Task.create(order.ask, order.consumer)
+    Task.create(ask: order.ask, user: order.consumer, status: 0)
   end
 end
