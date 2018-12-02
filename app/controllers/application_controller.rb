@@ -16,9 +16,12 @@ class ApplicationController < ActionController::API
     Transaction.create! transaction
     if from == to
       to.amount += amount
+      to.save
     else
       to.amount += amount
       from.amount -= amount
+      to.save
+      from.save
     end 
   end
 

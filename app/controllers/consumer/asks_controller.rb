@@ -27,8 +27,8 @@ class Consumer::AsksController < ApplicationController
     @ask = Ask.new(ask_params)
     @ask.consumer = current_user
     if @ask.save
-      self.create_transaction(current_user, current_user, @ask.amount, @ask, order=nil, 0)
-      self.create_transaction(current_user, fermastore, @ask.amount, @ask, order=nil, 1)
+      self.create_transaction(current_user, current_user, @ask.amount, @ask, order=nil, "Пополнение")
+      self.create_transaction(current_user, fermastore, @ask.amount, @ask, order=nil, "Резерв")
       render :show, status: :created, location: @ask
     else
       render json: @ask.errors, status: :unprocessable_entity

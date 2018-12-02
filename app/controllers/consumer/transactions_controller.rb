@@ -9,7 +9,7 @@ class Consumer::TransactionsController < ApplicationController
         @transactions = Transaction.where(from: current_user.id) 
         build do
             message "Транзакции пользователя"   
-            view 'consumer/transactions'
+            view 'consumer/transactions/transaction'
         end
     end  
 
@@ -24,6 +24,8 @@ class Consumer::TransactionsController < ApplicationController
             @transaction.ask = nil
             @transaction.order = nil
             current_user.amount += @transaction.amount
+            current_user.save
+            puts current_user.amount
             if @transaction.save!
                 render :show, status: :created, json: @transaction
             else
@@ -36,10 +38,14 @@ class Consumer::TransactionsController < ApplicationController
             @transaction.order = nil
             if current_user.amount >= @transaction.amount 
                 current_user.amount -= @transaction.amount
+                current_user.save
                 @transaction.save!
                 render :show, status: :created, json: @transaction
             else
-                render json: @transaction.errors, status: :unprocessable_entity
+                build do
+                    message "На счёте недостаточно средств"
+                    view 'consumer/transactions/response'
+                end
             end
         end
     end
