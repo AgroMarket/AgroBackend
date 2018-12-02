@@ -34,6 +34,7 @@ Rails.application.routes.draw do
       get 'profile' => 'consumers#show'
       put 'profile' => 'consumers#update'
       get 'transactions' => 'transactions#index'
+      post 'transactions' => 'transactions#create'
     end
 
     # GUEST
