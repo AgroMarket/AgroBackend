@@ -16,13 +16,13 @@ class AsksController < ApplicationController
   # POST /asks.json
   def create
     @ask = Ask.new(ask_params)
-    fermastore = User.find_by(email: 'fermastore@mail.ru')
+    #fermastore = User.find_by(email: 'fermastore@mail.ru')
     if @ask.save
       render :show, status: :created, location: @ask
     else
       render json: @ask.errors, status: :unprocessable_entity
     end
-    self.create_transaction(from: current_user, to: current_user, amount: @ask.amount, ask: @ask, status: 0)
+    #self.create_transaction(from: current_user, to: current_user, amount: @ask.amount, ask: @ask, status: 0)
   end
 
   # PATCH/PUT /asks/1

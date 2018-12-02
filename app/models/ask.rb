@@ -3,4 +3,6 @@ class Ask < ApplicationRecord
   has_many :orders
   has_many :tranzactions
   has_many :tasks
+
+  enum status: %i[Ожидает Доставлен Выполнен]
 end

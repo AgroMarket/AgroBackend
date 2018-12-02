@@ -39,6 +39,12 @@ Rails.application.routes.draw do
       post 'transactions' => 'transactions#create'
     end
 
+    # USER
+    namespace :users do
+      get 'transactions' => 'transactions#index'
+      get 'tasks' => 'tasks#index'
+    end
+
     # GUEST
     resources :pages, only: %i[index show]
     resources :consumers, only: %i[index show create]
