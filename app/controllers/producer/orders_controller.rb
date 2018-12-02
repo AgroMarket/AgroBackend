@@ -50,7 +50,7 @@ class Producer::OrdersController < ApplicationController
         order Order.create_order_from_order(params[:order][:id])
         view 'producer/orders/show'
       end
-    elsif Order.create_orders_from_cart(params[:cart_id])
+    elsif Order.create_orders_from_cart(params[:cart_id], current_user)
       build do
         message 'Создание заказов'
         view 'producer/orders/create'
@@ -65,7 +65,7 @@ class Producer::OrdersController < ApplicationController
   def update
     if params[:order][:status] == 1
       if @order.update(order_params)
-        create_task(@order) if check_ask_status_in_order(@order)      
+        create_task(@order) if check_ask_status_in_order(@order)
         build do
           message 'Редактирование заказа'
           view 'producer/orders/show'
@@ -88,13 +88,13 @@ class Producer::OrdersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_order
-      @order = Order.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_order
+    @order = Order.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def order_params
-      params.require(:order).permit(:status)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def order_params
+    params.require(:order).permit(:status)
+  end
 end

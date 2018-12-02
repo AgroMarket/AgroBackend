@@ -1,20 +1,20 @@
 class Consumer::TransactionsController < ApplicationController
-   # before_action :set_tranzaction, only: [:show, :update, :destroy]
-    before_action :authenticate_user
-    include Exceptable
-  
-    # GET /tranzactions
-    # GET /tranzactions.json
-    def index
-        @transactions = Transaction.where(from: current_user.id) 
-        build do
-            message "Транзакции пользователя"   
-            view 'consumer/transactions/transaction'
-        end
-    end  
+  # before_action :set_tranzaction, only: [:show, :update, :destroy]
+  before_action :authenticate_user
+  include Exceptable
 
-    def show
+  # GET /tranzactions
+  # GET /tranzactions.json
+  def index
+    @transactions = Transaction.where(from: current_user.id)
+    build do
+      message "Транзакции пользователя"
+      view 'consumer/transactions/transaction'
     end
+  end
+
+  def show
+  end
 
     def create
         @transaction = Transaction.new(transaction_params)
@@ -27,6 +27,7 @@ class Consumer::TransactionsController < ApplicationController
             current_user.save
             puts current_user.amount
             if @transaction.save!
+                # TODO JSON
                 render :show, status: :created, json: @transaction
             else
                 render json: @transaction.errors, status: :unprocessable_entity
@@ -40,6 +41,7 @@ class Consumer::TransactionsController < ApplicationController
                 current_user.amount -= @transaction.amount
                 current_user.save
                 @transaction.save!
+                # TODO JSON
                 render :show, status: :created, json: @transaction
             else
                 build do
@@ -47,14 +49,17 @@ class Consumer::TransactionsController < ApplicationController
                     view 'consumer/transactions/response'
                 end
             end
+
         end
+      end
     end
-
-    private
-
-    def transaction_params
-        params.require(:transaction).permit(:amount, :status)
-    end
-    
   end
+
+  private
+
+  def transaction_params
+    params.require(:transaction).permit(:amount, :status)
+  end
+
+end
   

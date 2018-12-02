@@ -45,7 +45,8 @@ Rails.application.routes.draw do
       post 'transactions' => 'transactions#create'
     end
 
-    
+    # DASHBOARD
+    get 'dashboard' => 'dashboards#index'
 
     # GUEST
     resources :pages, only: %i[index show]

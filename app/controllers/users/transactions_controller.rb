@@ -6,7 +6,7 @@ class Users::TransactionsController < ApplicationController
      # GET /tranzactions
      # GET /tranzactions.json
      def index
-        if current_user.has_role?(:admin)
+        if current_user.has_role? :admin
             @transactions = Transaction.all          
         else
             @transaction = Transaction.where(to: current_user.id)
