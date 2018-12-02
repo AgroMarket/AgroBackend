@@ -17,6 +17,11 @@ end
 
 # Создаём первого пользователя ФермаСторе
 first_user = User.create! ({email: 'FermaStore@mail.ru', password: '12341234', avatar: ''})
+money_user = User.create! ({email: 'money@mail.ru', password: '12341234', avatar: ''})
+transport_company = User.create! ({email: 'transport@mail.ru', password: '12341234', avatar: ''})
+
+first_user.add_role :admin
+transport_company.add_role :transport
 
 # Consumers
 (1..5).each do |i|
@@ -29,7 +34,7 @@ first_user = User.create! ({email: 'FermaStore@mail.ru', password: '12341234', a
                description: FFaker::HipsterIpsum.paragraph }
   Consumer.create! consumer
 end
-# Consumer.all.each { |consumer| consumer.image.attach missing_png }
+Consumer.all.each { |consumer| consumer.image.attach missing_png }
 
 # Producer
 (1..12).each do |i|
@@ -113,7 +118,7 @@ p cart.total
 puts ''
 
 # Asks
-ask = Ask.create! consumer: Consumer.first, amount: cart.total, status: 0
+ask = Ask.create! consumer: Consumer.first, amount: cart.total + cart.delivery_cost, status: 0
 
 # Orders
 cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
@@ -169,18 +174,22 @@ cart.cart_items.destroy_all
 # создаём транзакции
 boss_user = User.find_by(email: 'fermastore@mail.ru')
 Consumer.all.each do |user|
-  if user.orders
-    user.orders.each do |order|
-      tranzactions_first = {
-        user: user,
-        sum: order.total,
-        to: boss_user.id,
-        order: order,
-        status: 'Резервация'
-      }
-      boss_user.amount = boss_user.amount + order.total
-      puts boss_user.amount
-      Tranzaction.create! tranzactions_first
+  asks = user.asks
+  if asks.orders 
+    asks.each do |ask|
+      ask.orders.each do |order|
+        tranzactions_first = {
+          from: order.consumer,
+          amount: order.total,
+          to: order.producer,
+          status: 2,
+          order: order,
+          ask: ask
+        }
+        order.producer.amount += order.total
+        puts order.producer.amount
+        Transaction.create! tranzactions_first
+      end
     end
   end
 end

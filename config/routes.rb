@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   
+  resources :tasks
+#  resources :transactions
 #  resources :asks
   scope :api do
      
@@ -8,7 +10,7 @@ Rails.application.routes.draw do
     
     # AUTH
     post 'login' => 'user_token#create'
-    
+    post 'transactions' => 'transactions#create'
     # PRODUCER
     namespace :producer do
       resources :products
@@ -19,6 +21,8 @@ Rails.application.routes.draw do
       get 'consumers' => 'consumers#index'      
       get 'profile' => 'producers#show'
       put 'profile' => 'producers#update'
+      get 'transactions' => 'transactions#index'
+      post 'transactions' => 'transactions#create'
     end
 
     # CONSUMER
@@ -31,6 +35,14 @@ Rails.application.routes.draw do
       resources :producers, only: :index
       get 'profile' => 'consumers#show'
       put 'profile' => 'consumers#update'
+      get 'transactions' => 'transactions#index'
+      post 'transactions' => 'transactions#create'
+    end
+
+    # USER
+    namespace :users do
+      get 'transactions' => 'transactions#index'
+      get 'tasks' => 'tasks#index'
     end
 
     # GUEST
@@ -49,7 +61,7 @@ Rails.application.routes.draw do
     end
 
     # TRANZACTIONS
-    resources :tranzactions, only: :index
+    # resources :tranzactions, only: :index
     # resources :orders, only: %i[index show create update] do
     #   resources :order_items
     # end

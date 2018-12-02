@@ -23,10 +23,10 @@ require 'rails_helper'
 # removed from Rails core in Rails 5, but can be added back in via the
 # `rails-controller-testing` gem.
 
-RSpec.describe TranzactionsController, type: :controller do
+RSpec.describe TransactionsController, type: :controller do
 
   # This should return the minimal set of attributes required to create a valid
-  # Tranzaction. As you add validations to Tranzaction, be sure to
+  # Transaction. As you add validations to Transaction, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
     skip("Add a hash of attributes valid for your model")
@@ -38,12 +38,12 @@ RSpec.describe TranzactionsController, type: :controller do
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
-  # TranzactionsController. Be sure to keep this updated too.
+  # TransactionsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
   describe "GET #index" do
     it "returns a success response" do
-      tranzaction = Tranzaction.create! valid_attributes
+      transaction = Transaction.create! valid_attributes
       get :index, params: {}, session: valid_session
       expect(response).to be_successful
     end
@@ -51,33 +51,33 @@ RSpec.describe TranzactionsController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
-      tranzaction = Tranzaction.create! valid_attributes
-      get :show, params: {id: tranzaction.to_param}, session: valid_session
+      transaction = Transaction.create! valid_attributes
+      get :show, params: {id: transaction.to_param}, session: valid_session
       expect(response).to be_successful
     end
   end
 
   describe "POST #create" do
     context "with valid params" do
-      it "creates a new Tranzaction" do
+      it "creates a new Transaction" do
         expect {
-          post :create, params: {tranzaction: valid_attributes}, session: valid_session
-        }.to change(Tranzaction, :count).by(1)
+          post :create, params: {transaction: valid_attributes}, session: valid_session
+        }.to change(Transaction, :count).by(1)
       end
 
-      it "renders a JSON response with the new tranzaction" do
+      it "renders a JSON response with the new transaction" do
 
-        post :create, params: {tranzaction: valid_attributes}, session: valid_session
+        post :create, params: {transaction: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:created)
         expect(response.content_type).to eq('application/json')
-        expect(response.location).to eq(tranzaction_url(Tranzaction.last))
+        expect(response.location).to eq(transaction_url(Transaction.last))
       end
     end
 
     context "with invalid params" do
-      it "renders a JSON response with errors for the new tranzaction" do
+      it "renders a JSON response with errors for the new transaction" do
 
-        post :create, params: {tranzaction: invalid_attributes}, session: valid_session
+        post :create, params: {transaction: invalid_attributes}, session: valid_session
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to eq('application/json')
       end
@@ -90,27 +90,27 @@ RSpec.describe TranzactionsController, type: :controller do
         skip("Add a hash of attributes valid for your model")
       }
 
-      it "updates the requested tranzaction" do
-        tranzaction = Tranzaction.create! valid_attributes
-        put :update, params: {id: tranzaction.to_param, tranzaction: new_attributes}, session: valid_session
-        tranzaction.reload
+      it "updates the requested transaction" do
+        transaction = Transaction.create! valid_attributes
+        put :update, params: {id: transaction.to_param, transaction: new_attributes}, session: valid_session
+        transaction.reload
         skip("Add assertions for updated state")
       end
 
-      it "renders a JSON response with the tranzaction" do
-        tranzaction = Tranzaction.create! valid_attributes
+      it "renders a JSON response with the transaction" do
+        transaction = Transaction.create! valid_attributes
 
-        put :update, params: {id: tranzaction.to_param, tranzaction: valid_attributes}, session: valid_session
+        put :update, params: {id: transaction.to_param, transaction: valid_attributes}, session: valid_session
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to eq('application/json')
       end
     end
 
     context "with invalid params" do
-      it "renders a JSON response with errors for the tranzaction" do
-        tranzaction = Tranzaction.create! valid_attributes
+      it "renders a JSON response with errors for the transaction" do
+        transaction = Transaction.create! valid_attributes
 
-        put :update, params: {id: tranzaction.to_param, tranzaction: invalid_attributes}, session: valid_session
+        put :update, params: {id: transaction.to_param, transaction: invalid_attributes}, session: valid_session
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to eq('application/json')
       end
@@ -118,11 +118,11 @@ RSpec.describe TranzactionsController, type: :controller do
   end
 
   describe "DELETE #destroy" do
-    it "destroys the requested tranzaction" do
-      tranzaction = Tranzaction.create! valid_attributes
+    it "destroys the requested transaction" do
+      transaction = Transaction.create! valid_attributes
       expect {
-        delete :destroy, params: {id: tranzaction.to_param}, session: valid_session
-      }.to change(Tranzaction, :count).by(-1)
+        delete :destroy, params: {id: transaction.to_param}, session: valid_session
+      }.to change(Transaction, :count).by(-1)
     end
   end
 

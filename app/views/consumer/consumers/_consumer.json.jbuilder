@@ -5,5 +5,6 @@ json.profile do
   json.email consumer.email
   json.phone consumer.phone
   json.address consumer.address
+  json.amount consumer.amount
   json.image consumer.image ? url_for(consumer.image) : nil
 end

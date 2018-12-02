@@ -22,7 +22,7 @@ class CartsController < ApplicationController
   def create
     @cart = Cart.new(cart_params)
     @cart.consumer = current_user if current_user.present?
-
+    
     if @cart.save
       build do
         message 'Новая корзина'

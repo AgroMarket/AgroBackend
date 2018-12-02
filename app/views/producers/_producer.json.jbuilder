@@ -7,6 +7,7 @@ json.producer do
 	json.phone producer.producer_phone
 	json.inn producer.producer_inn
 	json.descripion producer.producer_description
+	json.amount producer.amount
 	json.logo url_for(producer.logo)
 	json.sertificates do
 	  json.array! do

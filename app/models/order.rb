@@ -3,10 +3,10 @@ class Order < ApplicationRecord
   belongs_to :consumer
   belongs_to :producer
   has_many :order_items, dependent: :destroy
-  has_one :tranzaction
+  has_many :transactions
 
 
-  enum status: %i[Ожидает Выполнен Отклонен]
+  enum status: %i[Подтверждается Подтверждён Доставлен Выполнен]
 
   def self.create_orders_from_cart(cart_id, user)
     cart = Cart.find(cart_id)
@@ -18,7 +18,7 @@ class Order < ApplicationRecord
         ask: ask,
         consumer: cart.consumer ? cart.consumer : user,
         producer: producer,
-        status: 1
+        status: 0
       }
       order = Order.create!(order_hash)
 
