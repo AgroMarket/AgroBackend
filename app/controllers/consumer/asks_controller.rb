@@ -5,7 +5,7 @@ class Consumer::AsksController < ApplicationController
   # GET /asks
   # GET /asks.json
   def index
-    build do
+    build do      
       @asks = Ask.where(consumer: current_user).includes(:orders).order('created_at DESC')
       message 'Список заказов покупателя'
       view 'consumer/asks/index'
@@ -27,9 +27,9 @@ class Consumer::AsksController < ApplicationController
     @ask = Ask.new(ask_params)
     @ask.consumer = current_user
     if @ask.save
-      self.create_transaction(current_user, current_user, @ask.amount, @ask, order=nil, "Пополнение")
-      self.create_transaction(current_user, fermastore, @ask.amount, @ask, order=nil, "Резерв")
-      render :show, status: :created, location: @ask
+      create_transaction(current_user, current_user, @ask.amount, @ask, order=nil, "Пополнение")
+      create_transaction(current_user, fermastore, @ask.amount, @ask, order=nil, "Резерв")
+      render :show, status: :created, json: @ask
     else
       render json: @ask.errors, status: :unprocessable_entity
     end
