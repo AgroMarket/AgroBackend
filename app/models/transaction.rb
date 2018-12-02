@@ -4,5 +4,5 @@ class Transaction < ApplicationRecord
   belongs_to :ask, optional: true
   belongs_to :order, optional: true
 
-  #enum status: %i[Пополнение Оплачен Вывод]
+  enum status: %i[Пополнение Резерв Оплачен Вывод]
 end

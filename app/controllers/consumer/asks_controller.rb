@@ -29,7 +29,7 @@ class Consumer::AsksController < ApplicationController
     if current_user.amount >= @ask.amount
       if @ask.save
         #create_transaction(current_user, current_user, @ask.amount, @ask, order=nil, "Пополнение")
-        create_transaction(current_user, fermastore, @ask.amount, @ask, order=nil, "Резерв")
+        create_transaction(current_user, fermastore, @ask.amount, @ask, order=nil, 1)
         render :show, status: :created, json: @ask
       else
         render json: @ask.errors, status: :unprocessable_entity
@@ -48,10 +48,10 @@ class Consumer::AsksController < ApplicationController
   def update
     if params[:status] == 2 && @ask.status != 2
       @ask.orders.each do |order|
-        create_transaction(fermastore, order.producer, (order.total*0.9).to_i, @ask, order, "Оплачен")
+        create_transaction(fermastore, order.producer, (order.total*0.9).to_i, @ask, order, 2)
       end
-      create_transaction(fermastore, money_user, (ask.amount*0.1).to_i, @ask, nil, "Оплачен")
-      create_transaction(fermastore, tk_user, 500, @ask, nil, "Оплачен")    
+      create_transaction(fermastore, money_user, (ask.amount*0.1).to_i, @ask, nil, 2)
+      create_transaction(fermastore, tk_user, 500, @ask, nil, 2)    
       if @ask.update(ask_params)
         render :show, status: :ok, location: @ask
       else

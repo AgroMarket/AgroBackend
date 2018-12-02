@@ -6,7 +6,7 @@ class CreateTransactions < ActiveRecord::Migration[5.2]
       t.integer :amount
       t.references :ask, null: true, default: 0
       t.references :order, null: true, default: 0
-      t.string :status
+      t.integer :status
 
       t.timestamps
     end

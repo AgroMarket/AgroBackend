@@ -1,12 +1,18 @@
 Rails.application.routes.draw do
   
-  resources :tasks
 #  resources :transactions
 #  resources :asks
   scope :api do
-     
+     # USER
+    namespace :users do
+      resources :tasks, only: %i[index update show]
+      get 'transactions' => 'transactions#index'
+      get 'tasks' => 'tasks#index'
+    end
+    
     # DEVISE
     devise_for :users, controllers: { registrations: 'users/registrations' }, defaults: { format: :json }
+    #change task
     
     # AUTH
     post 'login' => 'user_token#create'
@@ -39,11 +45,7 @@ Rails.application.routes.draw do
       post 'transactions' => 'transactions#create'
     end
 
-    # USER
-    namespace :users do
-      get 'transactions' => 'transactions#index'
-      get 'tasks' => 'tasks#index'
-    end
+    
 
     # GUEST
     resources :pages, only: %i[index show]

@@ -18,7 +18,7 @@ class Consumer::TransactionsController < ApplicationController
 
     def create
         @transaction = Transaction.new(transaction_params)
-        if @transaction.status == "Пополнение"
+        if @transaction.status == 0
             @transaction.from = current_user
             @transaction.to = current_user
             @transaction.ask = nil
@@ -31,7 +31,7 @@ class Consumer::TransactionsController < ApplicationController
             else
                 render json: @transaction.errors, status: :unprocessable_entity
             end
-        elsif @transaction.status == "Вывод"
+        elsif @transaction.status == 3
             @transaction.from = current_user
             @transaction.to = current_user
             @transaction.ask = nil

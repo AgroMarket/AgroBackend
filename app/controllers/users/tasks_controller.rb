@@ -10,7 +10,7 @@ class Users::TasksController < ApplicationController
             @tasks = Task.all
             build do 
                 message "Список всех доставок"                
-                view 'user/tasks/task'
+                view 'user/tasks/tasks'
             end
         #end
     end
@@ -37,7 +37,10 @@ class Users::TasksController < ApplicationController
     def update
       if params[:status] == 1
         if @task.update(task_params)
-          render :show, status: :ok, location: @task
+          build do 
+            message "Статус заказа"
+            view 'user/tasks/show'
+          end
         else
           render json: @task.errors, status: :unprocessable_entity
         end
@@ -58,7 +61,7 @@ class Users::TasksController < ApplicationController
   
       # Never trust parameters from the scary internet, only allow the white list through.
       def task_params
-        params.require(:task).permit(:ask_id, :user_id)
+        params.require(:task).permit(:ask_id, :user_id, :status)
       end
   end
   
