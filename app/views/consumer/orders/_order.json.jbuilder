@@ -1,6 +1,7 @@
 json.order do
   json.id order.id
   json.producer_id order.producer_id
+  json.producer_name order.producer.name
   json.producer_link producer_path order.producer_id
   json.name "Список товаров"
   # json.link consumer_order_path (order.id)
