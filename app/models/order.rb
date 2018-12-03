@@ -38,11 +38,10 @@ class Order < ApplicationRecord
           order.total += order_item.sum
           order.save
         end
+        cart.cart_items.destroy_all
       end
     end
-
-    cart.cart_items.destroy_all if order.present?
-    true
+    ask
   end
 
   # def self.create_order_from_order(order_id)
