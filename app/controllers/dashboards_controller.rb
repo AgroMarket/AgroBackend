@@ -1,24 +1,27 @@
 class DashboardsController < ApplicationController
 
-before_action :authenticate_user
-include Exceptable
+  before_action :authenticate_user
+  include Exceptable
 
-def index
+  def index
     @dashboard = get_info_for_dashboard
-    build do 
-        message "Информация для админа"
-        view 'dashboards/index'
+    build do
+      message 'Информация для админа'
+      view 'dashboards/index'
     end
-end
+  end
 
-private
+  private
 
-def get_info_for_dashboard
+  def get_info_for_dashboard
     {
-        total_money: Ask.sum("amount"),
-        total_sales: Order.all.count,
-        total_our_money: money_user.amount
+      producers_count: Producer.count,
+      consumers_count: Consumer.count,
+      products_count: Product.count,
+      orders_count: Order.count,
+      turnover: Ask.sum(:amount),
+      profit: money_user.amount
     }
-end
+  end
 
 end

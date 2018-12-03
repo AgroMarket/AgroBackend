@@ -1,5 +1,8 @@
 json.dashboard do
-    json.total_money @dashboard[:total_money]
-    json.total_sales @dashboard[:total_sales]
-    json.total_our_money @dashboard[:total_our_money]
+  json.producers_count @dashboard[:producers_count]
+  json.consumers_count @dashboard[:consumers_count]
+  json.products_count @dashboard[:products_count]
+  json.sales_count @dashboard[:orders_count]
+  json.turnover @dashboard[:turnover]
+  json.profit @dashboard[:profit]
 end
