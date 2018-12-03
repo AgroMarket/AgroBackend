@@ -1,0 +1,1 @@
+json.partial! "consumer/transactions/transaction", transaction: @transaction

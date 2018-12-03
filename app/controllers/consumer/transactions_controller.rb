@@ -55,25 +55,18 @@ class Consumer::TransactionsController < ApplicationController
           order: nil,
           status: 3
       }
-      @transaction = Transaction.create!(transaction)
-      if @transaction && current_user.amount >= @transaction.amount
+      @transaction = Transaction.new(transaction)
+      if current_user.amount >= @transaction.amount
         build do
           current_user.amount -= @transaction.amount
           current_user.save!
           @transaction.save!
           message 'Вывод средств покупателя'
           view 'consumer/transactions/transaction'
-          # view 'consumer/consumers/show' if current_user.consumer?
-          # view 'producer/producers/show' if current_user.producer?
         end
-
       else
-        @transaction.destroy
         build do
           message 'На счёте недостаточно средств'
-          error @transaction.errors
-          status :unprocessable_entity
-          # view 'consumer/consumers/consumer'
           view 'consumer/transactions/transaction'
         end
       end
