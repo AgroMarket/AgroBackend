@@ -4,8 +4,8 @@ module Exceptable
       begin
         yield
         @status = response.status
-        @result = true
-        @error = nil
+        @result ||= true
+        @error ||= nil
 
       rescue => ex
         @status = response.status
@@ -15,6 +15,14 @@ module Exceptable
 
       render "layouts/response", formats: :json
     end
+  end
+
+  def result(result)
+    @result = result
+  end
+
+  def error(error)
+    @error = error
   end
 
   def products(products)
