@@ -31,6 +31,8 @@ Rails.application.routes.draw do
       get 'consumers' => 'consumers#index'
       get 'profile' => 'producers#show'
       put 'profile' => 'producers#update'
+
+      get 'dashboard' => 'dashboards#index'
     end
 
     # CONSUMER
