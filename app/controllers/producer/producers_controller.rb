@@ -1,4 +1,5 @@
 class Producer::ProducersController < ApplicationController
+  before_action :authenticate_user
   before_action :set_producer, only: [:show, :update, :destroy]
   include Exceptable
 

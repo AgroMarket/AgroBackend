@@ -1,6 +1,14 @@
 Rails.application.routes.draw do
 
   scope :api do
+    # DEVISE
+    devise_for :users, controllers: { registrations: 'users/registrations' }, defaults: { format: :json }
+    #change task
+
+    # AUTH
+    post 'login' => 'user_token#create'
+    post 'transactions' => 'transactions#create'
+
      # USER
     namespace :users do
       resources :tasks, only: %i[index update show]
@@ -8,14 +16,6 @@ Rails.application.routes.draw do
       # get 'transactions' => 'transactions#index'
       # get 'tasks' => 'tasks#index'
     end
-    
-    # DEVISE
-    devise_for :users, controllers: { registrations: 'users/registrations' }, defaults: { format: :json }
-    #change task
-    
-    # AUTH
-    post 'login' => 'user_token#create'
-    post 'transactions' => 'transactions#create'
 
     # PRODUCER
     namespace :producer do
