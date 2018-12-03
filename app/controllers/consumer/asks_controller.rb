@@ -28,15 +28,24 @@ class Consumer::AsksController < ApplicationController
     @ask.consumer = current_user
     if current_user.amount >= @ask.amount
       if @ask.save
-        #create_transaction(current_user, current_user, @ask.amount, @ask, order=nil, "Пополнение")
-        create_transaction(current_user, fermastore, @ask.amount, @ask, order=nil, 1)
-        render :show, status: :created, json: @ask
+        build do
+          message 'Оформление заказа'
+          #create_transaction(current_user, current_user, @ask.amount, @ask, order=nil, "Пополнение")
+          create_transaction(current_user, fermastore, @ask.amount, @ask, order=nil, 1)
+          status :created
+          view 'consumer/asks/show'
+        end
       else
-        render json: @ask.errors, status: :unprocessable_entity
+        build do
+          message 'Оформление заказа'
+          error @ask.errors
+          status :unprocessable_entity
+          view 'consumer/asks/show'
+        end
       end
     else
       build do
-        message "На счёте недостаточно средств"
+        message 'На счёте недостаточно средств'
         view 'consumer/transactions/response'
       end
     end
@@ -51,11 +60,11 @@ class Consumer::AsksController < ApplicationController
         create_transaction(fermastore, order.producer, (order.total*0.9).to_i, @ask, order, 2)
       end
       create_transaction(fermastore, money_user, (@ask.amount*0.1).to_i, @ask, nil, 2)
-      create_transaction(fermastore, tk_user, 500, @ask, nil, 2)    
+      create_transaction(fermastore, tk_user, 500, @ask, nil, 2)
       if @ask.update(ask_params)
         build do 
-          message "Статус заказа изменен"
-          view "consumer/asks/show"
+          message 'Статус заказа изменен'
+          view 'consumer/asks/show'
         end
       else
         render json: @ask.errors, status: :unprocessable_entity
