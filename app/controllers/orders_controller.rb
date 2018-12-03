@@ -16,14 +16,32 @@ class OrdersController < ApplicationController
   # POST /orders
   # POST /orders.json
   def create
-    if Order.create_orders_from_cart(params[:cart_id], current_user)
-      build do
-        message 'Создание заказов'
-        view 'orders/create'
+    @cart = Cart.find params[:cart_id]
+
+    if current_user.amount >= @cart.total
+      ask = Order.create_orders_from_cart(params[:cart_id], current_user)
+
+      if ask && create_transaction(current_user, fermastore, ask.amount, ask, nil, 1)
+        build do
+          message 'Создание заказов'
+          view 'orders/create'
+        end
+
+      else
+        ask.destroy
+        build do
+          message 'Создание заказов'
+          error @order.errors
+          status :unprocessable_entity
+          view 'orders/create'
+        end
       end
-      # render :show, status: :created, location: @order
+
     else
-      render json: @order.errors, status: :unprocessable_entity
+      build do
+        message 'На счёте недостаточно средств'
+        view 'consumer/transactions/response'
+      end
     end
   end
 
