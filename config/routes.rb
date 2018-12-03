@@ -24,14 +24,9 @@ Rails.application.routes.draw do
         resources :order_items, only: %i[index]
       end
       resources :transactions, only: %i[index create]
-      # get 'transactions' => 'transactions#index'
-      # post 'transactions' => 'transactions#create'
-
-      # resources :consumers, only: %i[index]
       get 'consumers' => 'consumers#index'
       get 'profile' => 'producers#show'
       put 'profile' => 'producers#update'
-
       get 'dashboard' => 'dashboards#index'
     end
 
