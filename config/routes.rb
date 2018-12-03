@@ -20,11 +20,10 @@ Rails.application.routes.draw do
     # PRODUCER
     namespace :producer do
       resources :products
-      resources :asks do
-        resources :orders, only: %i[index show create destroy] do
-          resources :order_items, only: %i[index create destroy]
-        end
+      resources :orders, only: %i[index show create destroy] do
+        resources :order_items, only: %i[index create destroy]
       end
+      
       resources :transactions, only: %i[index create]
       # get 'transactions' => 'transactions#index'
       # post 'transactions' => 'transactions#create'
