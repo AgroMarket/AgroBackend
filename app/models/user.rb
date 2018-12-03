@@ -26,6 +26,14 @@ class User < ApplicationRecord
     self.find payload["sub"]
   end
 
+  def consumer?
+    type == 'Consumer'
+  end
+
+  def producer?
+    type == 'Producer'
+  end
+
   private
 
   # def assign_default_role

@@ -16,40 +16,52 @@ class Consumer::TransactionsController < ApplicationController
   def show
   end
 
-    def create
-        @transaction = Transaction.new(transaction_params)
-        if @transaction.status == 0
-            @transaction.from = current_user
-            @transaction.to = current_user
-            @transaction.ask = nil
-            @transaction.order = nil
-            current_user.amount += @transaction.amount
-            current_user.save
-            puts current_user.amount
-            if @transaction.save!
-                # TODO JSON
-                render :show, status: :created, json: @transaction
-            else
-                render json: @transaction.errors, status: :unprocessable_entity
-            end
-        elsif @transaction.status == 3
-            @transaction.from = current_user
-            @transaction.to = current_user
-            @transaction.ask = nil
-            @transaction.order = nil
-            if current_user.amount >= @transaction.amount 
-                current_user.amount -= @transaction.amount
-                current_user.save
-                @transaction.save!
-                # TODO JSON
-                render :show, status: :created, json: @transaction
-            else
-                build do
-                    message "На счёте недостаточно средств"
-                    view 'consumer/transactions/response'
-                end
-            end
+  def create
+    if params[:transaction][:status] == 0
+      transaction_hash = {
+        amount: params[:transaction][:amount],
+        from: current_user,
+        to: current_user,
+        ask: nil,
+        order: nil,
+        status: 0
+      }
+      transaction = Transaction.create!(transaction_hash)
+      if transaction
+        build do
+          current_user.amount += transaction.amount
+          current_user.save!
+          message 'Пополнение счета покупателя'
 
+          view 'consumer/consumers/show' if current_user.consumer?
+          view 'producer/producers/show' if current_user.producer?
+        end
+
+      else
+        build do
+          message 'Пополнение счета покупателя'
+          error @transaction.errors
+          status :unprocessable_entity
+          view 'consumer/consumers/consumer'
+        end
+      end
+
+    elsif params[:transaction][:status] == 3
+      @transaction.from = current_user
+      @transaction.to = current_user
+      @transaction.ask = nil
+      @transaction.order = nil
+      if current_user.amount >= @transaction.amount
+        current_user.amount -= @transaction.amount
+        current_user.save
+        @transaction.save!
+        # TODO JSON
+        render :show, status: :created, json: @transaction
+
+      else
+        build do
+          message "На счёте недостаточно средств"
+          view 'consumer/transactions/response'
         end
       end
     end
@@ -62,4 +74,3 @@ class Consumer::TransactionsController < ApplicationController
   end
 
 end
-  

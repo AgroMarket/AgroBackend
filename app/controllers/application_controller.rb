@@ -4,7 +4,7 @@ class ApplicationController < ActionController::API
   undef_method :current_user
   respond_to :json
 
-  def create_transaction (from, to, amount, ask, order=nil, status)
+  def create_transaction (from, to, amount, ask, order = nil, status)
     transaction = {
       from: from,
       to: to,
@@ -13,7 +13,7 @@ class ApplicationController < ActionController::API
       order: order,
       status: status
     }
-    Transaction.create! transaction
+    result = Transaction.create! transaction
     if from == to
       to.amount += amount
       to.save
@@ -22,7 +22,8 @@ class ApplicationController < ActionController::API
       from.amount -= amount
       to.save
       from.save
-    end 
+    end
+    result
   end
 
   def fermastore 
