@@ -4,7 +4,7 @@ json.orders do
 			json.id order.id
 			json.date order.created_at
 			json.status order.status
-			json.link producer_order_path (order.id)
+#			json.link consumer_order_path (order.id)
 			json.total order.total
 		end
 	end

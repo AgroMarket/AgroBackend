@@ -4,7 +4,7 @@ json.order do
   json.producer_name order.producer.name
   json.producer_link producer_path order.producer_id
   json.name "Список товаров"
-  json.link producer_order_path (order.id)
+  # json.link consumer_ask_order_path (order.id)
   json.date order.created_at
   json.status order.status
   json.total order.total

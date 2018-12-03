@@ -1,4 +1,4 @@
-class Consumer::AsksController < ApplicationController
+class Producer::AsksController < ApplicationController
   before_action :set_ask, only: [:show, :update, :destroy]
   include Exceptable
 
@@ -6,7 +6,7 @@ class Consumer::AsksController < ApplicationController
   # GET /asks.json
   def index
     build do      
-      @asks = Ask.where(consumer_id: current_user.id).includes(:orders).order('created_at DESC')
+      @asks = Ask.where(consumer: current_user).includes(:orders).order('created_at DESC')
       message 'Список заказов покупателя'
       view 'producer/asks/index'
     end

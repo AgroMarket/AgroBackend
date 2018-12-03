@@ -170,6 +170,92 @@ puts '', "Ask total: #{ask.amount}"
 
 cart.cart_items.destroy_all
 
+# Создаём заказ для продавца
+# Carts
+cart = Cart.create! consumer: Producer.first
+
+# CartItems
+Producer.first(4).each do |producer|
+  producer.products.first(3).each do |product|
+    quantity = 2
+    cart_item = {
+      cart: cart,
+      product: product,
+      producer: producer,
+      quantity: quantity,
+      sum: product.price * quantity
+    }
+    cart.cart_items << CartItem.create!(cart_item)
+  end
+end
+
+puts 'cart start'
+cart.cart_items.each do |item|
+  cart_id = item.cart.id
+  farmer_id = item.product.producer.id
+  farmer = item.product.producer.name
+  product_id = item.product.id
+  product = item.product.name
+  puts "  cart_id #{cart_id} farmer_id #{farmer_id} farmer_name #{farmer} product_id #{product_id} product_name #{product}"
+end
+puts 'cart end'
+puts ''
+p cart.total
+puts ''
+
+# Asks
+ask = Ask.create! consumer: Producer.first, amount: cart.total + cart.delivery_cost, status: 0
+
+# Orders
+cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
+  # для каждого производителя находим в корзине его товары и формируем из них заказ
+  puts "farmer_id #{producer.id}, farmer_name #{producer.name}"
+
+  # создаем заказ
+  order_hash = {
+    ask: ask,
+    consumer: cart.consumer,
+    producer: producer,
+    status: 1
+  }
+  order = Order.create!(order_hash)
+
+  # если заказ создан, то наполняем его товарами
+  if order.present?
+    # выбираем из корзины записи относящиеся только к данному производителю
+    CartItem.where(cart: cart, producer: producer).each do |cart_item|
+      order_item_hash = {
+        order: order,
+        product: cart_item.product,
+        producer: producer,
+        price: cart_item.product.price,
+        quantity: cart_item.quantity,
+        sum: cart_item.sum
+      }
+
+      order_item = OrderItem.create!(order_item_hash)
+      order_id = order_item.order.id
+      farmer_id = order_item.producer.id
+      farmer_name = order_item.producer.name
+      product_id = order_item.product.id
+      product_name = order_item.product.name
+      price = order_item.price
+      quantity = order_item.quantity
+      sum = order_item.sum
+      puts "  order_id #{order_id} farmer_id #{farmer_id} farmer_name #{farmer_name} product_id #{product_id} product_name #{product_name} price #{price} quantity #{quantity} sum #{sum}"
+
+      order.order_items << order_item
+      order.total += order_item.sum
+      order.save
+      puts "    total #{order.total}"
+    end
+
+  end
+end
+puts '', "Ask total: #{ask.amount}"
+
+cart.cart_items.destroy_all
+
 
 # создаём транзакции
 boss_user = User.find_by(email: 'fermastore@mail.ru')

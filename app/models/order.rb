@@ -12,7 +12,7 @@ class Order < ApplicationRecord
     cart = Cart.find(cart_id)
 
     ask = Ask.create! consumer: Consumer.first, amount: cart.total, status: 0
-
+    # Похоже, что проблема в этой функции здесь
     cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
       order_hash = {
         ask: ask,
