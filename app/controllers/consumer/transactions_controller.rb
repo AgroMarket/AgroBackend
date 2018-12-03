@@ -42,7 +42,7 @@ class Consumer::TransactionsController < ApplicationController
           message 'Пополнение счета покупателя'
           error @transaction.errors
           status :unprocessable_entity
-          view 'consumer/consumers/consumer'
+          view 'producer/producers/producer'
         end
       end
 
@@ -62,12 +62,12 @@ class Consumer::TransactionsController < ApplicationController
           current_user.save!
           @transaction.save!
           message 'Вывод средств покупателя'
-          view 'consumer/transactions/transaction'
+          view 'producer/transactions/transaction'
         end
       else
         build do
           message 'На счёте недостаточно средств'
-          view 'consumer/transactions/transaction'
+          view 'producer/transactions/transaction'
         end
       end
     end
