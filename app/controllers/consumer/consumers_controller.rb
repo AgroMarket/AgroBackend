@@ -29,9 +29,6 @@ class Consumer::ConsumersController < ApplicationController
   # GET /consumers/1
   # GET /consumers/1.json
   def show
-    p '------------'
-    p current_user
-    p '------------'
     if current_user.consumer?
       build do
         message 'Профиль покупателя'
@@ -90,9 +87,6 @@ class Consumer::ConsumersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_consumer
-      p '------------'
-      p current_user
-      p '------------'
       if current_user
         @consumer = Consumer.find(current_user.id)
       else

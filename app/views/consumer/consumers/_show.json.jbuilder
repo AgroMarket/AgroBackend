@@ -1,1 +1,1 @@
-json.partial! "consumers/consumer", consumer: current_user
+json.partial! "consumer/consumers/consumer", consumer: current_user
