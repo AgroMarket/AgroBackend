@@ -8,7 +8,7 @@ class Consumer::TransactionsController < ApplicationController
   def index
     @transactions = Transaction.where(from: current_user.id)
     build do
-      message "Транзакции пользователя"
+      message 'Транзакции пользователя'
       view 'consumer/transactions/transaction'
     end
   end
@@ -47,21 +47,34 @@ class Consumer::TransactionsController < ApplicationController
       end
 
     elsif params[:transaction][:status] == 3
-      @transaction.from = current_user
-      @transaction.to = current_user
-      @transaction.ask = nil
-      @transaction.order = nil
-      if current_user.amount >= @transaction.amount
-        current_user.amount -= @transaction.amount
-        current_user.save
-        @transaction.save!
-        # TODO JSON
-        render :show, status: :created, json: @transaction
+      transaction = {
+          amount: params[:transaction][:amount],
+          from: current_user,
+          to: current_user,
+          ask: nil,
+          order: nil,
+          status: 3
+      }
+      @transaction = Transaction.create!(transaction)
+      if @transaction && current_user.amount >= @transaction.amount
+        build do
+          current_user.amount -= @transaction.amount
+          current_user.save!
+          @transaction.save!
+          message 'Вывод средств покупателя'
+          view 'consumer/transactions/transaction'
+          # view 'consumer/consumers/show' if current_user.consumer?
+          # view 'producer/producers/show' if current_user.producer?
+        end
 
       else
+        @transaction.destroy
         build do
-          message "На счёте недостаточно средств"
-          view 'consumer/transactions/response'
+          message 'На счёте недостаточно средств'
+          error @transaction.errors
+          status :unprocessable_entity
+          # view 'consumer/consumers/consumer'
+          view 'consumer/transactions/transaction'
         end
       end
     end
