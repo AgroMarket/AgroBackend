@@ -26,6 +26,7 @@ class Consumer::AsksController < ApplicationController
   def create
     @ask = Ask.new(ask_params)
     @ask.consumer = current_user
+    @ask.amount += 500
     if current_user.amount >= @ask.amount
       if @ask.save
         build do
