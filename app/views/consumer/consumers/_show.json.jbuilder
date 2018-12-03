@@ -1,1 +1,1 @@
-json.partial! "consumers/consumer", consumer: @consumer
+json.partial! "consumers/consumer", consumer: current_user

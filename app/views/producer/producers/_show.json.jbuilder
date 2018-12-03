@@ -1,1 +1,1 @@
-json.partial! "producer/producers/producer", producer: @producer
+json.partial! "producer/producers/producer", producer: current_user
