@@ -1,13 +1,12 @@
 Rails.application.routes.draw do
-  
-#  resources :transactions
-#  resources :asks
+
   scope :api do
      # USER
     namespace :users do
       resources :tasks, only: %i[index update show]
-      get 'transactions' => 'transactions#index'
-      get 'tasks' => 'tasks#index'
+      resources :transactions, only: %i[index]
+      # get 'transactions' => 'transactions#index'
+      # get 'tasks' => 'tasks#index'
     end
     
     # DEVISE
@@ -17,18 +16,21 @@ Rails.application.routes.draw do
     # AUTH
     post 'login' => 'user_token#create'
     post 'transactions' => 'transactions#create'
+
     # PRODUCER
     namespace :producer do
       resources :products
       resources :orders, only: %i[index show update] do
         resources :order_items, only: %i[index]
       end
+      resources :transactions, only: %i[index create]
+      # get 'transactions' => 'transactions#index'
+      # post 'transactions' => 'transactions#create'
+
       # resources :consumers, only: %i[index]
-      get 'consumers' => 'consumers#index'      
+      get 'consumers' => 'consumers#index'
       get 'profile' => 'producers#show'
       put 'profile' => 'producers#update'
-      get 'transactions' => 'transactions#index'
-      post 'transactions' => 'transactions#create'
     end
 
     # CONSUMER
@@ -61,6 +63,7 @@ Rails.application.routes.draw do
     resources :carts, only: %i[index show create update destroy] do
       resources :cart_items, only: %i[index show create update destroy]
       resources :orders, only: %i[create]
+      # resources :asks, only: %i[create]
     end
 
     # TRANZACTIONS
