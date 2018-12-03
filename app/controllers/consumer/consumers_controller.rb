@@ -28,9 +28,18 @@ class Consumer::ConsumersController < ApplicationController
   # GET /consumers/1
   # GET /consumers/1.json
   def show
-    build do
-      message 'Профиль покупателя'
-      view 'consumer/consumers/show'
+    if current_user.consumer?
+      build do
+        message 'Профиль покупателя'
+        view 'consumer/consumers/show'
+      end
+    end
+
+    if current_user.producer?
+      build do
+        message 'Профиль производителя'
+        view 'producer/producers/show'
+      end
     end
   end
 

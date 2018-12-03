@@ -5,9 +5,18 @@ class Producer::ProducersController < ApplicationController
   # GET /producers/1
   # GET /producers/1.json
   def show
-    build do
-      message 'Профиль производителя'
-      view 'producer/producers/show'
+    if current_user.producer?
+      build do
+        message 'Профиль производителя'
+        view 'producer/producers/show'
+      end
+    end
+
+    if current_user.consumer?
+      build do
+        message 'Профиль покупателя'
+        view 'consumer/consumers/show'
+      end
     end
   end
 
@@ -32,7 +41,7 @@ class Producer::ProducersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_producer
-      @producer = Producer.find(current_user.id)
+      @producer = User.find(current_user.id)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
