@@ -18,7 +18,7 @@ class Producer::DashboardsController < ApplicationController
       consumers_count: current_user.consumers.count,
       orders_count: current_user.orders.count,
       turnover: current_user.orders.sum(:total),
-      profit: current_user.amount
+      amount: current_user.amount
     }
   end
 
