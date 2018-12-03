@@ -58,6 +58,7 @@ class Consumer::ConsumersController < ApplicationController
   # PATCH/PUT /consumers/1.json
   def update
     if @consumer.update(consumer_params)
+      current_user.type = params[:consumer][:type]
       build do
         message 'Редактирование профиля покупателя'
         view 'consumer/consumers/show'
@@ -85,6 +86,6 @@ class Consumer::ConsumersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def consumer_params
-      params.require(:consumer).permit(:email, :password, :name, :phone, :address)
+      params.require(:consumer).permit(:email, :password, :name, :phone, :address, :type)
     end
 end
