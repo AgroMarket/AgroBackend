@@ -6,9 +6,9 @@ class Consumer::AsksController < ApplicationController
   # GET /asks.json
   def index
     build do      
-      @asks = Ask.where(consumer: current_user).includes(:orders).order('created_at DESC')
+      @asks = Ask.where(consumer_id: current_user.id).includes(:orders).order('created_at DESC')
       message 'Список заказов покупателя'
-      view 'consumer/asks/index'
+      view 'producer/asks/index'
     end
   end
 
@@ -17,7 +17,7 @@ class Consumer::AsksController < ApplicationController
   def show
     build do
       message 'Заказ покупателя детально'
-      view 'consumer/asks/show'
+      view 'producer/asks/show'
     end
   end
 
@@ -34,20 +34,20 @@ class Consumer::AsksController < ApplicationController
           #create_transaction(current_user, current_user, @ask.amount, @ask, order=nil, "Пополнение")
           create_transaction(current_user, fermastore, @ask.amount, @ask, order=nil, 1)
           status :created
-          view 'consumer/asks/show'
+          view 'producer/asks/show'
         end
       else
         build do
           message 'Оформление заказа'
           error @ask.errors
           status :unprocessable_entity
-          view 'consumer/asks/show'
+          view 'producer/asks/show'
         end
       end
     else
       build do
         message 'На счёте недостаточно средств'
-        view 'consumer/transactions/response'
+        view 'producer/transactions/response'
       end
     end
     
@@ -65,7 +65,7 @@ class Consumer::AsksController < ApplicationController
       if @ask.update(ask_params)
         build do 
           message 'Статус заказа изменен'
-          view 'consumer/asks/show'
+          view 'producer/asks/show'
         end
       else
         render json: @ask.errors, status: :unprocessable_entity
