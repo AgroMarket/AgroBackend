@@ -69,6 +69,8 @@ class Consumer::ConsumersController < ApplicationController
   def update
     if @consumer.update(consumer_params)
       current_user.type = params[:consumer][:type]
+      # сохраняем тип
+      current_user.save
       build do
         message 'Редактирование профиля покупателя'
         view 'consumer/consumers/show'
