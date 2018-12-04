@@ -1,4 +1,4 @@
-class Consumer::TransactionsController < ApplicationController
+class Producer::TransactionsController < ApplicationController
   # before_action :set_tranzaction, only: [:show, :update, :destroy]
   before_action :authenticate_user
   include Exceptable
