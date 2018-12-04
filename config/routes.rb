@@ -25,6 +25,10 @@ Rails.application.routes.draw do
           resources :order_items, only: %i[index]
         end
       end
+      #  Добавил заказы для старого api по просьбе фронтенда
+      resources :orders, only: %i[index show update] do
+        resources :order_items, only: %i[index]
+      end
       resources :transactions, only: %i[index create]
       get 'consumers' => 'consumers#index'
       get 'profile' => 'producers#show'
