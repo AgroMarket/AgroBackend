@@ -21,7 +21,8 @@ money_user = User.create! ({email: 'money@mail.ru', password: '12341234', avatar
 transport_company = User.create! ({email: 'transport@mail.ru', password: '12341234', avatar: ''})
 
 first_user.add_role :admin
-transport_company.add_role :transport
+transport_company.add_role :delivery
+money_user.add_role :money
 
 # Consumers
 (1..5).each do |i|

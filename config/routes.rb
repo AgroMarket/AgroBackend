@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     namespace :users do
       resources :tasks, only: %i[index update show]
       resources :transactions, only: %i[index]
+      get 'profile' => 'informations#show'
       # get 'transactions' => 'transactions#index'
       # get 'tasks' => 'tasks#index'
     end

@@ -10,7 +10,7 @@ class Users::TasksController < ApplicationController
     @tasks = Task.all
     build do
       message "Список всех доставок"
-      view 'user/tasks/index'
+      view 'users/tasks/index'
     end
     #end
   end
@@ -41,7 +41,7 @@ class Users::TasksController < ApplicationController
       if @task.update(task_params)
         build do 
           message "Статус изменён"
-          view 'user/tasks/show'
+          view 'users/tasks/show'
         end
       else
         render json: @task.errors, status: :unprocessable_entity

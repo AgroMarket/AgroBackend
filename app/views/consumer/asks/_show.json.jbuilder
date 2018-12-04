@@ -5,6 +5,8 @@ json.ask do
   json.date @ask.created_at
   json.amount @ask.amount
   json.status @ask.status
+  # вывод стоимости доставки
+  json.delivery_cost 500
   json.link consumer_ask_path @ask.id
   json.orders do
     json.array! @ask.orders do |order|

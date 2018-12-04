@@ -13,7 +13,7 @@ class Users::TransactionsController < ApplicationController
         end
         build do
             message "Транзакции всех пользователя"   
-            view 'user/transactions/transaction'
+            view 'users/transactions/transaction'
         end
      end  
      
