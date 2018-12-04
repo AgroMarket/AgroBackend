@@ -5,10 +5,10 @@ class Order < ApplicationRecord
   has_many :order_items, dependent: :destroy
   has_many :transactions
 
-
   enum status: %i[Подтверждается Подтверждён Доставлен Выполнен]
 
   def self.create_orders_from_cart(cart_id, user)
+    order = nil
     cart = Cart.find(cart_id)
 
     ask = Ask.create! consumer: Consumer.first, amount: cart.total, status: 0
@@ -38,9 +38,9 @@ class Order < ApplicationRecord
           order.total += order_item.sum
           order.save
         end
-        cart.cart_items.destroy_all
       end
     end
+    cart.cart_items.destroy_all if order.present?
     ask
   end
 
