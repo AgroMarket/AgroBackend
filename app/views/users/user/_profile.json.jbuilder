@@ -1,5 +1,6 @@
 json.profile do
-    json.type @user.roles.first.name
-    json.email @user.email
-    json.amount @user.amount
+    json.type @consumer.roles.first.name
+    json.email @consumer.email
+    json.amount @consumer.amount
+    json.profit @profit.amount ? @profit.amount : 0
 end

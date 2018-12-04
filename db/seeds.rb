@@ -16,13 +16,13 @@ def missing_png
 end
 
 # Создаём первого пользователя ФермаСторе
-first_user = User.create! ({email: 'FermaStore@mail.ru', password: '12341234', avatar: ''})
-money_user = User.create! ({email: 'money@mail.ru', password: '12341234', avatar: ''})
-transport_company = User.create! ({email: 'transport@mail.ru', password: '12341234', avatar: ''})
+#first_user = User.create! ({email: 'FermaStore@mail.ru', password: '12341234', avatar: ''})
+#money_user = User.create! ({email: 'money@mail.ru', password: '12341234', avatar: ''})
+#transport_company = User.create! ({email: 'transport@mail.ru', password: '12341234', avatar: ''})
 
-first_user.add_role :admin
-transport_company.add_role :delivery
-money_user.add_role :money
+#first_user.add_role :admin
+#transport_company.add_role :delivery
+#money_user.add_role :money
 
 # Consumers
 (1..5).each do |i|
@@ -36,6 +36,15 @@ money_user.add_role :money
   Consumer.create! consumer
 end
 Consumer.all.each { |consumer| consumer.image.attach missing_png }
+
+# Создаём пользователей: админа, профит и транспортная компания
+first_user = Consumer.create! ({email: 'FermaStore@mail.ru', password: '12341234', avatar: ''})
+money_user = Consumer.create! ({email: 'money@mail.ru', password: '12341234', avatar: ''})
+transport_company = Consumer.create! ({email: 'transport@mail.ru', password: '12341234', avatar: ''})
+
+first_user.add_role :admin
+transport_company.add_role :delivery
+money_user.add_role :money
 
 # Producer
 (1..12).each do |i|
@@ -259,7 +268,7 @@ cart.cart_items.destroy_all
 
 
 # создаём транзакции
-boss_user = User.find_by(email: 'fermastore@mail.ru')
+boss_user = Consumer.find_by(email: 'fermastore@mail.ru')
 Consumer.all.each do |user|
   asks = user.asks
   if asks.orders 
@@ -274,6 +283,7 @@ Consumer.all.each do |user|
           ask: ask
         }
         order.producer.amount += order.total
+        order.save
         puts order.producer.amount
         Transaction.create! tranzactions_first
       end

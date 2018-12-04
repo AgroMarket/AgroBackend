@@ -9,7 +9,7 @@ class Producer::TransactionsController < ApplicationController
     @transactions = Transaction.where(to: current_user.id)
     build do
       message "Транзакции пользователя"
-      view 'producer/transactions/transaction'
+      view 'producer/transactions/transactions'
     end
   end
 

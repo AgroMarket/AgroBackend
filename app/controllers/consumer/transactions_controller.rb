@@ -6,10 +6,18 @@ class Consumer::TransactionsController < ApplicationController
   # GET /tranzactions
   # GET /tranzactions.json
   def index
-    @transactions = Transaction.where(from: current_user.id)
-    build do
-      message 'Транзакции пользователя'
-      view 'consumer/transactions/transaction'
+    if current_user.has_role? :admin
+      @transactions = Transaction.all
+      build do
+        message 'Транзакции всех пользователей'   
+        view 'users/transactions/transaction'
+      end    
+    else
+      @transactions = Transaction.where(from: current_user.id)
+      build do
+        message 'Транзакции пользователя'
+        view 'consumer/transactions/transaction'
+      end
     end
   end
 

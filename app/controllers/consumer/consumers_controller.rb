@@ -29,17 +29,32 @@ class Consumer::ConsumersController < ApplicationController
   # GET /consumers/1
   # GET /consumers/1.json
   def show
-    if current_user.consumer?
-      build do
-        message 'Профиль покупателя'
-        view 'consumer/consumers/show'
+    if current_user.has_role? :admin
+      @profit = User.find_by(email: 'money@mail.ru')
+      build do 
+        message "Профиль пользователя"
+        view 'users/user/profile'
       end
-    end
+    elsif current_user.has_role? :delivery
+      @profit = current_user
+      build do 
+        message "Профиль пользователя"
+        view 'users/user/profile'
+      end
+    else
 
-    if current_user.producer?
-      build do
-        message 'Профиль производителя'
-        view 'producer/producers/show'
+      if current_user.consumer?
+        build do
+          message 'Профиль покупателя'
+          view 'consumer/consumers/show'
+        end
+      end
+
+      if current_user.producer?
+        build do
+          message 'Профиль производителя'
+          view 'producer/producers/show'
+        end
       end
     end
   end
