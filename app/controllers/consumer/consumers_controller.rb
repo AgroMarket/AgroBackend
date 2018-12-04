@@ -66,10 +66,13 @@ class Consumer::ConsumersController < ApplicationController
 
   # PATCH/PUT /consumers/1
   # PATCH/PUT /consumers/1.json
-  def update
+  def update    
     if @consumer.update(consumer_params)
       current_user.type = params[:consumer][:type]
-      # сохраняем тип
+      # переносим часть информации из полей "покупателя", 
+      # так же отредактировал вьюху 'producer/producers/show'
+      current_user.producer_address = @consumer.address
+      current_user.producer_phone = @consumer.phone
       current_user.save
       build do
         message 'Редактирование профиля покупателя'
