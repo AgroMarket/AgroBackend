@@ -1,4 +1,5 @@
 class OrdersController < ApplicationController
+  before_action :authenticate_user
   before_action :set_order, only: [:show, :update, :destroy]
   include Exceptable
 
@@ -17,8 +18,8 @@ class OrdersController < ApplicationController
   # POST /orders.json
   def create
     @cart = Cart.find params[:cart_id]
-
-    if current_user.amount >= @cart.total
+    # сравниваем, хватает ли денег на стоимость с учетом доставки
+    if current_user.amount >= (@cart.total + @cart.delivery_cost)
       ask = Order.create_orders_from_cart(params[:cart_id], current_user)
 
       if ask && create_transaction(current_user, fermastore, ask.amount, ask, nil, 1)
