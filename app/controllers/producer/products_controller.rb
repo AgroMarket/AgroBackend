@@ -10,7 +10,7 @@ class Producer::ProductsController < ApplicationController
 
     build do
       message 'Список товаров производителя'
-      products Product.where(producer_id: current_user.id).order(:rank)
+      products Product.where(producer_id: current_user.id).order('created_at DESC')
       path producer_products_path
       @products = paginate @products
       view 'producer/products/index'
