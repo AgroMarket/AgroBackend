@@ -9,7 +9,7 @@ module Paginable
     @pagination = {
       "current_page": current_page,
       "first_page": 1,
-      "last_page": total_pages,
+      "last_page": total_pages.zero? ? 1 : total_pages,
       "prev_page_url": current_page <= 1 ? nil : "#{@path}?#{url_params}&page=#{current_page - 1}",
       "next_page_url": current_page >= total_pages ? nil : "#{@path}?#{url_params}&page=#{current_page + 1}"
     }
