@@ -1,3 +1,4 @@
+json.products_count @products.first.category.products.size
 json.products do
   json.array! @products do |product|
     json.product do
