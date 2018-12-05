@@ -6,7 +6,7 @@ class CategoriesController < ApplicationController
   # GET /categories.json
   def index
     build do
-      message 'Запрос данных для главной страницы'
+      message 'Дерево категорий'
       @categories = Category.includes(:children).where(parent_id: 0).order(:rank)
       view 'layouts/menu'
     end
