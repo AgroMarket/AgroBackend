@@ -60,10 +60,11 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
 
   create_table "carts", force: :cascade do |t|
     t.bigint "consumer_id"
-    t.integer "total"
+    t.integer "sum", default: 0
+    t.integer "delivery_cost", default: 0
+    t.integer "total", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "delivery_cost", default: 500
     t.index ["consumer_id"], name: "index_carts_on_consumer_id"
   end
 
