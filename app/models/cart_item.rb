@@ -21,7 +21,8 @@ class CartItem < ApplicationRecord
   end
 
   def calculate_cart_total
-    cart.total = cart.cart_items.map(&:sum).inject { |total, sum| total + sum }
+    cart.sum = cart.cart_items.map(&:sum).inject { |total, sum| total + sum }
+    cart.total = cart.sum + cart.delivery_cost
     cart.save
   end
 end
