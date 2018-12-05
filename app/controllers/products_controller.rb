@@ -10,13 +10,13 @@ class ProductsController < ApplicationController
 
     build do
       if params[:category_id]
-        message 'Список товаров по категориям'
+        message "Товары категории"
         products Product.by_parent_categories(params[:category_id])
         path category_products_path
         @products = paginate @products
 
       elsif params[:producer_id]
-        message 'Список товаро производителя'
+        message 'Товары производителя'
         products Product.by_producer(params[:producer_id])
         path producer_products_path
         @products = paginate @products
