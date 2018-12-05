@@ -1,7 +1,7 @@
 class CartItem < ApplicationRecord
   belongs_to :cart
   belongs_to :product
-  belongs_to :producer, optional: true
+  belongs_to :producer, class_name: 'Member', foreign_key: 'producer_id', optional: true
 
   before_create   :prepare_cart_item
   before_save     :calculate_sum
