@@ -1,6 +1,6 @@
 module Paginable
   def paginate(items_all)
-    per_page = 6
+    per_page = 8
     result = items_all.page(params[:page]).per(per_page)
     total_pages = (items_all.count / per_page).ceil
     current_page = params[:page] ? params[:page].to_i : 1
