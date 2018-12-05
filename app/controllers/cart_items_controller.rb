@@ -49,7 +49,7 @@ class CartItemsController < ApplicationController
     elsif @cart_item.update(cart_item_params)
       @cart = @cart_item.cart
       build do
-        message 'Новый товар в корзине'
+        message 'Изменение количества'
         view 'carts/show'
       end
       # render :show, status: :ok, location: @item
