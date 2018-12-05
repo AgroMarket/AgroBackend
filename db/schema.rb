@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
   end
 
   create_table "asks", force: :cascade do |t|
-    t.bigint "consumer_id"
+    t.integer "consumer_id"
     t.integer "amount", default: 0, null: false
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
   create_table "cart_items", force: :cascade do |t|
     t.bigint "cart_id"
     t.bigint "product_id"
-    t.bigint "producer_id"
+    t.integer "producer_id"
     t.integer "quantity"
     t.integer "sum"
     t.datetime "created_at", null: false
@@ -59,7 +59,7 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
   end
 
   create_table "carts", force: :cascade do |t|
-    t.bigint "consumer_id"
+    t.integer "consumer_id"
     t.integer "sum", default: 0
     t.integer "delivery_cost", default: 0
     t.integer "total", default: 0
@@ -82,7 +82,7 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
   create_table "order_items", force: :cascade do |t|
     t.bigint "order_id"
     t.bigint "product_id"
-    t.bigint "producer_id"
+    t.integer "producer_id"
     t.integer "price"
     t.integer "quantity"
     t.integer "sum"
@@ -95,8 +95,8 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
 
   create_table "orders", force: :cascade do |t|
     t.bigint "ask_id"
-    t.bigint "consumer_id"
-    t.bigint "producer_id"
+    t.integer "consumer_id"
+    t.integer "producer_id"
     t.integer "total", default: 0, null: false
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
@@ -121,7 +121,7 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
     t.integer "price"
     t.string "image"
     t.integer "rank"
-    t.bigint "producer_id"
+    t.integer "producer_id"
     t.bigint "category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -181,19 +181,20 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
     t.string "unconfirmed_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "amount"
-    t.string "type"
-    t.string "image"
-    t.string "name"
-    t.string "address"
-    t.string "phone"
-    t.text "description"
-    t.string "producer_logo"
-    t.string "producer_brand"
-    t.string "producer_address"
-    t.string "producer_phone"
-    t.text "producer_description"
-    t.string "producer_inn"
+    t.string "type", default: "Member", null: false
+    t.string "user_type", default: "consumer", null: false
+    t.integer "amount", default: 0, null: false
+    t.string "image", default: "", null: false
+    t.string "name", default: "", null: false
+    t.string "address", default: "", null: false
+    t.string "phone", default: "", null: false
+    t.text "description", default: "", null: false
+    t.string "producer_logo", default: "", null: false
+    t.string "producer_brand", default: "", null: false
+    t.string "producer_address", default: "", null: false
+    t.string "producer_phone", default: "", null: false
+    t.text "producer_description", default: "", null: false
+    t.string "producer_inn", default: "", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
