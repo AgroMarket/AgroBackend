@@ -1,7 +1,7 @@
 class Order < ApplicationRecord
   belongs_to :ask
-  belongs_to :consumer
-  belongs_to :producer
+  belongs_to :consumer, class_name: 'Member', foreign_key: 'consumer_id'
+  belongs_to :producer, class_name: 'Member', foreign_key: 'producer_id'
   has_many :order_items, dependent: :destroy
   has_many :transactions
 
