@@ -3,8 +3,9 @@ require 'page_contents'
 
 # frozen_string_literal: true
 
-Consumer.destroy_all
-Producer.destroy_all
+# Consumer.destroy_all
+# Producer.destroy_all
+Member.destroy_all
 Category.destroy_all
 Product.destroy_all
 Cart.destroy_all
@@ -15,40 +16,33 @@ def missing_png
   { io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"), filename: 'missing.png' }
 end
 
-# Создаём первого пользователя ФермаСторе
-#first_user = User.create! ({email: 'FermaStore@mail.ru', password: '12341234', avatar: ''})
-#money_user = User.create! ({email: 'money@mail.ru', password: '12341234', avatar: ''})
-#transport_company = User.create! ({email: 'transport@mail.ru', password: '12341234', avatar: ''})
-
-#first_user.add_role :admin
-#transport_company.add_role :delivery
-#money_user.add_role :money
-
 # Consumers
 (1..5).each do |i|
-  consumer = { email: "consumer#{i}@mail.ru",
+  consumer = { user_type: 'consumer',
+               email: "consumer#{i}@mail.ru",
                password: '12341234',
                name: FFaker::NameRU.name,
-               avatar: '',
                phone: FFaker::PhoneNumber.short_phone_number,
                address: FFaker::AddressRU.city,
                description: FFaker::HipsterIpsum.paragraph }
-  Consumer.create! consumer
+  Member.create! consumer
 end
-Consumer.all.each { |consumer| consumer.image.attach missing_png }
+Member.all.each { |consumer| consumer.image.attach missing_png }
 
 # Создаём пользователей: админа, профит и транспортная компания
-first_user = Consumer.create! ({email: 'FermaStore@mail.ru', password: '12341234', avatar: ''})
-money_user = Consumer.create! ({email: 'money@mail.ru', password: '12341234', avatar: ''})
-transport_company = Consumer.create! ({email: 'transport@mail.ru', password: '12341234', avatar: ''})
+# first_user = Consumer.create! ({email: 'FermaStore@mail.ru', password: '12341234', avatar: ''})
+# money_user = Consumer.create! ({email: 'money@mail.ru', password: '12341234', avatar: ''})
+# transport_company = Consumer.create! ({email: 'transport@mail.ru', password: '12341234', avatar: ''})
 
-first_user.add_role :admin
-transport_company.add_role :delivery
-money_user.add_role :money
+# first_user.add_role :admin
+# transport_company.add_role :delivery
+# money_user.add_role :money
 
 # Producer
-(1..12).each do |i|
-  producer = { email: "farmer#{i}@mail.ru",
+categories_count = CategoryNames::ALL.size
+(1..categories_count).each do |i|
+  producer = { user_type: 'producer',
+               email: "farmer#{i}@mail.ru",
                password: '12341234',
                name: "farmer#{i}",
                phone: FFaker::PhoneNumber.short_phone_number,
@@ -60,9 +54,10 @@ money_user.add_role :money
                producer_phone: FFaker::PhoneNumber.short_phone_number,
                producer_description: FFaker::HipsterIpsum.paragraph,
                producer_inn: rand(100000000..999999999).to_s }
-  Producer.create! producer
+  Member.create! producer
 end
-Producer.all.each { |producer| producer.logo.attach missing_png }
+Member.all.each { |producer| producer.image.attach missing_png }
+Member.all.each { |producer| producer.logo.attach missing_png }
 
 # Categories
 category_names = CategoryNames::ALL
@@ -86,7 +81,7 @@ Category.where(parent_id: 0).each_with_index do |parent, idx|
         measures: 'кг',
         price: rand(100..1000),
         rank: i + 1,
-        producer: Producer.find_by(email: "farmer#{idx+1}@mail.ru"),
+        producer: Member.find_by(email: "farmer#{idx+1}@mail.ru"),
         category: category
       }
       Product.create! product
@@ -96,10 +91,10 @@ end
 Product.all.each { |product| product.image.attach missing_png }
 
 # Carts
-cart = Cart.create! consumer: Consumer.first
+cart = Cart.create! consumer: Member.consumers.first
 
 # CartItems
-Producer.first(4).each do |producer|
+Member.producers.first(4).each do |producer|
   producer.products.first(3).each do |product|
     quantity = 2
     cart_item = {
@@ -127,181 +122,181 @@ puts ''
 p cart.total
 puts ''
 
-# Asks
-ask = Ask.create! consumer: Consumer.first, amount: cart.total + cart.delivery_cost, status: 0
+%w[consumer producer].each do |user_type|
+  # Asks
+  ask = Ask.create! consumer: Member.where(user_type: user_type).first, amount: cart.total + cart.delivery_cost, status: 0
 
-# Orders
-cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
-  # для каждого производителя находим в корзине его товары и формируем из них заказ
-  puts "farmer_id #{producer.id}, farmer_name #{producer.name}"
+  # Orders
+  cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
+    # для каждого производителя находим в корзине его товары и формируем из них заказ
+    puts "farmer_id #{producer.id}, farmer_name #{producer.name}"
 
-  # создаем заказ
-  order_hash = {
-    ask: ask,
-    consumer: cart.consumer,
-    producer: producer,
-    status: 1
-  }
-  order = Order.create!(order_hash)
-
-  # если заказ создан, то наполняем его товарами
-  if order.present?
-    # выбираем из корзины записи относящиеся только к данному производителю
-    CartItem.where(cart: cart, producer: producer).each do |cart_item|
-      order_item_hash = {
-        order: order,
-        product: cart_item.product,
-        producer: producer,
-        price: cart_item.product.price,
-        quantity: cart_item.quantity,
-        sum: cart_item.sum
-      }
-
-      order_item = OrderItem.create!(order_item_hash)
-      order_id = order_item.order.id
-      farmer_id = order_item.producer.id
-      farmer_name = order_item.producer.name
-      product_id = order_item.product.id
-      product_name = order_item.product.name
-      price = order_item.price
-      quantity = order_item.quantity
-      sum = order_item.sum
-      puts "  order_id #{order_id} farmer_id #{farmer_id} farmer_name #{farmer_name} product_id #{product_id} product_name #{product_name} price #{price} quantity #{quantity} sum #{sum}"
-
-      order.order_items << order_item
-      order.total += order_item.sum
-      order.save
-      puts "    total #{order.total}"
-    end
-
-  end
-end
-puts '', "Ask total: #{ask.amount}"
-
-cart.cart_items.destroy_all
-
-# Создаём заказ для продавца
-# Carts
-cart = Cart.create! consumer: Producer.first
-
-# CartItems
-Producer.first(4).each do |producer|
-  producer.products.first(3).each do |product|
-    quantity = 2
-    cart_item = {
-      cart: cart,
-      product: product,
+    # создаем заказ
+    order_hash = {
+      ask: ask,
+      consumer: cart.consumer,
       producer: producer,
-      quantity: quantity,
-      sum: product.price * quantity
+      status: 0
     }
-    cart.cart_items << CartItem.create!(cart_item)
-  end
-end
+    order = Order.create!(order_hash)
 
-puts 'cart start'
-cart.cart_items.each do |item|
-  cart_id = item.cart.id
-  farmer_id = item.product.producer.id
-  farmer = item.product.producer.name
-  product_id = item.product.id
-  product = item.product.name
-  puts "  cart_id #{cart_id} farmer_id #{farmer_id} farmer_name #{farmer} product_id #{product_id} product_name #{product}"
-end
-puts 'cart end'
-puts ''
-p cart.total
-puts ''
+    # если заказ создан, то наполняем его товарами
+    if order.present?
+      # выбираем из корзины записи относящиеся только к данному производителю
+      CartItem.where(cart: cart, producer: producer).each do |cart_item|
+        order_item_hash = {
+          order: order,
+          product: cart_item.product,
+          producer: producer,
+          price: cart_item.product.price,
+          quantity: cart_item.quantity,
+          sum: cart_item.sum
+        }
 
-# Asks
-ask = Ask.create! consumer: Producer.first, amount: cart.total + cart.delivery_cost, status: 0
+        order_item = OrderItem.create!(order_item_hash)
+        order_id = order_item.order.id
+        farmer_id = order_item.producer.id
+        farmer_name = order_item.producer.name
+        product_id = order_item.product.id
+        product_name = order_item.product.name
+        price = order_item.price
+        quantity = order_item.quantity
+        sum = order_item.sum
+        puts "  order_id #{order_id} farmer_id #{farmer_id} farmer_name #{farmer_name} product_id #{product_id} product_name #{product_name} price #{price} quantity #{quantity} sum #{sum}"
 
-# Orders
-cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
-  # для каждого производителя находим в корзине его товары и формируем из них заказ
-  puts "farmer_id #{producer.id}, farmer_name #{producer.name}"
+        order.order_items << order_item
+        order.total += order_item.sum
+        order.save
+        puts "    total #{order.total}"
+      end
 
-  # создаем заказ
-  order_hash = {
-    ask: ask,
-    consumer: cart.consumer,
-    producer: producer,
-    status: 1
-  }
-  order = Order.create!(order_hash)
-
-  # если заказ создан, то наполняем его товарами
-  if order.present?
-    # выбираем из корзины записи относящиеся только к данному производителю
-    CartItem.where(cart: cart, producer: producer).each do |cart_item|
-      order_item_hash = {
-        order: order,
-        product: cart_item.product,
-        producer: producer,
-        price: cart_item.product.price,
-        quantity: cart_item.quantity,
-        sum: cart_item.sum
-      }
-
-      order_item = OrderItem.create!(order_item_hash)
-      order_id = order_item.order.id
-      farmer_id = order_item.producer.id
-      farmer_name = order_item.producer.name
-      product_id = order_item.product.id
-      product_name = order_item.product.name
-      price = order_item.price
-      quantity = order_item.quantity
-      sum = order_item.sum
-      puts "  order_id #{order_id} farmer_id #{farmer_id} farmer_name #{farmer_name} product_id #{product_id} product_name #{product_name} price #{price} quantity #{quantity} sum #{sum}"
-
-      order.order_items << order_item
-      order.total += order_item.sum
-      order.save
-      puts "    total #{order.total}"
     end
-
   end
-end
-puts '', "Ask total: #{ask.amount}"
+  puts '', "Ask total: #{ask.amount}"
 
-cart.cart_items.destroy_all
+  cart.cart_items.destroy_all
+end
+
+# # Создаём заказ для продавца
+# # Carts
+# cart = Cart.create! consumer: Producer.first
+#
+# # CartItems
+# Producer.first(4).each do |producer|
+#   producer.products.first(3).each do |product|
+#     quantity = 2
+#     cart_item = {
+#       cart: cart,
+#       product: product,
+#       producer: producer,
+#       quantity: quantity,
+#       sum: product.price * quantity
+#     }
+#     cart.cart_items << CartItem.create!(cart_item)
+#   end
+# end
+#
+# puts 'cart start'
+# cart.cart_items.each do |item|
+#   cart_id = item.cart.id
+#   farmer_id = item.product.producer.id
+#   farmer = item.product.producer.name
+#   product_id = item.product.id
+#   product = item.product.name
+#   puts "  cart_id #{cart_id} farmer_id #{farmer_id} farmer_name #{farmer} product_id #{product_id} product_name #{product}"
+# end
+# puts 'cart end'
+# puts ''
+# p cart.total
+# puts ''
+#
+# # Asks
+# ask = Ask.create! consumer: Producer.first, amount: cart.total + cart.delivery_cost, status: 0
+#
+# # Orders
+# cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
+#   # для каждого производителя находим в корзине его товары и формируем из них заказ
+#   puts "farmer_id #{producer.id}, farmer_name #{producer.name}"
+#
+#   # создаем заказ
+#   order_hash = {
+#     ask: ask,
+#     consumer: cart.consumer,
+#     producer: producer,
+#     status: 1
+#   }
+#   order = Order.create!(order_hash)
+#
+#   # если заказ создан, то наполняем его товарами
+#   if order.present?
+#     # выбираем из корзины записи относящиеся только к данному производителю
+#     CartItem.where(cart: cart, producer: producer).each do |cart_item|
+#       order_item_hash = {
+#         order: order,
+#         product: cart_item.product,
+#         producer: producer,
+#         price: cart_item.product.price,
+#         quantity: cart_item.quantity,
+#         sum: cart_item.sum
+#       }
+#
+#       order_item = OrderItem.create!(order_item_hash)
+#       order_id = order_item.order.id
+#       farmer_id = order_item.producer.id
+#       farmer_name = order_item.producer.name
+#       product_id = order_item.product.id
+#       product_name = order_item.product.name
+#       price = order_item.price
+#       quantity = order_item.quantity
+#       sum = order_item.sum
+#       puts "  order_id #{order_id} farmer_id #{farmer_id} farmer_name #{farmer_name} product_id #{product_id} product_name #{product_name} price #{price} quantity #{quantity} sum #{sum}"
+#
+#       order.order_items << order_item
+#       order.total += order_item.sum
+#       order.save
+#       puts "    total #{order.total}"
+#     end
+#
+#   end
+# end
+# puts '', "Ask total: #{ask.amount}"
+#
+# cart.cart_items.destroy_all
 
 
 # создаём транзакции
-boss_user = Consumer.find_by(email: 'fermastore@mail.ru')
-Consumer.all.each do |user|
-  asks = user.asks
-  if asks.orders 
-    asks.each do |ask|
-      ask.orders.each do |order|
-        tranzactions_first = {
-          from: order.consumer,
-          amount: order.total,
-          to: order.producer,
-          status: 2,
-          order: order,
-          ask: ask
-        }
-        order.producer.amount += order.total
-        order.save
-        puts order.producer.amount
-        Transaction.create! tranzactions_first
-      end
-    end
-  end
-end
-
-boss_user.save
+# boss_user = Consumer.find_by(email: 'fermastore@mail.ru')
+# Consumer.all.each do |user|
+#   asks = user.asks
+#   if asks.orders
+#     asks.each do |ask|
+#       ask.orders.each do |order|
+#         tranzactions_first = {
+#           from: order.consumer,
+#           amount: order.total,
+#           to: order.producer,
+#           status: 2,
+#           order: order,
+#           ask: ask
+#         }
+#         order.producer.amount += order.total
+#         order.save
+#         puts order.producer.amount
+#         Transaction.create! tranzactions_first
+#       end
+#     end
+#   end
+# end
+#
+# boss_user.save
 
 # Переводим транзакции в статус
 
 # Pages
-# Page.create! name: 'main',      title: 'Ferma Store',       content: ''
 Page.create! name: 'about',     title: 'О нас',             content: PageContents::ABOUT
 Page.create! name: 'sellers',   title: 'Продавцам',         content: PageContents::SELLERS
 Page.create! name: 'buyers',    title: 'Покупателям',       content: PageContents::BUYERS
 Page.create! name: 'delivery',  title: 'Доставка и оплата', content: PageContents::DELIVERY
-# Page.create! name: 'basket',    title: 'Корзина',           content: ''
 
 # def missing_png
 #   {
