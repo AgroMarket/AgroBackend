@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :members
   scope :api do
     # DEVISE
     devise_for :users, controllers: { registrations: 'users/registrations' }, defaults: { format: :json }
