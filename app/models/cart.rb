@@ -1,5 +1,5 @@
 class Cart < ApplicationRecord
-  belongs_to :consumer, optional: true
+  belongs_to :consumer, class_name: 'Member', foreign_key: 'consumer_id', optional: true
   has_many :cart_items, dependent: :destroy
 
   before_create   :set_delivery_cost
