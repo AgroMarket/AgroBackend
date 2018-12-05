@@ -15,7 +15,7 @@ class PagesController < ApplicationController
   # GET /api/pages/1
   def show
     build do
-      message 'Статическая страница'
+      message "Статическая страница '#{@page.title}'"
       view 'pages/show'
     end
   end
