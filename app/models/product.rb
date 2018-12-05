@@ -2,7 +2,7 @@
 
 class Product < ApplicationRecord
   belongs_to :category
-  belongs_to :producer
+  belongs_to :producer, class_name: 'Member', foreign_key: 'producer_id'
   has_many :cart_items
   has_many :order_items
   has_one_attached :image
