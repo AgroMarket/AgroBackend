@@ -1,6 +1,6 @@
 class Member::MembersController < ApplicationController
   before_action :authenticate_user
-  before_action :set_member, only: :show
+  before_action :set_member, only: %i[show update]
   include Exceptable
 
   # GET /api/members/1
@@ -26,10 +26,10 @@ class Member::MembersController < ApplicationController
   # PATCH/PUT /members/1
   # PATCH/PUT /members/1.json
 def update
-  if @member.update(member_params)
-    render :show, status: :ok, location: @member
-  else
-    render json: @member.errors, status: :unprocessable_entity
+  build do
+    @member.update(member_params)
+    message    'Данные пользователя'
+    view       'members/show'
   end
 end
 
@@ -37,6 +37,7 @@ end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_member
+    p current_user
     @member = current_user
   end
 

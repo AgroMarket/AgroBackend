@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     # MEMBER
     namespace :member do
       get 'profile' => 'members#show'
+      put 'profile' => 'members#update'
       resources :transactions, only: %i[create]
       resources :asks do
         resources :orders, only: %i[index show create destroy] do
@@ -20,7 +21,6 @@ Rails.application.routes.draw do
       # resources :orders, only: %i[index show create destroy] do
       #   resources :order_items, only: %i[index create destroy]
       # end
-      # put 'profile' => 'consumers#update'
       # get 'transactions' => 'transactions#index'
       # post 'transactions' => 'transactions#create'
     end
