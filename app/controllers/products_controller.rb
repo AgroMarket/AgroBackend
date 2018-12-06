@@ -10,7 +10,7 @@ class ProductsController < ApplicationController
 
     build do
       if params[:category_id]
-        message "Товары категории"
+        message 'Товары категории'
         products Product.by_parent_categories(params[:category_id])
         path category_products_path
         @products = paginate @products
