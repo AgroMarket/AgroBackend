@@ -1,5 +1,6 @@
 class Member < User
   has_many :products, foreign_key: 'producer_id'
+  has_many :asks, foreign_key: 'consumer_id'
   has_one_attached :image
   has_one_attached :logo
 
