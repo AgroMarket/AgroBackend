@@ -10,11 +10,11 @@ Rails.application.routes.draw do
     namespace :member do
       get 'profile' => 'members#show'
       resources :transactions, only: %i[create]
-      # resources :asks do
-      #   resources :orders, only: %i[index show create destroy] do
-      #     resources :order_items, only: %i[index create destroy]
-      #   end
-      # end
+      resources :asks do
+        resources :orders, only: %i[index show create destroy] do
+          resources :order_items, only: %i[index create destroy]
+        end
+      end
       # # добавил, чтобы просто работало, ждём, когда пофиксится на фронте (но это не точно)
       # resources :orders, only: %i[index show create destroy] do
       #   resources :order_items, only: %i[index create destroy]
