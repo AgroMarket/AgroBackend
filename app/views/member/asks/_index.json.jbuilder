@@ -8,6 +8,7 @@ json.asks do
       json.delivery_cost ask.delivery_cost
       json.total ask.total
       json.status ask.status
+      json.link member_ask_path ask.id
     end
   end
 end
