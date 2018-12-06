@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     # MEMBER
     namespace :member do
       get 'profile' => 'members#show'
+      resources :transactions, only: %i[create]
       # resources :asks do
       #   resources :orders, only: %i[index show create destroy] do
       #     resources :order_items, only: %i[index create destroy]
