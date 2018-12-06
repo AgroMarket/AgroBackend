@@ -38,7 +38,9 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
 
   create_table "asks", force: :cascade do |t|
     t.integer "consumer_id"
-    t.integer "amount", default: 0, null: false
+    t.integer "sum", default: 0
+    t.integer "delivery_cost", default: 0
+    t.integer "total", default: 0, null: false
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
