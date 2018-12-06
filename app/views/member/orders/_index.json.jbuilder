@@ -1,3 +1,4 @@
+json.orders_count current_user.orders.size
 json.orders do
 	json.array! @orders do |order|
 		json.order do
@@ -5,7 +6,7 @@ json.orders do
 			json.date order.created_at
       json.producer order.producer.name
 			json.status order.status
-			json.link consumer_order_path (order.id)
+			json.link member_order_path (order.id)
 			json.total order.total
 		end
 	end
