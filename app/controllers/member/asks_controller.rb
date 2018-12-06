@@ -50,7 +50,12 @@ class Member::AsksController < ApplicationController
   # DELETE /asks/1
   # DELETE /asks/1.json
   def destroy
-    @ask.destroy
+    if @ask.destroy
+      build do
+        message 'Заказ покупателя детально'
+        view 'member/asks/show'
+      end
+    end
   end
 
   private
