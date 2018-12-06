@@ -10,9 +10,16 @@ class Order < ApplicationRecord
   def self.create_orders_from_cart(cart_id, user)
     order = nil
     cart = Cart.find(cart_id)
-    # добавил к итоговой сумме заказа доставку, так же было consumer: Consumer.first
-    ask = Ask.create! consumer: user, amount: cart.total + cart.delivery_cost, status: 0
-    # Похоже, что проблема в этой функции здесь
+
+    hash = {
+      consumer: user,
+      sum: cart.sum,
+      delivery_cost: cart.delivery_cost,
+      total: cart.total,
+      status: 0
+    }
+    ask = Ask.create! hash
+
     cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
       order_hash = {
         ask: ask,
@@ -40,7 +47,7 @@ class Order < ApplicationRecord
         end
       end
     end
-    cart.cart_items.destroy_all if order.present?
+    # cart.cart_items.destroy_all if order.present?
     ask
   end
 
