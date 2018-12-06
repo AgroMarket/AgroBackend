@@ -1,0 +1,2 @@
+class Carrier < User
+end

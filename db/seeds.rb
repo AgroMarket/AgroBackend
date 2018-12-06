@@ -16,6 +16,15 @@ def missing_png
   { io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"), filename: 'missing.png' }
 end
 
+# Создаём пользователей: админа, профит и транспортная компания
+first_user = Administrator.create! email: 'fermastore@mail.ru', password: '12341234'
+money_user = Administrator.create! email: 'profit@mail.ru', password: '12341234'
+transport_company = Carrier.create! email: 'carrier@mail.ru', password: '12341234'
+
+# first_user.add_role :admin
+# transport_company.add_role :delivery
+# money_user.add_role :money
+
 # Consumers
 (1..5).each do |i|
   consumer = { user_type: 'consumer',
@@ -28,15 +37,6 @@ end
   Member.create! consumer
 end
 Member.all.each { |consumer| consumer.image.attach missing_png }
-
-# Создаём пользователей: админа, профит и транспортная компания
-# first_user = Consumer.create! ({email: 'FermaStore@mail.ru', password: '12341234', avatar: ''})
-# money_user = Consumer.create! ({email: 'money@mail.ru', password: '12341234', avatar: ''})
-# transport_company = Consumer.create! ({email: 'transport@mail.ru', password: '12341234', avatar: ''})
-
-# first_user.add_role :admin
-# transport_company.add_role :delivery
-# money_user.add_role :money
 
 # Producer
 categories_count = CategoryNames::ALL.size
