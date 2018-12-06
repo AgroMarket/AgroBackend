@@ -5,7 +5,9 @@ json.asks do
     json.ask do
       json.id ask.id
       json.date ask.created_at
-      json.amount ask.amount
+      json.sum ask.sum
+      json.delivery_cost ask.delivery_cost
+      json.total ask.total
       json.status ask.status
       json.link producer_ask_path(ask.id)
       # json.orders do
