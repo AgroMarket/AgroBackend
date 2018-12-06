@@ -34,37 +34,7 @@ class User < ApplicationRecord
     type == 'Producer'
   end
 
-
-
   def enough_money?(cart)
     amount >= cart.total
-  end
-
-  private
-
-  # def assign_default_role
-  #   self.add_role(:customer) if self.roles.blank?
-  # end
-
-  def create_transaction (options)
-    transaction = {
-        from: options[:from],
-        to: options[:to],
-        amount: options[:amount],
-        ask: ask,
-        order: order,
-        status: status
-    }
-    result = Transaction.create! transaction
-    if from == to
-      to.amount += amount
-      to.save
-    else
-      to.amount += amount
-      from.amount -= amount
-      to.save
-      from.save
-    end
-    result
   end
 end
