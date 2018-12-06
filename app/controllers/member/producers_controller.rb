@@ -11,7 +11,7 @@ class Member::ProducersController < ApplicationController
 
     build do
       message 'Список поставщиков'
-      producers current_user.producers.distinct
+      producers current_user.sellers
       view 'member/producers/index'
       path member_producers_path
       @producers = paginate @producers
