@@ -1,14 +1,15 @@
 class CreateTransactions < ActiveRecord::Migration[5.2]
   def change
     create_table :transactions do |t|
-      t.integer :type,      null: false, default: 0
-      t.integer :from,      null: false, default: 0
-      t.integer :to,        null: false, default: 0
+      t.string  :t_type,    null: false, default: ''
+      t.integer :from_id,   null: false, default: 0
+      t.integer :to_id,     null: false, default: 0
+      t.integer :before,    null: true
       t.integer :amount,    null: false, default: 0
-      t.integer :status,    null: false, default: 0
-      t.references :ask,    null: false, default: 0
-      t.references :order,  null: false, default: 0
-      t.references :task,   null: false, default: 0
+      t.integer :after,     null: true
+      t.references :ask,    null: true
+      t.references :order,  null: true
+      t.references :task,   null: true
 
       t.timestamps
     end
