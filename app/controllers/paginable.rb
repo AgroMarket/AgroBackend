@@ -11,12 +11,14 @@ module Paginable
     url_params = @url_params.nil? ? nil : @url_params.map { |key, value| "#{key}=#{value}" }.to_a.join('&')
 
     @pagination =
-      if total_pages > per_page
+      if items_all.size > per_page
         { "current_page": current_page,
           "first_page": 1,
           "last_page": total_pages,
           "prev_page_url": current_page <= 1 ? nil : "#{@path}?#{url_params}&page=#{current_page - 1}",
           "next_page_url": current_page >= total_pages ? nil : "#{@path}?#{url_params}&page=#{current_page + 1}" }
+      else
+        nil
       end
     result
   end
