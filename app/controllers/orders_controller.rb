@@ -1,40 +1,29 @@
 class OrdersController < ApplicationController
   before_action :authenticate_user
+  before_action :set_cart, only: :create
   include Exceptable
 
   # POST /orders
   # POST /orders.json
   def create
-    @cart = Cart.find params[:cart_id]
-    # сравниваем, хватает ли денег на стоимость с учетом доставки
-    if current_user.amount >= (@cart.total + @cart.delivery_cost)
-      ask = Order.create_orders_from_cart(params[:cart_id], current_user)
-
-      if ask && create_transaction(current_user, fermastore, ask.amount, ask, nil, 1)
-        build do
-          message 'Создание заказов'
-          view 'orders/create'
-        end
-
+    build do
+      if current_user.enough_money? @cart
+        @ask = Order.create_orders_from_cart(@cart.id, current_user)
+        @transactions = Transaction.transaction_reserve current_user, @ask
+        message 'Создание заказов'
+        view 'member/orders/create'
       else
-        ask.destroy
-        build do
-          message 'Создание заказов'
-          error @order.errors
-          status :unprocessable_entity
-          view 'orders/create'
-        end
-      end
-
-    else
-      build do
         message 'На счёте недостаточно средств'
-        view 'consumer/transactions/response'
+        view 'member/transactions/message'
       end
     end
   end
 
   private
+
+  def set_cart
+    @cart = Cart.find params[:cart_id]
+  end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def order_params
