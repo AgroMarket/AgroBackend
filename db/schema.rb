@@ -150,18 +150,20 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
   end
 
   create_table "transactions", force: :cascade do |t|
-    t.bigint "from_id"
-    t.bigint "to_id"
-    t.integer "amount"
-    t.bigint "ask_id", default: 0
-    t.bigint "order_id", default: 0
-    t.integer "status"
+    t.string "t_type", default: "", null: false
+    t.integer "from_id", default: 0, null: false
+    t.integer "to_id", default: 0, null: false
+    t.integer "before"
+    t.integer "amount", default: 0, null: false
+    t.integer "after"
+    t.bigint "ask_id"
+    t.bigint "order_id"
+    t.bigint "task_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ask_id"], name: "index_transactions_on_ask_id"
-    t.index ["from_id"], name: "index_transactions_on_from_id"
     t.index ["order_id"], name: "index_transactions_on_order_id"
-    t.index ["to_id"], name: "index_transactions_on_to_id"
+    t.index ["task_id"], name: "index_transactions_on_task_id"
   end
 
   create_table "users", force: :cascade do |t|
