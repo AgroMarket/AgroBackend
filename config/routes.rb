@@ -19,11 +19,11 @@ Rails.application.routes.draw do
       resources :producers, only: :index
       get 'dashboard' => 'dashboards#index'
       resources :products
+      resources :orders, only: %i[index show create update destroy] do
+        resources :order_items, only: %i[index create destroy]
+      end
 
-      # # добавил, чтобы просто работало, ждём, когда пофиксится на фронте (но это не точно)
-      # resources :orders, only: %i[index show create destroy] do
-      #   resources :order_items, only: %i[index create destroy]
-      # end
+
       # get 'transactions' => 'transactions#index'
       # post 'transactions' => 'transactions#create'
     end
