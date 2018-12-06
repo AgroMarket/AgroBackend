@@ -8,7 +8,7 @@ json.cart do
   json.total cart.total
   json.consumer_id cart.consumer.present? ? cart.consumer.id : nil
   json.cart_items do
-    json.array! cart.cart_items do |item|
+    json.array! cart.cart_items.order(:updated_at) do |item|
       json.cart_item do
           json.id item.id
           json.product do
