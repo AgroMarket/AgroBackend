@@ -1,5 +1,6 @@
-class TransactionsController < ApplicationController
+class Member::TransactionsController < ApplicationController
   before_action :set_transaction, only: [:show, :update, :destroy]
+  include Exceptable
 
   # GET /transactions
   # GET /transactions.json
@@ -15,12 +16,18 @@ class TransactionsController < ApplicationController
   # POST /transactions
   # POST /transactions.json
   def create
-    @transaction = Transaction.new(transaction_params)
-    if @transaction.save
-      render :show, status: :created, location: @transaction
-    else
-      render json: @transaction.errors, status: :unprocessable_entity
-    end     
+    build do
+      type = params[:transaction][:type]
+      amount = params[:transaction][:amount]
+      if type == 'replenish'
+        @transaction = current_user.transaction_replenish amount
+        message 'Пополнение счета'
+      elsif type == 'withdrawal'
+        @transaction = current_user.transaction_withdrawal amount
+        message 'Снятие со счета'
+      end
+      view 'member/transactions/show'
+    end
   end
 
   # PATCH/PUT /transactions/1
