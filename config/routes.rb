@@ -15,11 +15,11 @@ Rails.application.routes.draw do
           resources :order_items, only: %i[index create destroy]
         end
       end
+      resources :producers, only: :index
       # # добавил, чтобы просто работало, ждём, когда пофиксится на фронте (но это не точно)
       # resources :orders, only: %i[index show create destroy] do
       #   resources :order_items, only: %i[index create destroy]
       # end
-      # resources :producers, only: :index
       # put 'profile' => 'consumers#update'
       # get 'transactions' => 'transactions#index'
       # post 'transactions' => 'transactions#create'
