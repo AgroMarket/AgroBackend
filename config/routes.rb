@@ -6,6 +6,24 @@ Rails.application.routes.draw do
     # AUTH
     post 'login' => 'user_token#create'
 
+    # MEMBER
+    namespace :member do
+      get 'profile' => 'members#show'
+      # resources :asks do
+      #   resources :orders, only: %i[index show create destroy] do
+      #     resources :order_items, only: %i[index create destroy]
+      #   end
+      # end
+      # # добавил, чтобы просто работало, ждём, когда пофиксится на фронте (но это не точно)
+      # resources :orders, only: %i[index show create destroy] do
+      #   resources :order_items, only: %i[index create destroy]
+      # end
+      # resources :producers, only: :index
+      # put 'profile' => 'consumers#update'
+      # get 'transactions' => 'transactions#index'
+      # post 'transactions' => 'transactions#create'
+    end
+
     # post 'transactions' => 'transactions#create'
     #
     #  # USER
