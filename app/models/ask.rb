@@ -5,4 +5,6 @@ class Ask < ApplicationRecord
   has_many :tasks
 
   enum status: %i[Ожидает Доставлен Выполнен]
+
+  scope :by_consumer, ->(consumer) { where(consumer: consumer).includes(:orders).order('created_at DESC') }
 end
