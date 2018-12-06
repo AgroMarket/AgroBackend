@@ -1,4 +1,5 @@
 class Member::TransactionsController < ApplicationController
+  before_action :authenticate_user
   before_action :set_transaction, only: [:show, :update, :destroy]
   include Exceptable
 
