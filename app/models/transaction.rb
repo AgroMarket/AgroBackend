@@ -6,6 +6,53 @@ class Transaction < ApplicationRecord
   belongs_to :order, optional: true
   # belongs_to :task, optional: true
 
+  # Резервирование средств
+  def self.transaction_reserve(user, ask)
+    transactions = []
+    system = Administrator.first
+
+    hash = {
+      account: user,
+      t_type: 'reserve',
+      direction: 'outflow',
+      amount: ask.total,
+      from: user,
+      to: system,
+      before: user.amount,
+      after: user.amount - ask.total,
+      ask: ask
+    }
+    outflow = Transaction.create!(hash)
+    p '------outflow-------'
+    p outflow
+    p '------outflow-------'
+    account_withdrawal(user, ask.total) if outflow
+
+    hash = {
+      account: system,
+      t_type: 'reserve',
+      direction: 'inflow',
+      amount: ask.total,
+      from: user,
+      to: system,
+      before: system.amount,
+      after: system.amount + ask.total,
+      ask: ask
+    }
+    inflow = Transaction.create!(hash)
+    p '------inflow-------'
+    p inflow
+    p '------inflow-------'
+    account_replenish(system, ask.total) if inflow
+
+    transactions.push outflow, inflow
+    p '------transactions-------'
+    p transactions
+    p '------transactions-------'
+    transactions
+  end
+
+  # Пополнение и снятие
   def self.transaction_replenish(user, amount)
     member_transaction 'replenish', user, amount
   end
