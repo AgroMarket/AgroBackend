@@ -29,6 +29,10 @@ module Exceptable
     @products = products
   end
 
+  def asks(asks)
+    @asks = asks
+  end
+
   def orders(orders)
     @orders = orders
   end
