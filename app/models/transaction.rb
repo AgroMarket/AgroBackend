@@ -23,9 +23,6 @@ class Transaction < ApplicationRecord
       ask: ask
     }
     outflow = Transaction.create!(hash)
-    p '------outflow-------'
-    p outflow
-    p '------outflow-------'
     account_withdrawal(user, ask.total) if outflow
 
     hash = {
@@ -40,15 +37,9 @@ class Transaction < ApplicationRecord
       ask: ask
     }
     inflow = Transaction.create!(hash)
-    p '------inflow-------'
-    p inflow
-    p '------inflow-------'
     account_replenish(system, ask.total) if inflow
 
     transactions.push outflow, inflow
-    p '------transactions-------'
-    p transactions
-    p '------transactions-------'
     transactions
   end
 
