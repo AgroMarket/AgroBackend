@@ -23,7 +23,7 @@ class User < ApplicationRecord
   alias_method :authenticate, :valid_password?
 
   def self.from_token_payload(payload)
-    self.find payload["sub"]
+    self.find payload['sub']
   end
 
   def consumer?
@@ -32,6 +32,44 @@ class User < ApplicationRecord
 
   def producer?
     type == 'Producer'
+  end
+
+  def account_replenish(amount)
+    self.amount += amount
+    save
+  end
+
+  def account_withdrawal(amount)
+    self.amount -= amount
+    save
+  end
+
+  def transaction_replenish(amount)
+    hash = {
+      t_type: 'replenish',
+      amount: amount,
+      from: self,
+      to: self,
+      before: self.amount,
+      after: self.amount + amount
+    }
+    transaction = Transaction.create!(hash)
+    account_replenish(amount) if transaction
+    transaction
+  end
+
+  def transaction_withdrawal(amount)
+    hash = {
+        t_type: 'withdrawal',
+        amount: amount,
+        from: self,
+        to: self,
+        before: self.amount,
+        after: self.amount - amount
+    }
+    transaction = Transaction.create!(hash)
+    account_withdrawal(amount) if transaction
+    transaction
   end
 
   private
