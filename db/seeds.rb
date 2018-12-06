@@ -124,7 +124,14 @@ puts ''
 
 %w[consumer producer].each do |user_type|
   # Asks
-  ask = Ask.create! consumer: Member.where(user_type: user_type).first, amount: cart.total + cart.delivery_cost, status: 0
+  hash = {
+    consumer: Member.where(user_type: user_type).first,
+    sum: cart.sum,
+    delivery_cost: cart.delivery_cost,
+    total: cart.total,
+    status: 0
+  }
+  ask = Ask.create! hash
 
   # Orders
   cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
@@ -172,7 +179,7 @@ puts ''
 
     end
   end
-  puts '', "Ask total: #{ask.amount}"
+  puts '', "Ask total: #{ask.total}"
 
   cart.cart_items.destroy_all
 end
