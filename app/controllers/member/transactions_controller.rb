@@ -20,10 +20,10 @@ class Member::TransactionsController < ApplicationController
       type = params[:transaction][:type]
       amount = params[:transaction][:amount]
       if type == 'replenish'
-        @transaction = current_user.transaction_replenish amount
+        @transaction = Transaction.transaction_replenish current_user, amount
         message 'Пополнение счета'
       elsif type == 'withdrawal'
-        @transaction = current_user.transaction_withdrawal amount
+        @transaction = Transaction.transaction_withdrawal current_user, amount
         message 'Снятие со счета'
       end
       view 'member/transactions/show'
