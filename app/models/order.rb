@@ -7,6 +7,8 @@ class Order < ApplicationRecord
 
   enum status: %i[Подтверждается Подтверждён Доставлен Выполнен]
 
+  after_update :create_task
+
   def self.create_orders_from_cart(cart_id, user)
     order = nil
     cart = Cart.find(cart_id)
@@ -47,15 +49,14 @@ class Order < ApplicationRecord
         end
       end
     end
-    # cart.cart_items.destroy_all if order.present?
+    cart.cart_items.destroy_all if order.present?
     ask
   end
 
-  def ask_confirmed?
-    ask.orders.count == ask.orders.where(status: 1).count
-  end
-
   def create_task
+    puts 'creating task'
+    return unless ask_confirmed?
+
     hash = {
       carrier: Carrier.first,
       ask: ask,
@@ -64,6 +65,10 @@ class Order < ApplicationRecord
       status: 0
     }
     Task.create! hash
+  end
+
+  def ask_confirmed?
+    ask.orders.count == ask.orders.where(status: 1).count
   end
 
   # def self.create_order_from_order(order_id)
