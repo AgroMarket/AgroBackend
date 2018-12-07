@@ -3,8 +3,8 @@ require 'page_contents'
 
 # frozen_string_literal: true
 
-# Consumer.destroy_all
-# Producer.destroy_all
+Administrator.destroy_all
+Carrier.destroy_all
 Member.destroy_all
 Category.destroy_all
 Product.destroy_all
@@ -17,9 +17,9 @@ def missing_png
 end
 
 # Создаём пользователей: админа, профит и транспортная компания
-first_user = Administrator.create! email: 'fermastore@mail.ru', password: '12341234'
-money_user = Administrator.create! email: 'profit@mail.ru', password: '12341234'
-transport_company = Carrier.create! email: 'carrier@mail.ru', password: '12341234'
+first_user = Administrator.create! email: 'fermastore@mail.ru', password: '12341234', user_type: 'admin'
+money_user = Administrator.create! email: 'profit@mail.ru', password: '12341234', user_type: 'admin'
+transport_company = Carrier.create! email: 'carrier@mail.ru', password: '12341234', user_type: 'delivery'
 
 # first_user.add_role :admin
 # transport_company.add_role :delivery
