@@ -4,7 +4,12 @@ class MembersController < ApplicationController
 
   # GET /api/members/1
   # GET /api/members/1.json
-  def show; end
+  def show
+    build do
+      message    'Данные пользователя'
+      view       'members/show'
+    end
+  end
 
   # POST /api/members
   # POST /api/members.json
