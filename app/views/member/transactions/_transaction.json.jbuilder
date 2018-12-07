@@ -8,7 +8,8 @@ json.transaction do
   json.to         transaction.to.email
   json.before     transaction.before
   json.after      transaction.after
-  json.ask        transaction.ask
-  json.order      transaction.order
-  # json.task   transaction.task
+  json.ask_id     transaction.ask_id
+  json.order_id   transaction.order_id
+  json.task_id    transaction.task_id
+  json.link       member_payment_path transaction.id
 end
