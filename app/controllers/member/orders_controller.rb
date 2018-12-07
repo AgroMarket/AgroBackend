@@ -67,7 +67,7 @@ class Member::OrdersController < ApplicationController
     build do
       if params[:order][:status] == 1
         @order.update!(order_params)
-        create_task(@order) if check_ask_status_in_order(@order)
+        @task = @order.create_task if @order.ask_confirmed?
         message 'Редактирование заказа'
         view 'member/orders/show'
       end
