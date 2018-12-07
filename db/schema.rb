@@ -142,13 +142,16 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
   end
 
   create_table "tasks", force: :cascade do |t|
+    t.bigint "carrier_id"
     t.bigint "ask_id"
-    t.bigint "user_id"
+    t.integer "delivery_cost", default: 0, null: false
+    t.bigint "member_id"
     t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ask_id"], name: "index_tasks_on_ask_id"
-    t.index ["user_id"], name: "index_tasks_on_user_id"
+    t.index ["carrier_id"], name: "index_tasks_on_carrier_id"
+    t.index ["member_id"], name: "index_tasks_on_member_id"
   end
 
   create_table "transactions", force: :cascade do |t|
