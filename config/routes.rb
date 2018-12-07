@@ -22,7 +22,7 @@ Rails.application.routes.draw do
       resources :orders, only: %i[index show create update destroy] do
         resources :order_items, only: %i[index create destroy]
       end
-
+      resources :consumers, only: %i[index]
 
       # get 'transactions' => 'transactions#index'
       # post 'transactions' => 'transactions#create'
