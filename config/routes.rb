@@ -6,6 +6,11 @@ Rails.application.routes.draw do
     # AUTH
     post 'login' => 'user_token#create'
 
+    # ADMIN
+    namespace :administrator do
+      get 'dashboard' => 'dashboards#index'
+    end
+
     # CARRIER
     namespace :carrier do
       resources :tasks, only: %i[index show update]
@@ -15,7 +20,7 @@ Rails.application.routes.draw do
     namespace :member do
       get 'profile' => 'members#show'
       put 'profile' => 'members#update'
-      resources :transactions, only: %i[create]
+      resources :transactions, only: %i[create show]
       resources :asks do
         resources :orders, only: %i[index show create destroy] do
           resources :order_items, only: %i[index create destroy]
