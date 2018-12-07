@@ -41,4 +41,8 @@ class User < ApplicationRecord
   def payments
     Transaction.where(account: self, direction: 'outflow')
   end
+
+  def inflows
+    Transaction.where(account: self, direction: 'inflow')
+  end
 end
