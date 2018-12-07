@@ -51,6 +51,21 @@ class Order < ApplicationRecord
     ask
   end
 
+  def ask_confirmed?
+    ask.orders.count == ask.orders.where(status: 1).count
+  end
+
+  def create_task
+    hash = {
+      carrier: Carrier.first,
+      ask: ask,
+      delivery_cost: ask.delivery_cost,
+      member: consumer,
+      status: 0
+    }
+    Task.create! hash
+  end
+
   # def self.create_order_from_order(order_id)
   #   old_order = Order.find(order_id)
   #   new_order = old_order.dup
