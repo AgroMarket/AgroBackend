@@ -4,7 +4,7 @@ class Transaction < ApplicationRecord
   belongs_to :to, class_name: 'User', foreign_key: 'to_id'
   belongs_to :ask, optional: true
   belongs_to :order, optional: true
-  # belongs_to :task, optional: true
+  belongs_to :task, optional: true
 
   # Резервирование средств
   def self.transaction_reserve(user, ask)
@@ -78,5 +78,117 @@ class Transaction < ApplicationRecord
   def self.account_withdrawal(user, amount)
     user.amount -= amount
     user.save
+  end
+
+  def self.system_payments(ask)
+    # перевести деньги со счета системы на счета каждого продавца
+    # перевести деньги со счера системы на счет транспортной компании
+    # перевести деньги со счета системы в прибыль системы
+
+    system = Administrator.first
+    profit = Administrator.second
+    carrier = Carrier.first
+
+    ask.orders.each do |order|
+      producer = order.producer
+      amount = ask.total * 0.9
+      delta = ask.total - amount
+
+      # Зачисление производителю
+      hash = {
+          account: system,
+          t_type: 'transfer',
+          direction: 'outflow',
+          amount: amount,
+          from: system,
+          to: producer,
+          before: system.amount,
+          after: system.amount - amount,
+          ask: ask,
+          order: order
+      }
+      outflow = Transaction.create!(hash)
+      account_withdrawal(system, amount) if outflow
+
+      hash = {
+          account: producer,
+          t_type: 'transfer',
+          direction: 'inflow',
+          amount: amount,
+          from: system,
+          to: producer,
+          before: producer.amount,
+          after: producer.amount + amount,
+          ask: ask,
+          order: order
+      }
+      inflow = Transaction.create!(hash)
+      account_replenish(producer, amount) if inflow
+
+      # Зачисление прибыли
+      hash = {
+          account: system,
+          t_type: 'profit',
+          direction: 'outflow',
+          amount: delta,
+          from: system,
+          to: profit,
+          before: system.amount,
+          after: system.amount - delta,
+          ask: ask
+      }
+      outflow = Transaction.create!(hash)
+      account_withdrawal(system, delta) if outflow
+
+      hash = {
+          account: profit,
+          t_type: 'profit',
+          direction: 'inflow',
+          amount: delta,
+          from: system,
+          to: profit,
+          before: profit.amount,
+          after: profit.amount + delta,
+          ask: ask
+      }
+      inflow = Transaction.create!(hash)
+      account_replenish(profit, delta) if inflow
+    end
+
+    # Зачисление перевозчику
+    task = Task.find_by(ask: ask)
+    delivery_cost = ask.delivery_cost
+    hash = {
+        account: system,
+        t_type: 'transfer',
+        direction: 'outflow',
+        amount: delivery_cost,
+        from: system,
+        to: carrier,
+        before: system.amount,
+        after: system.amount - delivery_cost,
+        ask: ask,
+        task: task
+    }
+    outflow = Transaction.create!(hash)
+    account_withdrawal(system, delivery_cost) if outflow
+
+    hash = {
+        account: carrier,
+        t_type: 'transfer',
+        direction: 'inflow',
+        amount: delivery_cost,
+        from: system,
+        to: carrier,
+        before: carrier.amount,
+        after: carrier.amount + delivery_cost,
+        ask: ask,
+        task: task
+    }
+    inflow = Transaction.create!(hash)
+    account_replenish(carrier, delivery_cost) if inflow
+
+    ask.update status: 'Выполнен'
+    p ask
   end
 end
