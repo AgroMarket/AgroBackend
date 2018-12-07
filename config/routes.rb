@@ -24,6 +24,7 @@ Rails.application.routes.draw do
       end
       resources :consumers, only: %i[index]
       resources :payments, only: %i[index show]
+      resources :inflows, only: %i[index show]
 
       # get 'transactions' => 'transactions#index'
       # post 'transactions' => 'transactions#create'
