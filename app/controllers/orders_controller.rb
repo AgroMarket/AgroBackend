@@ -9,7 +9,6 @@ class OrdersController < ApplicationController
     build do
       if current_user.enough_money? @cart
         @ask = Order.create_orders_from_cart(@cart.id, current_user)
-        @transactions = Transaction.transaction_reserve current_user, @ask
         message 'Создание заказов'
         view 'member/orders/create'
       else
