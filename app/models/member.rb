@@ -24,4 +24,15 @@ class Member < User
     Member.where(user_type: 'producer')
   end
 
+  def dashboard
+    { buys_count: buys.count,
+      buys_sum: buys.sum(:total),
+      producers_count: sellers.count,
+      products_count: products.count,
+      sells_count: orders.count,
+      sells_sum: orders.sum(:total),
+      consumers_count: buyers.count,
+      amount: amount }
+  end
+
 end
