@@ -6,6 +6,11 @@ Rails.application.routes.draw do
     # AUTH
     post 'login' => 'user_token#create'
 
+    # CARRIER
+    namespace :carrier do
+      resources :tasks, only: %i[index show update]
+    end
+
     # MEMBER
     namespace :member do
       get 'profile' => 'members#show'
@@ -29,6 +34,8 @@ Rails.application.routes.draw do
       # get 'transactions' => 'transactions#index'
       # post 'transactions' => 'transactions#create'
     end
+
+
 
     # post 'transactions' => 'transactions#create'
     #
