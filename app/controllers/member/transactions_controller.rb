@@ -12,6 +12,10 @@ class Member::TransactionsController < ApplicationController
   # GET /transactions/1
   # GET /transactions/1.json
   def show
+    build do
+      message 'Транзакция детально'
+      view 'member/transactions/show'
+    end
   end
 
   # POST /transactions

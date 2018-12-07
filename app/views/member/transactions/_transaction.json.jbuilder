@@ -11,5 +11,5 @@ json.transaction do
   json.ask_id     transaction.ask_id
   json.order_id   transaction.order_id
   json.task_id    transaction.task_id
-  json.link       member_payment_path transaction.id
+  json.link       member_transaction_path transaction.id
 end
