@@ -13,7 +13,7 @@ class Member::PaymentsController < ApplicationController
       message 'Список платежей'
       path member_payments_path
       @transactions = paginate current_user.payments
-      view 'member/transactions/index'
+      view 'member/payments/index'
     end
   end
 
