@@ -6,5 +6,20 @@ class Ask < ApplicationRecord
 
   enum status: %i[Ожидает Доставлен Выполнен]
 
+  after_update :make_system_payments
+
   scope :by_consumer, ->(consumer) { where(consumer: consumer).includes(:orders).order('created_at DESC') }
+
+  def producers
+    orders.map(&:producer)
+  end
+
+  def make_system_payments
+    case status
+    when 'Ожидает'
+      return
+    when 'Доставлен'
+      Transaction.system_payments self
+    end
+  end
 end
