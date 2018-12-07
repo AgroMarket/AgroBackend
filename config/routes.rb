@@ -23,6 +23,7 @@ Rails.application.routes.draw do
         resources :order_items, only: %i[index create destroy]
       end
       resources :consumers, only: %i[index]
+      resources :payments, only: %i[index show]
 
       # get 'transactions' => 'transactions#index'
       # post 'transactions' => 'transactions#create'
