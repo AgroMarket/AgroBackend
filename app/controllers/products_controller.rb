@@ -19,19 +19,18 @@ class ProductsController < ApplicationController
         message 'Товары производителя'
         products Product.by_producer(params[:producer_id])
         path producer_products_path
-        @products = paginate @products
-
+        @products = paginate @products if !@products.empty?
+    
       elsif params[:search]
         message 'Поиск товаров'
         products Product.search(params[:search])
         path products_path
         url_params "search": params[:search]
         @products = paginate @products
-
       elsif params[:scope] && params[:scope] == 'samples'
         message 'Список случайных товаров'
         products Product.samples
-      end
+      end  
 
       view 'products/index'
     end
@@ -84,4 +83,5 @@ class ProductsController < ApplicationController
     def product_params
       params.require(:product).permit(:name, :messures, :price, :image, :category_id)
     end
+  
 end
