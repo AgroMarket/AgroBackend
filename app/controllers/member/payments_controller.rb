@@ -12,7 +12,7 @@ class Member::PaymentsController < ApplicationController
     build do
       message 'Список платежей'
       path member_payments_path
-      @transactions = paginate current_user.payments
+      @transactions = paginate current_user.payments.order('updated_at DESC')
       view 'member/payments/index'
     end
   end

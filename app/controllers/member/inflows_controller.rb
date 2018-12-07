@@ -12,7 +12,7 @@ class Member::InflowsController < ApplicationController
     build do
       message 'Список поступлений'
       path member_inflows_path
-      @transactions = paginate current_user.inflows
+      @transactions = paginate current_user.inflows.order('updated_at DESC')
       view 'member/inflows/index'
     end
   end
