@@ -5,9 +5,9 @@ class User < ApplicationRecord
   # has_many :orders, dependent: :destroy
   # has_one :cart, dependent: :destroy
   # has_one_attached :image
-  has_many :from, class_name: 'Transaction', foreign_key: 'from_id'
-  has_many :to, class_name: 'Transaction', foreign_key: 'to_id'
-  has_many :tasks
+  # has_many :from, class_name: 'Transaction', foreign_key: 'from_id'
+  # has_many :to, class_name: 'Transaction', foreign_key: 'to_id'
+  # has_many :tasks
 
   # after_create :assign_default_role
 
@@ -36,5 +36,9 @@ class User < ApplicationRecord
 
   def enough_money?(cart)
     amount >= cart.total
+  end
+
+  def payments
+    Transaction.where(account: self, direction: 'outflow')
   end
 end
