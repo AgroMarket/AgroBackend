@@ -56,7 +56,7 @@ class Transaction < ApplicationRecord
     hash = {
       account: user,
       t_type: type,
-      direction: 'inflow',
+      direction: type == 'replenish' ? 'inflow' : 'outflow',
       amount: amount,
       from: user,
       to: user,
