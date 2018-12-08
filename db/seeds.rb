@@ -1,5 +1,6 @@
 require 'category_names'
 require 'page_contents'
+require 'ffaker'
 
 # frozen_string_literal: true
 
