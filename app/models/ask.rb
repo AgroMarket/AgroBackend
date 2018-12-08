@@ -10,6 +10,7 @@ class Ask < ApplicationRecord
   after_update :make_system_payments
 
   scope :by_consumer, ->(consumer) { where(consumer: consumer).includes(:orders).order('created_at DESC') }
+  scope :by_consumer_and_status, ->(consumer, status) { where(consumer: consumer, status: status).includes(:orders).order('created_at DESC') }
 
   def producers
     orders.map(&:producer)

@@ -10,11 +10,27 @@ class Member::AsksController < ApplicationController
     @pagination = nil
 
     build do
-      message 'Список покупок'
+      if params[:scope] == 'pending'
+        message 'Упаковываются'
+        @asks = Ask.by_consumer_and_status(current_user, 0)
+
+      elsif params[:scope] == 'confirmed'
+        message 'Доставляются'
+        @asks = Ask.by_consumer_and_status(current_user, 1)
+
+      elsif params[:scope] == 'completed'
+        message 'Доставлены'
+        @asks = Ask.by_consumer_and_status(current_user, 2)
+
+      else
+        message 'Список покупок'
+        @asks = Ask.by_consumer(current_user)
+      end
+
+      @asks_count = @asks.size
       path member_asks_path
-      asks Ask.by_consumer(current_user)
-      view 'member/asks/index'
       @asks = paginate @asks
+      view 'member/asks/index'
     end
   end
 

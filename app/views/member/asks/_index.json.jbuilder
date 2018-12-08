@@ -1,4 +1,4 @@
-json.asks_count current_user.asks.size
+json.asks_count @asks_count
 json.asks do
   json.array! @asks do |ask|
     json.ask do
