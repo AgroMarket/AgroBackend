@@ -211,10 +211,10 @@ end
 # Все продавцы подтверждают свои заказы.
 # Заказы готовы к доставке
 Order.all.each do |order|
-  order.update! status: 'Подтверждён'
+  order.update! status: 1 # Доставляется
 end
 
 # # Перевозчик доставляет заказ покупателю
 carier.tasks.each do |task|
-  task.update! status: 'Доставлен'
+  task.update! status: 1 # Доставлен
 end

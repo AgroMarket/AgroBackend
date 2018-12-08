@@ -5,7 +5,8 @@ class Order < ApplicationRecord
   has_many :order_items, dependent: :destroy
   has_many :transactions
 
-  enum status: %i[Подтверждается Подтверждён Выполнен]
+  # enum status: %i[Подтверждается Подтверждён Выполнен]
+  enum status: %i[Упаковывается Доставляется Доставлен]
 
   after_update :create_task
 
@@ -68,6 +69,8 @@ class Order < ApplicationRecord
       status: 0
     }
     Task.create! hash
+
+    ask.update status: 1
   end
 
   def ask_confirmed?

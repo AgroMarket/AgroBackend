@@ -8,8 +8,8 @@ class Task < ApplicationRecord
   after_update :ask_delivered
 
   def ask_delivered
-    return unless status == 'Доставлен'
+    return unless status == 1
 
-    ask.update status: 'Доставлен'
+    ask.update status: 2
   end
 end

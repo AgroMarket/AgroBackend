@@ -188,7 +188,7 @@ class Transaction < ApplicationRecord
     inflow = Transaction.create!(hash)
     account_replenish(carrier, delivery_cost) if inflow
 
-    ask.update status: 'Выполнен'
-    p ask
+    # ask.update status: 'Выполнен'
+    # p ask
   end
 end

@@ -4,7 +4,8 @@ class Ask < ApplicationRecord
   has_many :tranzactions
   has_many :tasks
 
-  enum status: %i[Ожидает Доставлен Выполнен]
+  # enum status: %i[Ожидает Доставлен Выполнен]
+  enum status: %i[Упаковывается Доставляется Доставлен]
 
   after_update :make_system_payments
 
@@ -15,15 +16,6 @@ class Ask < ApplicationRecord
   end
 
   def make_system_payments
-    case status
-    when 'Ожидает'
-      return
-    when 'Доставлен'
-      Transaction.system_payments self
-    when 'Выполнен'
-      orders.each do |order|
-        order.update! status: 'Выполнен'
-      end
-    end
+    Transaction.system_payments self if status == 2
   end
 end
