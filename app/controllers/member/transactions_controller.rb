@@ -24,6 +24,8 @@ class Member::TransactionsController < ApplicationController
     build do
       if params[:transaction][:type] == 'withdrawal' && current_user.amount < params[:transaction][:amount]
           @need_money = params[:transaction][:amount] - current_user.amount
+          @after = current_user.amount - params[:transaction][:amount]
+          @amount = params[:transaction][:amount]
           message 'На счёте недостаточно средств'
           view 'member/transactions/withdrawal'    
       else

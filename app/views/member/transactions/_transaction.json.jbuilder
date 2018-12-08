@@ -12,4 +12,5 @@ json.transaction do
   json.order_id   transaction.order_id
   json.task_id    transaction.task_id
   json.link       member_transaction_path transaction.id
+  json.need_money 0
 end
