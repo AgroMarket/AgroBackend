@@ -9,11 +9,13 @@ Rails.application.routes.draw do
     # ADMIN
     namespace :administrator do
       get 'dashboard' => 'dashboards#index'
+      get 'profile' => 'members#show'
     end
 
     # CARRIER
     namespace :carrier do
       resources :tasks, only: %i[index show update]
+      get 'profile' => 'members#show'
     end
 
     # MEMBER

@@ -8,7 +8,9 @@ class Member::MembersController < ApplicationController
   def show
     build do
       message    'Данные пользователя'
-      view       'members/show'
+      view       'members/show' if current_user.member?
+      view       'carrier/members/show' if current_user.carrier?
+      view       'administrator/members/show' if current_user.administrator?
     end
   end
 

@@ -26,12 +26,24 @@ class User < ApplicationRecord
     self.find payload['sub']
   end
 
-  def consumer?
-    type == 'Consumer'
+  # def consumer?
+  #   type == 'Consumer'
+  # end
+  #
+  # def producer?
+  #   type == 'Producer'
+  # end
+
+  def member?
+    type == 'Member'
   end
 
-  def producer?
-    type == 'Producer'
+  def carrier?
+    type == 'Carrier'
+  end
+
+  def administrator?
+    type == 'Administrator'
   end
 
   def enough_money?(cart)
