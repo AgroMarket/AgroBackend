@@ -20,6 +20,10 @@ class Ask < ApplicationRecord
       return
     when 'Доставлен'
       Transaction.system_payments self
+    when 'Выполнен'
+      orders.each do |order|
+        order.update! status: 'Выполнен'
+      end
     end
   end
 end

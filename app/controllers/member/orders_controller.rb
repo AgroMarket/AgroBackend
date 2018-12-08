@@ -10,17 +10,17 @@ class Member::OrdersController < ApplicationController
     @paginanation = nil
 
     build do
-      if params[:scope] == "pending"
+      if params[:scope] == 'pending'
         message 'Новые заказы'
-        orders Order.where(producer: current_user, status: 0).order('created_at DESC')
+        orders Order.where(producer: current_user, status: 'Подтверждается').order('created_at DESC')
 
-      elsif params[:scope] == "close"
+      elsif params[:scope] == 'confirmed'
         message 'Выполненные заказы'
-        orders Order.where(producer: current_user, status: 1).order('created_at DESC')
+        orders Order.where(producer: current_user, status: 'Подтверждён').order('created_at DESC')
 
-      elsif params[:scope] == "reject"
+      elsif params[:scope] == 'completed'
         message 'Отклоненные заказы'
-        orders Order.where(producer: current_user, status: 2).order('created_at DESC')
+        orders Order.where(producer: current_user, status: 'Выполнен').order('created_at DESC')
 
       else
         message 'Список продаж'

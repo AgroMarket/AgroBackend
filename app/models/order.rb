@@ -5,7 +5,7 @@ class Order < ApplicationRecord
   has_many :order_items, dependent: :destroy
   has_many :transactions
 
-  enum status: %i[Подтверждается Подтверждён Доставлен Выполнен]
+  enum status: %i[Подтверждается Подтверждён Выполнен]
 
   after_update :create_task
 
