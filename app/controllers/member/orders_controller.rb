@@ -12,21 +12,22 @@ class Member::OrdersController < ApplicationController
     build do
       if params[:scope] == 'pending'
         message 'Новые заказы'
-        orders Order.where(producer: current_user, status: 'Подтверждается').order('created_at DESC')
+        @orders = Order.where(producer: current_user, status: 'Подтверждается').order('created_at DESC')
 
       elsif params[:scope] == 'confirmed'
         message 'Выполненные заказы'
-        orders Order.where(producer: current_user, status: 'Подтверждён').order('created_at DESC')
+        @orders = Order.where(producer: current_user, status: 'Подтверждён').order('created_at DESC')
 
       elsif params[:scope] == 'completed'
         message 'Отклоненные заказы'
-        orders Order.where(producer: current_user, status: 'Выполнен').order('created_at DESC')
+        @orders = Order.where(producer: current_user, status: 'Выполнен').order('created_at DESC')
 
       else
         message 'Список продаж'
-        orders Order.where(producer: current_user).order('created_at DESC')
+        @orders = Order.where(producer: current_user).order('created_at DESC')
       end
 
+      @orders_count = @orders.size
       path member_orders_path
       @orders = paginate @orders
       view 'member/orders/index'

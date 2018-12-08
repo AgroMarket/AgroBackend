@@ -1,4 +1,4 @@
-json.orders_count current_user.orders.size
+json.orders_count @orders_count
 json.orders do
 	json.array! @orders do |order|
 		json.order do
