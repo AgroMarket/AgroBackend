@@ -1,4 +1,4 @@
-json.products_count !@products.empty? ? @products.first.category.products.size : 0
+json.products_count @products_count
 json.products do
   json.array! @products do |product|
     json.product do

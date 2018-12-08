@@ -11,26 +11,30 @@ class ProductsController < ApplicationController
     build do
       if params[:category_id]
         message 'Товары категории'
-        products Product.by_parent_categories(params[:category_id])
+        @products = Product.by_parent_categories(params[:category_id])
         path category_products_path
+        @products_count = @products.size
         @products = paginate @products
 
       elsif params[:producer_id]
         message 'Товары производителя'
-        products Product.by_producer(params[:producer_id])
+        @products = Product.by_producer(params[:producer_id])
         path producer_products_path
-        @products = paginate @products if !@products.empty?
-    
+        @products_count = @products.size
+        @products = paginate @products
+
       elsif params[:search]
         message 'Поиск товаров'
-        products Product.search(params[:search])
+        @products = Product.search(params[:search])
         path products_path
         url_params "search": params[:search]
+        @products_count = @products.size
         @products = paginate @products
+
       elsif params[:scope] && params[:scope] == 'samples'
         message 'Список случайных товаров'
-        products Product.samples
-      end  
+        @products = Product.samples
+      end
 
       view 'products/index'
     end
