@@ -5,4 +5,5 @@ json.task do
   json.delivery_cost task.delivery_cost
   json.consumer_id task.member_id
   json.status task.status
+  json.created_at task.created_at
 end
