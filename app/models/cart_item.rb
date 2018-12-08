@@ -21,8 +21,13 @@ class CartItem < ApplicationRecord
   end
 
   def calculate_cart_total
-    cart.sum = cart.cart_items.map(&:sum).inject { |total, sum| total + sum }
-    cart.total = cart.sum + cart.delivery_cost
+    if !cart.cart_items.empty?
+      cart.sum = cart.cart_items.map(&:sum).inject { |total, sum| total + sum }
+      cart.total = cart.sum + cart.delivery_cost      
+    else
+      cart.sum = 0
+      cart.total = 0
+    end
     cart.save
   end
 end
