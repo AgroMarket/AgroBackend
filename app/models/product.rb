@@ -7,6 +7,9 @@ class Product < ApplicationRecord
   has_many :order_items
   has_one_attached :image
 
+  scope :active, -> {where("deleted IS FALSE")}
+  scope :inactive, -> {where("deleted IS TRUE")}
+
   # validates :name, presence: :true
 
   scope :by_category, ->(category_id) { where(category_id: category_id) }

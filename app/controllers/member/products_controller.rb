@@ -11,7 +11,7 @@ class Member::ProductsController < ApplicationController
 
     build do
       message 'Товары производителя'
-      products Product.where(producer: current_user).order('created_at DESC')
+      products Product.active.where(producer: current_user).order('created_at DESC')
       path member_products_path
       @products = paginate @products
       view 'member/products/index'
@@ -52,7 +52,7 @@ class Member::ProductsController < ApplicationController
   # DELETE /products/1
   # DELETE /products/1.json
   def destroy
-    if @product.destroy
+    if @product.update!(deleted: true)
       build do
         message 'Удаление товара'
         view 'member/products/show'
