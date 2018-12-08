@@ -4,8 +4,8 @@ class Administrator::DashboardsController < ApplicationController
   include Exceptable
 
   def index
-    @dashboard = get_info_for_dashboard
     build do
+      @dashboard = Administrator.dashboard
       message 'Информация для админа'
       view 'administrator/dashboards/index'
     end
