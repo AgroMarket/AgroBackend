@@ -22,16 +22,22 @@ class Member::TransactionsController < ApplicationController
   # POST /transactions.json
   def create
     build do
-      type = params[:transaction][:type]
-      amount = params[:transaction][:amount]
-      if type == 'replenish'
-        @transaction = Transaction.transaction_replenish current_user, amount
-        message 'Пополнение счета'
-      elsif type == 'withdrawal'
-        @transaction = Transaction.transaction_withdrawal current_user, amount
-        message 'Снятие со счета'
+      if params[:transaction][:type] == 'withdrawal' && current_user.amount < params[:transaction][:amount]
+          @need_money = params[:transaction][:amount] - current_user.amount
+          message 'На счёте недостаточно средств'
+          view 'member/transactions/withdrawal'    
+      else
+          type = params[:transaction][:type]
+          amount = params[:transaction][:amount]
+          if type == 'replenish'
+            @transaction = Transaction.transaction_replenish current_user, amount
+            message 'Пополнение счета'
+          elsif type == 'withdrawal'
+            @transaction = Transaction.transaction_withdrawal current_user, amount
+            message 'Снятие со счета'
+          end
+          view 'member/transactions/show'
       end
-      view 'member/transactions/show'
     end
   end
 
