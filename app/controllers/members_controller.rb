@@ -1,6 +1,5 @@
 class MembersController < ApplicationController
   before_action :set_member, only: :show
-  #before_action :authenticate_user, only: :show
   include Exceptable
 
   # GET /api/members/1
