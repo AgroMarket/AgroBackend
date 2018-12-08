@@ -8,6 +8,7 @@ json.product do
 	json.price product.price
 	json.rank product.rank
 	json.category_id product.category_id
+	json.deleted product.deleted
 	json.category_api category_products_path product.category_id
   json.parent_category_id product.category.parent_id
 	json.producer_id product.producer.id
