@@ -49,7 +49,10 @@ class Order < ApplicationRecord
         end
       end
     end
-    cart.cart_items.destroy_all if order.present?
+    if order.present?
+      Transaction.transaction_reserve user, ask
+      cart.cart_items.destroy_all
+    end
     ask
   end
 
