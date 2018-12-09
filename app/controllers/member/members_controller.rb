@@ -10,6 +10,7 @@ class Member::MembersController < ApplicationController
       message    'Данные пользователя'
       view       'members/show' if current_user.member?
       view       'carrier/members/show' if current_user.carrier?
+      @profit = Administrator.second.amount
       view       'administrator/members/show' if current_user.administrator?
     end
   end

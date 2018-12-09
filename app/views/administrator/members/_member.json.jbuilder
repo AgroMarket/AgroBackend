@@ -4,7 +4,7 @@
 json.member do
   json.user_type member.user_type
   json.link member_path member.id
-  json.amount member.amount
+  json.amount @profit
   json.id member.id
   json.email member.email
   json.image url_for(member.image)
