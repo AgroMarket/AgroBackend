@@ -124,8 +124,8 @@ class Transaction < ApplicationRecord
 
     ask.orders.each do |order|
       producer = order.producer
-      amount = (ask.total * 0.9).to_i
-      delta = ask.total - amount
+      amount = (order.total * 0.9).to_i
+      delta = order.total - amount
 
       # Зачисление производителю
       hash = {

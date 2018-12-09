@@ -17,6 +17,6 @@ class Ask < ApplicationRecord
   end
 
   def make_system_payments
-    Transaction.system_payments self if status == 2
+    Transaction.system_payments self if status == "Доставлен"
   end
 end
