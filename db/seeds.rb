@@ -67,7 +67,7 @@ categories_count = CategoryNames::ALL.size
                address: FFaker::AddressRU.city,
                description: FFaker::HipsterIpsum.paragraph,
                producer_logo: '',
-               producer_brand: 'ИП' + name,
+               producer_brand: 'ИП ' + name,
                producer_address: FFaker::AddressRU.city,
                producer_phone: FFaker::PhoneNumber.short_phone_number,
                producer_description: FFaker::HipsterIpsum.paragraph,
