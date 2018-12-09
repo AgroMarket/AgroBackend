@@ -17,6 +17,11 @@ class Ask < ApplicationRecord
   end
 
   def make_system_payments
-    Transaction.system_payments self if status == "Доставлен"
+    if status == "Доставлен"
+      Transaction.system_payments self
+      orders.each do |order|
+        order.update! status: 2 # Доставлен
+      end
+    end
   end
 end
