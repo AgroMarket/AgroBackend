@@ -56,15 +56,16 @@ end
 # Producer
 categories_count = CategoryNames::ALL.size
 (1..categories_count).each do |i|
+  name = FFaker::NameRU.name
   producer = { user_type: 'producer',
                email: "farmer#{i}@mail.ru",
                password: '12341234',
-               name: FFaker::NameRU.name,
+               name: name,
                phone: FFaker::PhoneNumber.short_phone_number,
                address: FFaker::AddressRU.city,
                description: FFaker::HipsterIpsum.paragraph,
                producer_logo: '',
-               producer_brand: 'ИП' + FFaker::NameRU.name,
+               producer_brand: 'ИП' + name,
                producer_address: FFaker::AddressRU.city,
                producer_phone: FFaker::PhoneNumber.short_phone_number,
                producer_description: FFaker::HipsterIpsum.paragraph,
