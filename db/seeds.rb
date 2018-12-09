@@ -34,6 +34,8 @@ first_user = Administrator.create! email: 'fermastore@mail.ru', password: '12341
 money_user = Administrator.create! email: 'profit@mail.ru', password: '12341234', user_type: 'admin'
 carier = Carrier.create! email: 'carrier@mail.ru', password: '12341234', user_type: 'delivery'
 
+first_user.image.attach ({ io: File.open("#{Rails.root}/app/assets/images/avatars/admin.jpg"), filename: "admin.jpg" })
+carier.image.attach ({ io: File.open("#{Rails.root}/app/assets/images/avatars/tk.jpg"), filename: "tk.jpg" })
 # first_user.add_role :admin
 # transport_company.add_role :delivery
 # money_user.add_role :money
@@ -50,7 +52,7 @@ carier = Carrier.create! email: 'carrier@mail.ru', password: '12341234', user_ty
   Member.create! consumer
 end
 Member.all.each do |consumer|
- consumer.image.attach { io: File.open("#{Rails.root}/app/assets/images/avatars/#{rand(1..3)}.jpg"), filename: 'avatar.jpg' }
+ consumer.image.attach ({ io: File.open("#{Rails.root}/app/assets/images/avatars/#{rand(1..3)}.jpg"), filename: "avatar.jpg" })
 end
 
 # Producer
@@ -73,8 +75,8 @@ categories_count = CategoryNames::ALL.size
   Member.create! producer
 end
 Member.all.each do |producer|
-  producer.image.attach { io: File.open("#{Rails.root}/app/assets/images/avatars/#{rand(1..3)}.jpg"), filename: 'avatar.jpg' }
- end
+  producer.image.attach ({ io: File.open("#{Rails.root}/app/assets/images/avatars/#{rand(1..3)}.jpg"), filename: 'avatar.jpg' })
+end
 Member.all.each { |producer| producer.logo.attach missing_png }
 
 # Categories

@@ -1,4 +1,5 @@
 class Administrator < User
+  has_one_attached :image
   def self.dashboard
     { producers_count: Member.producers.count,
       consumers_count: Member.consumers.count,
