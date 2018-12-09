@@ -85,44 +85,52 @@ class Transaction < ApplicationRecord
     # перевести деньги со счера системы на счет транспортной компании
     # перевести деньги со счета системы в прибыль системы
 
+    total = ask.total
+    delivery = ask.delivery_cost
+    to_producers = ((total - delivery) * 0.9).to_i
+    profit = total - delivery - to_producers
+    puts "total #{total} delivery #{delivery} to_producers #{to_producers} profit #{profit}"
+
     system = Administrator.first
-    profit = Administrator.second
+    syster_profit = Administrator.second
     carrier = Carrier.first
+    task = Task.find_by(ask: ask)
 
     # Зачисление перевозчику
-    task = Task.find_by(ask: ask)
-    delivery_cost = ask.delivery_cost
     hash = {
         account: system,
         t_type: 'transfer',
         direction: 'outflow',
-        amount: delivery_cost,
+        amount: delivery,
         from: system,
         to: carrier,
         before: system.amount,
-        after: system.amount - delivery_cost,
+        after: system.amount - delivery,
         ask: ask,
         task: task
     }
     outflow = Transaction.create!(hash)
-    account_withdrawal(system, delivery_cost) if outflow
+    account_withdrawal(system, delivery) if outflow
 
     hash = {
         account: carrier,
         t_type: 'transfer',
         direction: 'inflow',
-        amount: delivery_cost,
+        amount: delivery,
         from: system,
         to: carrier,
         before: carrier.amount,
-        after: carrier.amount + delivery_cost,
+        after: carrier.amount + delivery,
         ask: ask,
         task: task
     }
     inflow = Transaction.create!(hash)
-    account_replenish(carrier, delivery_cost) if inflow
+    account_replenish(carrier, delivery) if inflow
+
+    puts "total #{total} delivery #{delivery} to_producers #{to_producers} profit #{profit}"
 
     ask.orders.each do |order|
+
       producer = order.producer
       amount = (order.total * 0.9).to_i
       delta = order.total - amount
@@ -165,7 +173,7 @@ class Transaction < ApplicationRecord
           direction: 'outflow',
           amount: delta,
           from: system,
-          to: profit,
+          to: syster_profit,
           before: system.amount,
           after: system.amount - delta,
           ask: ask
@@ -174,19 +182,19 @@ class Transaction < ApplicationRecord
       account_withdrawal(system, delta) if outflow
 
       hash = {
-          account: profit,
+          account: syster_profit,
           t_type: 'profit',
           direction: 'inflow',
           amount: delta,
           from: system,
-          to: profit,
-          before: profit.amount,
-          after: profit.amount + delta,
+          to: syster_profit,
+          before: syster_profit.amount,
+          after: syster_profit.amount + delta,
           ask: ask
       }
       inflow = Transaction.create!(hash)
-      account_replenish(profit, delta) if inflow
-    end    
+      account_replenish(syster_profit, delta) if inflow
+    end
 
     # ask.update status: 'Выполнен'
     # p ask
