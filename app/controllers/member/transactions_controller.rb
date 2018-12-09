@@ -34,7 +34,10 @@ class Member::TransactionsController < ApplicationController
           if type == 'replenish'
             @transaction = Transaction.transaction_replenish current_user, amount
             message 'Пополнение счета'
-          elsif type == 'withdrawal'
+          elsif type == 'withdrawal' && current_user.user_type == 'admin'
+            @transaction = Transaction.transaction_withdrawal Administrator.second, amount
+            message 'Снятие со счета'
+          elsif type == 'withdrawal' 
             @transaction = Transaction.transaction_withdrawal current_user, amount
             message 'Снятие со счета'
           end
