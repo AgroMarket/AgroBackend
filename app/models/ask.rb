@@ -5,7 +5,7 @@ class Ask < ApplicationRecord
   has_many :tasks
 
   # enum status: %i[Ожидает Доставлен Выполнен]
-  enum status: %i[Упаковывается Доставляется Доставлен]
+  enum status: %i[Упаковывается Доставляется Доставлен Отменён]
 
   after_update :make_system_payments
 

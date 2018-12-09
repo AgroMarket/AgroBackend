@@ -15,13 +15,15 @@ class Member::OrdersController < ApplicationController
         @orders = Order.where(producer: current_user, status: 0).order('created_at DESC')
 
       elsif params[:scope] == 'confirmed'
-        message 'Выполненные заказы'
+        message 'Заказы в процессе доставки'
         @orders = Order.where(producer: current_user, status: 1).order('created_at DESC')
 
       elsif params[:scope] == 'completed'
-        message 'Отклоненные заказы'
+        message 'Доставленные заказы'
         @orders = Order.where(producer: current_user, status: 2).order('created_at DESC')
-
+      elsif params[:scope] == 'declained'
+        message 'Отклоненные заказы'
+        @orders = Order.where(producer: current_user, status: 3).order('created_at DESC')
       else
         message 'Список продаж'
         @orders = Order.where(producer: current_user).order('created_at DESC')

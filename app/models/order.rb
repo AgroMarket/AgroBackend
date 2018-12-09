@@ -6,7 +6,7 @@ class Order < ApplicationRecord
   has_many :transactions
 
   # enum status: %i[Подтверждается Подтверждён Выполнен]
-  enum status: %i[Упаковывается Доставляется Доставлен]
+  enum status: %i[Упаковывается Доставляется Доставлен Отменён]
 
   after_update :create_task
 

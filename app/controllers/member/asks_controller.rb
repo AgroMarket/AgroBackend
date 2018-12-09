@@ -21,7 +21,9 @@ class Member::AsksController < ApplicationController
       elsif params[:scope] == 'completed'
         message 'Доставлены'
         @asks = Ask.by_consumer_and_status(current_user, 2)
-
+      elsif params[:scope] == 'declained'
+        message 'Отклонены'
+        @asks = Ask.by_consumer_and_status(current_user, 3)  
       else
         message 'Список покупок'
         @asks = Ask.by_consumer(current_user)

@@ -20,6 +20,10 @@ def missing_png
   { io: File.open("#{Rails.root}/app/assets/images/300x300/missing.png"), filename: 'missing.png' }
 end
 
+def picture_for_products(picture_name)
+  { io: File.open("#{Rails.root}/app/assets/images/products/#{picture_name}.png"), filename: "#{picture_name}.png" }
+end
+
 Page.create! name: 'about',     title: 'О нас',             content: PageContents::ABOUT
 Page.create! name: 'sellers',   title: 'Продавцам',         content: PageContents::SELLERS
 Page.create! name: 'buyers',    title: 'Покупателям',       content: PageContents::BUYERS
@@ -53,12 +57,12 @@ categories_count = CategoryNames::ALL.size
   producer = { user_type: 'producer',
                email: "farmer#{i}@mail.ru",
                password: '12341234',
-               name: "farmer#{i}",
+               name: FFaker::NameRU.name,
                phone: FFaker::PhoneNumber.short_phone_number,
                address: FFaker::AddressRU.city,
                description: FFaker::HipsterIpsum.paragraph,
                producer_logo: '',
-               producer_brand: "Farmer#{i}",
+               producer_brand: FFaker::Company.name,
                producer_address: FFaker::AddressRU.city,
                producer_phone: FFaker::PhoneNumber.short_phone_number,
                producer_description: FFaker::HipsterIpsum.paragraph,
@@ -97,7 +101,7 @@ Category.where(parent_id: 0).each_with_index do |parent, idx|
     end
   end
 end
-Product.all.each { |product| product.image.attach missing_png }
+Product.all.each { |product| product.image.attach picture_for_products(product.category.parent.name) }
 
 # Carts
 cart = Cart.create! consumer: Member.consumers.first
