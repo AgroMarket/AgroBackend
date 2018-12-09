@@ -8,9 +8,18 @@ class Carrier::TasksController < ApplicationController
   # GET /tasks.json
   def index
     build do
-      message 'Список задач перевозчика'
-      path carrier_tasks_path
-      @tasks = paginate current_user.tasks.order('created_at DESC')
+      if params[:scope] == 'waiting'
+        message 'Ожидающие доставку'
+        @tasks = current_user.tasks.where(status: "Ожидает").order('created_at DESC')
+      elsif params[:scope] == 'delivered'
+        message 'Доставленные'
+        @tasks = current_user.tasks.where(status: "Доставлен").order('created_at DESC')
+      else
+        message 'Список задач перевозчика'
+        @tasks = current_user.tasks.order('created_at DESC')
+      end      
+      @tasks = paginate @tasks
+      path carrier_tasks_path      
       view 'carrier/tasks/index'
     end
   end
