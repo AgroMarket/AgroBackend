@@ -7,6 +7,7 @@ json.producers do
       json.phone producer.phone
       json.address producer.address
 			json.email producer.email
+			json.email producer.producer_brand
 			json.address producer.producer_address
 			json.phone producer.producer_phone
 			json.inn producer.producer_inn
