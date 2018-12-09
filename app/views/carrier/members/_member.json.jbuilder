@@ -7,4 +7,5 @@ json.member do
   json.amount member.amount
   json.id member.id
   json.email member.email
+  json.image url_for(member.image)
 end
