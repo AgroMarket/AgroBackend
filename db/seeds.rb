@@ -77,7 +77,9 @@ end
 Member.all.each do |producer|
   producer.image.attach ({ io: File.open("#{Rails.root}/app/assets/images/avatars/#{rand(1..3)}.jpg"), filename: 'avatar.jpg' })
 end
-Member.all.each { |producer| producer.logo.attach missing_png }
+Member.all.each do |producer|
+  producer.logo.attach ({ io: File.open("#{Rails.root}/app/assets/images/logo/#{rand(1..3)}.jpg"), filename: 'logo.jpg' })
+end
 
 # Categories
 category_names = CategoryNames::ALL
