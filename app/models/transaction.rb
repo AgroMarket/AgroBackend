@@ -89,9 +89,42 @@ class Transaction < ApplicationRecord
     profit = Administrator.second
     carrier = Carrier.first
 
+    # Зачисление перевозчику
+    task = Task.find_by(ask: ask)
+    delivery_cost = ask.delivery_cost
+    hash = {
+        account: system,
+        t_type: 'transfer',
+        direction: 'outflow',
+        amount: delivery_cost,
+        from: system,
+        to: carrier,
+        before: system.amount,
+        after: system.amount - delivery_cost,
+        ask: ask,
+        task: task
+    }
+    outflow = Transaction.create!(hash)
+    account_withdrawal(system, delivery_cost) if outflow
+
+    hash = {
+        account: carrier,
+        t_type: 'transfer',
+        direction: 'inflow',
+        amount: delivery_cost,
+        from: system,
+        to: carrier,
+        before: carrier.amount,
+        after: carrier.amount + delivery_cost,
+        ask: ask,
+        task: task
+    }
+    inflow = Transaction.create!(hash)
+    account_replenish(carrier, delivery_cost) if inflow
+
     ask.orders.each do |order|
       producer = order.producer
-      amount = ask.total * 0.9
+      amount = (ask.total * 0.9).to_i
       delta = ask.total - amount
 
       # Зачисление производителю
@@ -153,40 +186,7 @@ class Transaction < ApplicationRecord
       }
       inflow = Transaction.create!(hash)
       account_replenish(profit, delta) if inflow
-    end
-
-    # Зачисление перевозчику
-    task = Task.find_by(ask: ask)
-    delivery_cost = ask.delivery_cost
-    hash = {
-        account: system,
-        t_type: 'transfer',
-        direction: 'outflow',
-        amount: delivery_cost,
-        from: system,
-        to: carrier,
-        before: system.amount,
-        after: system.amount - delivery_cost,
-        ask: ask,
-        task: task
-    }
-    outflow = Transaction.create!(hash)
-    account_withdrawal(system, delivery_cost) if outflow
-
-    hash = {
-        account: carrier,
-        t_type: 'transfer',
-        direction: 'inflow',
-        amount: delivery_cost,
-        from: system,
-        to: carrier,
-        before: carrier.amount,
-        after: carrier.amount + delivery_cost,
-        ask: ask,
-        task: task
-    }
-    inflow = Transaction.create!(hash)
-    account_replenish(carrier, delivery_cost) if inflow
+    end    
 
     # ask.update status: 'Выполнен'
     # p ask
