@@ -6,8 +6,12 @@ json.producers do
 	    json.name producer.name
       json.phone producer.phone
       json.address producer.address
+			json.email producer.email
+			json.address producer.producer_address
+			json.phone producer.producer_phone
+			json.inn producer.producer_inn
 	    json.logo url_for(producer.logo)
-	    json.link producer_path producer.id
+			json.link producer_path producer.id
   	end
   end
 end
