@@ -49,7 +49,9 @@ carier = Carrier.create! email: 'carrier@mail.ru', password: '12341234', user_ty
                description: FFaker::HipsterIpsum.paragraph }
   Member.create! consumer
 end
-Member.all.each { |consumer| consumer.image.attach missing_png }
+Member.all.each do |consumer|
+ consumer.image.attach { io: File.open("#{Rails.root}/app/assets/images/avatars/#{rand(1..3)}.jpg"), filename: 'avatar.jpg' }
+end
 
 # Producer
 categories_count = CategoryNames::ALL.size
@@ -69,7 +71,9 @@ categories_count = CategoryNames::ALL.size
                producer_inn: rand(100000000..999999999).to_s }
   Member.create! producer
 end
-Member.all.each { |producer| producer.image.attach missing_png }
+Member.all.each do |producer|
+  producer.image.attach { io: File.open("#{Rails.root}/app/assets/images/avatars/#{rand(1..3)}.jpg"), filename: 'avatar.jpg' }
+ end
 Member.all.each { |producer| producer.logo.attach missing_png }
 
 # Categories
