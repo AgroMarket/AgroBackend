@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_01_134348) do
+ActiveRecord::Schema.define(version: 2018_12_08_192608) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,8 +37,10 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
   end
 
   create_table "asks", force: :cascade do |t|
-    t.bigint "consumer_id"
-    t.integer "amount", default: 0, null: false
+    t.integer "consumer_id"
+    t.integer "sum", default: 0
+    t.integer "delivery_cost", default: 0
+    t.integer "total", default: 0, null: false
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -48,7 +50,7 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
   create_table "cart_items", force: :cascade do |t|
     t.bigint "cart_id"
     t.bigint "product_id"
-    t.bigint "producer_id"
+    t.integer "producer_id"
     t.integer "quantity"
     t.integer "sum"
     t.datetime "created_at", null: false
@@ -59,11 +61,12 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
   end
 
   create_table "carts", force: :cascade do |t|
-    t.bigint "consumer_id"
-    t.integer "total"
+    t.integer "consumer_id"
+    t.integer "sum", default: 0
+    t.integer "delivery_cost", default: 0
+    t.integer "total", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "delivery_cost", default: 500
     t.index ["consumer_id"], name: "index_carts_on_consumer_id"
   end
 
@@ -81,7 +84,7 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
   create_table "order_items", force: :cascade do |t|
     t.bigint "order_id"
     t.bigint "product_id"
-    t.bigint "producer_id"
+    t.integer "producer_id"
     t.integer "price"
     t.integer "quantity"
     t.integer "sum"
@@ -94,8 +97,8 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
 
   create_table "orders", force: :cascade do |t|
     t.bigint "ask_id"
-    t.bigint "consumer_id"
-    t.bigint "producer_id"
+    t.integer "consumer_id"
+    t.integer "producer_id"
     t.integer "total", default: 0, null: false
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
@@ -120,10 +123,11 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
     t.integer "price"
     t.string "image"
     t.integer "rank"
-    t.bigint "producer_id"
+    t.integer "producer_id"
     t.bigint "category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "deleted", default: false
     t.index ["category_id"], name: "index_products_on_category_id"
     t.index ["producer_id"], name: "index_products_on_producer_id"
   end
@@ -139,27 +143,37 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
   end
 
   create_table "tasks", force: :cascade do |t|
+    t.bigint "carrier_id"
     t.bigint "ask_id"
-    t.bigint "user_id"
+    t.integer "delivery_cost", default: 0, null: false
+    t.bigint "member_id"
     t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ask_id"], name: "index_tasks_on_ask_id"
-    t.index ["user_id"], name: "index_tasks_on_user_id"
+    t.index ["carrier_id"], name: "index_tasks_on_carrier_id"
+    t.index ["member_id"], name: "index_tasks_on_member_id"
   end
 
   create_table "transactions", force: :cascade do |t|
+    t.bigint "account_id"
+    t.string "t_type"
+    t.string "direction"
+    t.integer "amount", default: 0, null: false
     t.bigint "from_id"
     t.bigint "to_id"
-    t.integer "amount"
-    t.bigint "ask_id", default: 0
-    t.bigint "order_id", default: 0
-    t.integer "status"
+    t.integer "before"
+    t.integer "after"
+    t.bigint "ask_id"
+    t.bigint "order_id"
+    t.bigint "task_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_transactions_on_account_id"
     t.index ["ask_id"], name: "index_transactions_on_ask_id"
     t.index ["from_id"], name: "index_transactions_on_from_id"
     t.index ["order_id"], name: "index_transactions_on_order_id"
+    t.index ["task_id"], name: "index_transactions_on_task_id"
     t.index ["to_id"], name: "index_transactions_on_to_id"
   end
 
@@ -180,19 +194,20 @@ ActiveRecord::Schema.define(version: 2018_12_01_134348) do
     t.string "unconfirmed_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "type"
-    t.string "avatar"
-    t.string "name"
-    t.string "address"
-    t.string "phone"
-    t.text "description"
-    t.string "producer_logo"
-    t.string "producer_brand"
-    t.string "producer_address"
-    t.string "producer_phone"
-    t.text "producer_description"
-    t.string "producer_inn"
-    t.integer "amount", default: 0
+    t.string "type", default: "Member", null: false
+    t.string "user_type", default: "consumer", null: false
+    t.integer "amount", default: 0, null: false
+    t.string "image", default: "", null: false
+    t.string "name", default: "", null: false
+    t.string "address", default: "", null: false
+    t.string "phone", default: "", null: false
+    t.text "description", default: "", null: false
+    t.string "producer_logo", default: "", null: false
+    t.string "producer_brand", default: "", null: false
+    t.string "producer_address", default: "", null: false
+    t.string "producer_phone", default: "", null: false
+    t.text "producer_description", default: "", null: false
+    t.string "producer_inn", default: "", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

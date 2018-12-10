@@ -10,7 +10,7 @@ json.product do
 	json.producer_id product.producer.id
 	json.producer_name product.producer.name
 	json.producer_link producer_path product.producer.id
-	json.producer_products producer_products_path product.producer.id
+	# json.producer_products producer_products_path(product.producer.id) # возвращает не тот путь, что надо
 	json.descripion product.description
 	json.image url_for(product.image)
 end

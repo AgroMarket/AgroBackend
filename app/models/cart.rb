@@ -1,9 +1,10 @@
 class Cart < ApplicationRecord
-  belongs_to :consumer, optional: true
+  belongs_to :consumer, class_name: 'Member', foreign_key: 'consumer_id', optional: true
   has_many :cart_items, dependent: :destroy
 
-  # def calculate_cart_total
-  #   self.total = cart_items.map(&:sum).inject { |total, sum| total + sum }
-  #   save
-  # end
+  before_create   :set_delivery_cost
+
+  def set_delivery_cost
+    self.delivery_cost = 500
+  end
 end

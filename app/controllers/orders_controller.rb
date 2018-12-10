@@ -1,75 +1,31 @@
 class OrdersController < ApplicationController
   before_action :authenticate_user
-  before_action :set_order, only: [:show, :update, :destroy]
+  before_action :set_cart, only: :create
   include Exceptable
-
-  # GET /orders
-  # GET /orders.json
-  def index
-    @orders = Order.all
-  end
-
-  # GET /orders/1
-  # GET /orders/1.json
-  def show
-  end
 
   # POST /orders
   # POST /orders.json
   def create
-    @cart = Cart.find params[:cart_id]
-    # сравниваем, хватает ли денег на стоимость с учетом доставки
-    if current_user.amount >= (@cart.total + @cart.delivery_cost)
-      ask = Order.create_orders_from_cart(params[:cart_id], current_user)
-
-      if ask && create_transaction(current_user, fermastore, ask.amount, ask, nil, 1)
-        build do
-          message 'Создание заказов'
-          view 'orders/create'
-        end
-
+    build do
+      if current_user.enough_money? @cart
+        @ask = Order.create_orders_from_cart(@cart.id, current_user)
+        message 'Создание заказов'
+        view 'member/orders/create'
       else
-        ask.destroy
-        build do
-          message 'Создание заказов'
-          error @order.errors
-          status :unprocessable_entity
-          view 'orders/create'
-        end
-      end
-
-    else
-      build do
         message 'На счёте недостаточно средств'
-        view 'consumer/transactions/response'
+        view 'member/transactions/message'
       end
     end
-  end
-
-  # PATCH/PUT /orders/1
-  # PATCH/PUT /orders/1.json
-  def update
-    if @order.update(order_params)
-      render :show, status: :ok, location: @order
-    else
-      render json: @order.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /orders/1
-  # DELETE /orders/1.json
-  def destroy
-    @order.destroy
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_order
-      @order = Order.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def order_params
-      params.require(:order).permit(:id)
-    end
+  def set_cart
+    @cart = Cart.find params[:cart_id]
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def order_params
+    params.require(:order).permit(:id)
+  end
 end

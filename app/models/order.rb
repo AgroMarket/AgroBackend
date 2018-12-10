@@ -1,18 +1,28 @@
 class Order < ApplicationRecord
   belongs_to :ask
-  belongs_to :consumer
-  belongs_to :producer
+  belongs_to :consumer, class_name: 'Member', foreign_key: 'consumer_id'
+  belongs_to :producer, class_name: 'Member', foreign_key: 'producer_id'
   has_many :order_items, dependent: :destroy
   has_many :transactions
 
-  enum status: %i[Подтверждается Подтверждён Доставлен Выполнен]
+  # enum status: %i[Подтверждается Подтверждён Выполнен]
+  enum status: %i[Упаковывается Доставляется Доставлен Отменён]
+
+  after_update :create_task
 
   def self.create_orders_from_cart(cart_id, user)
     order = nil
     cart = Cart.find(cart_id)
-    # добавил к итоговой сумме заказа доставку, так же было consumer: Consumer.first
-    ask = Ask.create! consumer: user, amount: cart.total + cart.delivery_cost, status: 0
-    # Похоже, что проблема в этой функции здесь
+
+    hash = {
+      consumer: user,
+      sum: cart.sum,
+      delivery_cost: cart.delivery_cost,
+      total: cart.total,
+      status: 0
+    }
+    ask = Ask.create! hash
+
     cart.cart_items.map(&:product).map(&:producer).uniq.each do |producer|
       order_hash = {
         ask: ask,
@@ -40,8 +50,31 @@ class Order < ApplicationRecord
         end
       end
     end
-    cart.cart_items.destroy_all if order.present?
+    if order.present?
+      Transaction.transaction_reserve user, ask
+      cart.cart_items.destroy_all
+    end
     ask
+  end
+
+  def create_task
+    puts 'creating task'
+    return unless ask_confirmed?
+
+    hash = {
+      carrier: Carrier.first,
+      ask: ask,
+      delivery_cost: ask.delivery_cost,
+      member: consumer,
+      status: 0
+    }
+    Task.create! hash
+
+    ask.update status: 1
+  end
+
+  def ask_confirmed?
+    ask.orders.count == ask.orders.where(status: 1).count
   end
 
   # def self.create_order_from_order(order_id)

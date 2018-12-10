@@ -38,11 +38,11 @@ class ApplicationController < ActionController::API
     User.find_by(email: 'transport@mail.ru')
   end
 
-  def check_ask_status_in_order(order)
-    order.ask.orders.count == order.ask.orders.where(status: 1).count
-  end
-
-  def create_task(order)
-    Task.create(ask: order.ask, user: order.consumer, status: 0)
-  end
+  # def check_ask_status_in_order(order)
+  #   order.ask.orders.count == order.ask.orders.where(status: 1).count
+  # end
+  #
+  # def create_task(order)
+  #   Task.create(ask: order.ask, user: order.consumer, status: 0)
+  # end
 end

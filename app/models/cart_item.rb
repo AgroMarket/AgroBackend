@@ -1,7 +1,7 @@
 class CartItem < ApplicationRecord
   belongs_to :cart
   belongs_to :product
-  belongs_to :producer, optional: true
+  belongs_to :producer, class_name: 'Member', foreign_key: 'producer_id', optional: true
 
   before_create   :prepare_cart_item
   before_save     :calculate_sum
@@ -21,7 +21,13 @@ class CartItem < ApplicationRecord
   end
 
   def calculate_cart_total
-    cart.total = cart.cart_items.map(&:sum).inject { |total, sum| total + sum }
+    if !cart.cart_items.empty?
+      cart.sum = cart.cart_items.map(&:sum).inject { |total, sum| total + sum }
+      cart.total = cart.sum + cart.delivery_cost      
+    else
+      cart.sum = 0
+      cart.total = 0
+    end
     cart.save
   end
 end

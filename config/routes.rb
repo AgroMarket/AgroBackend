@@ -1,83 +1,115 @@
 Rails.application.routes.draw do
-
   scope :api do
     # DEVISE
     devise_for :users, controllers: { registrations: 'users/registrations' }, defaults: { format: :json }
-    #change task
 
     # AUTH
     post 'login' => 'user_token#create'
-    post 'transactions' => 'transactions#create'
 
-     # USER
-    namespace :users do
-      resources :tasks, only: %i[index update show]
-      resources :transactions, only: %i[index]
-      get 'profile' => 'informations#show'
-      # get 'transactions' => 'transactions#index'
-      # get 'tasks' => 'tasks#index'
-    end
-
-    # PRODUCER
-    namespace :producer do
-      resources :products
-      resources :asks do
-        resources :orders, only: %i[index show update] do
-          resources :order_items, only: %i[index]
-        end
-      end
-      #  Добавил заказы для старого api по просьбе фронтенда
-      resources :orders, only: %i[index show update] do
-        resources :order_items, only: %i[index]
-      end
-      resources :transactions, only: %i[index create]
-      get 'consumers' => 'consumers#index'
-      get 'profile' => 'producers#show'
-      put 'profile' => 'producers#update'
+    # ADMIN
+    namespace :administrator do
       get 'dashboard' => 'dashboards#index'
+      get 'profile' => 'members#show'
     end
 
-    # CONSUMER
-    namespace :consumer do
+    # CARRIER
+    namespace :carrier do
+      resources :tasks, only: %i[index show update]
+      get 'profile' => 'members#show'
+    end
+
+    # MEMBER
+    namespace :member do
+      get 'profile' => 'members#show'
+      put 'profile' => 'members#update'
+      resources :transactions, only: %i[create show]
       resources :asks do
         resources :orders, only: %i[index show create destroy] do
           resources :order_items, only: %i[index create destroy]
         end
       end
-      # добавил, чтобы просто работало, ждём, когда пофиксится на фронте (но это не точно)
-      resources :orders, only: %i[index show create destroy] do
+      resources :producers, only: :index
+      get 'dashboard' => 'dashboards#index'
+      resources :products
+      resources :orders, only: %i[index show create update destroy] do
         resources :order_items, only: %i[index create destroy]
       end
-      resources :producers, only: :index
-      get 'profile' => 'consumers#show'
-      put 'profile' => 'consumers#update'
-      get 'transactions' => 'transactions#index'
-      post 'transactions' => 'transactions#create'
+      resources :consumers, only: %i[index]
+      resources :payments, only: %i[index show]
+      resources :inflows, only: %i[index show]
+
+      # get 'transactions' => 'transactions#index'
+      # post 'transactions' => 'transactions#create'
     end
 
-    # DASHBOARD
-    get 'dashboard' => 'dashboards#index'
+
+
+    # post 'transactions' => 'transactions#create'
+    #
+    #  # USER
+    # namespace :users do
+    #   resources :tasks, only: %i[index update show]
+    #   resources :transactions, only: %i[index]
+    #   get 'profile' => 'informations#show'
+    #   # get 'transactions' => 'transactions#index'
+    #   # get 'tasks' => 'tasks#index'
+    # end
+
+    # # PRODUCER
+    # namespace :producer do
+    #   resources :products
+    #   resources :asks do
+    #     resources :orders, only: %i[index show update] do
+    #       resources :order_items, only: %i[index]
+    #     end
+    #   end
+    #   #  Добавил заказы для старого api по просьбе фронтенда
+    #   resources :orders, only: %i[index show update] do
+    #     resources :order_items, only: %i[index]
+    #   end
+    #   resources :transactions, only: %i[index create]
+    #   get 'consumers' => 'consumers#index'
+    #   get 'profile' => 'producers#show'
+    #   put 'profile' => 'producers#update'
+    #   get 'dashboard' => 'dashboards#index'
+    # end
+
+    # # CONSUMER
+    # namespace :consumer do
+    #   resources :asks do
+    #     resources :orders, only: %i[index show create destroy] do
+    #       resources :order_items, only: %i[index create destroy]
+    #     end
+    #   end
+    #   # добавил, чтобы просто работало, ждём, когда пофиксится на фронте (но это не точно)
+    #   resources :orders, only: %i[index show create destroy] do
+    #     resources :order_items, only: %i[index create destroy]
+    #   end
+    #   resources :producers, only: :index
+    #   get 'profile' => 'consumers#show'
+    #   put 'profile' => 'consumers#update'
+    #   get 'transactions' => 'transactions#index'
+    #   post 'transactions' => 'transactions#create'
+    # end
+
+    # # DASHBOARD
+    # get 'dashboard' => 'dashboards#index'
 
     # GUEST
-    resources :pages, only: %i[index show]
-    resources :consumers, only: %i[index show create]
-    resources :producers, only: %i[show] do
-      resources :products, only: %i[index]
+    resources :pages,         only: %i[index show]
+    resources :members,       only: %i[show create]
+    resources :products,      only: %i[index show]
+    resources :categories,    only: %i[index show] do
+      resources :products,    only: %i[index]
     end
-    resources :categories, only: %i[index show] do
-      resources :products, only: %i[index]
+    resources :producers,     only: %i[show] do
+      resources :products,    only: %i[index]
     end
-    resources :products, only: %i[index show]
-    resources :carts, only: %i[index show create update destroy] do
-      resources :cart_items, only: %i[index show create update destroy]
-      resources :orders, only: %i[create]
-      # resources :asks, only: %i[create]
+    resources :carts,         only: %i[index show create update destroy] do
+      resources :cart_items,  only: %i[index show create update destroy]
+      resources :orders,      only: %i[create]
     end
+    # resources :consumers, only: %i[index show create]
 
-    # TRANZACTIONS
-    # resources :tranzactions, only: :index
-    # resources :orders, only: %i[index show create update] do
-    #   resources :order_items
-    # end
   end
 end
