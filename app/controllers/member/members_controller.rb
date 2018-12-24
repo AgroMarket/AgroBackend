@@ -46,6 +46,6 @@ end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def member_params
-    params.require(:member).permit(:amount, :user_type, :email, :password, :name, :address, :phone, :description, :producer_brand, :producer_address, :producer_phone, :producer_description, :producer_inn, :image)
+    params.require(:member).permit(:amount, :user_type, :email, :password, :name, :address, :phone, :description, :producer_brand, :producer_address, :producer_phone, :producer_description, :producer_inn, :image, :logo)
   end
 end
